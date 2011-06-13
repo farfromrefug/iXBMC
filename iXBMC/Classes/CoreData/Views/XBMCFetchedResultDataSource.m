@@ -63,6 +63,7 @@
     self.sortBy = [_sortArray objectAtIndex:index];
     self.sectionKey = [ActiveSupport firstSortDescriptorName:self.sortBy];
 
+	NSLog(@"switch sort %@, %@", self.sortBy, self.sectionKey);
     [self deepFetch];    
     return [self currentSortName];
 }

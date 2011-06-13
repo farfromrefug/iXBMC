@@ -238,7 +238,7 @@
 
 - (void)connectedToXBMC: (NSNotification *) notification
 {
-    [[LibraryUpdater sharedInstance] updateRecentlyAdded];
+//    [[LibraryUpdater sharedInstance] updateRecentlyAdded];
 
 //    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showConnectionFailure) object:nil];
 //    [self showHUD];

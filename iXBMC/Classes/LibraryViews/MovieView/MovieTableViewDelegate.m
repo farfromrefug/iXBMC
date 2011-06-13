@@ -104,7 +104,7 @@
 {
     [super scrollViewDidEndDecelerating:scrollView];
 
-    [(MovieViewController*)_controller loadContentForVisibleCells]; 
+//    [(MovieViewController*)_controller loadContentForVisibleCells]; 
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -118,7 +118,7 @@
 
     if (!decelerate) 
     {
-        [(MovieViewController*)_controller loadContentForVisibleCells]; 
+//        [(MovieViewController*)_controller loadContentForVisibleCells]; 
     }
 }
 

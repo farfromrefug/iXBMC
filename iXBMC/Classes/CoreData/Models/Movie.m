@@ -94,5 +94,18 @@
     [self didChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
++ (NSString*)defaultSort
+{
+    return @"firstLetter asc sortLabel asc";
+}
+
++ (NSArray*)sorts
+{
+    return [NSArray arrayWithObjects:[self defaultSort], @"year des sortLabel asc", @"director asc sortLabel asc", nil];
+}
++ (NSArray*)sortNames
+{
+    return [NSArray arrayWithObjects:@"Title", @"Year", @"Director", nil];
+}
 
 @end

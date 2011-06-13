@@ -43,5 +43,4 @@
     [self didChangeValueForKey:@"ActorToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
-
 @end

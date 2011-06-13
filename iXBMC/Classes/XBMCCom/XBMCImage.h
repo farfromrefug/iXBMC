@@ -10,7 +10,10 @@
 
 @interface XBMCImage : NSObject {
     NSMutableArray* _downloadingImages;
-	NSOperationQueue* _downloadQueue;
+//	NSOperationQueue* _downloadQueue;
+	dispatch_queue_t _queue;
+
+	BOOL _valid;
 }
 
 + (XBMCImage *) sharedInstance;

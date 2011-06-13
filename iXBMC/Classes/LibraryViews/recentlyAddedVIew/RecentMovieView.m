@@ -72,15 +72,11 @@
 	CGFloat boundsY = contentRect.origin.y;
 	CGFloat height = contentRect.size.height;
 	CGFloat width = contentRect.size.width;
-	
-	CGPoint point;
-	
-	CGFloat actualFontSize;
 	//	CGSize size;
 	
-	int thumbnailHeight = self.height - 2*V_SPACING;
+	int thumbnailHeight = height - 2*V_SPACING;
 	
-	CGRect posterShadowRect = CGRectMake(H_SPACING, V_SPACING, 
+	CGRect posterShadowRect = CGRectMake(boundsX + H_SPACING, boundsY + V_SPACING, 
 								   thumbnailHeight*2/3, thumbnailHeight);
 	
 	CGRect posterRect = CGRectMake(0, 0

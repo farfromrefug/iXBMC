@@ -27,17 +27,24 @@ static XBMCImage *sharedInstance = nil;
     self = [super init];
     if (self)
     {
-		_downloadQueue = [NSOperationQueue new];
-		[_downloadQueue setMaxConcurrentOperationCount:5];
-        _downloadingImages = [[NSMutableArray arrayWithCapacity:0] retain];
+		_queue = dispatch_queue_create("com.ixbmc.imagedownload", NULL);
+		_valid = TRUE;
+//		_downloadQueue = [NSOperationQueue new];
+//		[_downloadQueue setMaxConcurrentOperationCount:5];
+//        _downloadingImages = [[NSMutableArray arrayWithCapacity:0] retain];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [_downloadingImages release];
-	[_downloadQueue release];
+//    [_downloadingImages release];
+//	[_downloadQueue release];
+	_valid = FALSE;
+	// wait for queue to empty
+	dispatch_sync(_queue, ^{});
+	dispatch_release(_queue);
+	
     [super dealloc];
 }
 
@@ -182,15 +189,18 @@ static XBMCImage *sharedInstance = nil;
                              object, @"object",
                              [NSValue valueWithPointer:sel], @"selector",
                              nil];
-    
-//    NSOperationQueue *queue = [NSOperationQueue new];
-    NSInvocationOperation *operation = [[NSInvocationOperation alloc] 
-                                        initWithTarget:[XBMCImage sharedInstance]
-                                        selector:@selector(downloadImage:) 
-                                        object:params];
-    [_downloadQueue addOperation:operation]; 
-//    [queue release];
-    [operation release];
+//    
+////    NSOperationQueue *queue = [NSOperationQueue new];
+//    NSInvocationOperation *operation = [[NSInvocationOperation alloc] 
+//                                        initWithTarget:[XBMCImage sharedInstance]
+//                                        selector:@selector(downloadImage:) 
+//                                        object:params];
+//    [_downloadQueue addOperation:operation]; 
+////    [queue release];
+	
+	dispatch_async(_queue, ^{[self downloadImage:params];});
+
+//    [operation release];
 }
 
 + (void) askForImage:(NSString*)url object:(NSObject*)object selector:(SEL)sel thumbnailSize:(NSInteger)size

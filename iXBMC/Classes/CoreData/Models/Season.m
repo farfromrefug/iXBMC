@@ -15,8 +15,10 @@
 @dynamic showtitle;
 @dynamic playcount;
 @dynamic thumbnail;
-@dynamic seasonid;
+@dynamic season;
 @dynamic tvshowid;
+@dynamic label;
+@dynamic nbepisodes;
 @dynamic SeasonToTVShow;
 @dynamic SeasonToEpisode;
 

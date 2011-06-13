@@ -237,7 +237,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSArray*)sectionIndexTitlesForTableView:(UITableView*)tableView {
-    if (!_forSearch && [[self currentSortName] compare:@"Title"] == NSOrderedSame )
+    if (!_forSearch && [[self currentSortName] isEqualToString:@"Title"] )
     {        
         //        return [TTSectionedDataSource lettersForSectionsWithSearch:YES summary:YES];
         NSMutableArray* titles = [NSMutableArray array];

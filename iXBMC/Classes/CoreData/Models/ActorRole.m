@@ -15,6 +15,7 @@
 
 @implementation ActorRole
 @dynamic role;
+@dynamic actorName;
 @dynamic RoleToActor;
 @dynamic RoleToTVShow;
 @dynamic RoleToMovie;

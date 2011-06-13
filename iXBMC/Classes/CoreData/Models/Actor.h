@@ -19,10 +19,7 @@
 @property (nonatomic, retain) NSSet* ActorToRole;
 
 - (void)addActorToRoleObject:(ActorRole *)value;
-
 - (void)removeActorToRoleObject:(ActorRole *)value;
-
 - (void)addActorToRole:(NSSet *)value;
-
 - (void)removeActorToRole:(NSSet *)value;
 @end

@@ -10,7 +10,6 @@
 
 #import "XBMCJSONCommunicator.h"
 #import "JSONKit.h"
-#import "CJSONSerializer.h"
 
 
 @implementation XBMCStateListener
@@ -82,11 +81,6 @@ static XBMCStateListener *sharedInstance = nil;
     }
 }
 
-- (void)gotIntrospect:(id)result
-{
-    NSLog(@"result: %@", result);
-}
-
 - (void)connect 
 {
     connected = true;
@@ -97,10 +91,6 @@ static XBMCStateListener *sharedInstance = nil;
                                                 valueForKey:@"currenthost"] forKey:@"server" ];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ConnectedToXBMC" 
                                                         object:nil userInfo:dict];
-//    NSDictionary *request = [[[NSDictionary alloc] initWithObjectsAndKeys:
-//                              @"JSONRPC.Introspect", @"cmd", [NSArray array], @"params"
-//                              ,nil] autorelease];
-//    [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request target:self selector:@selector(gotIntrospect:)];    
 
     playing = false;
     paused = false;
@@ -155,6 +145,10 @@ static XBMCStateListener *sharedInstance = nil;
     }
 }
 
+- (void)printResult:(id)result
+{
+	NSLog(@"printResult: %@", result);
+}
 
 - (void)start
 {
@@ -163,6 +157,17 @@ static XBMCStateListener *sharedInstance = nil;
                                                      selector: @selector(checkStateTimerFunc:)
                                                      userInfo: nil repeats:TRUE];
     started = true;
+	
+//	NSDictionary *request = [NSDictionary dictionaryWithObjectsAndKeys:
+//							 @"JSONRPC.Introspect", @"cmd"
+//							 , [NSDictionary dictionaryWithObjectsAndKeys:
+//															   [NSDictionary dictionaryWithObjectsAndKeys:
+//																	@"VideoLibrary", @"id", 
+//																	@"namespace", @"type", nil]
+//															 , @"filter", nil], @"params"
+//							 ,nil];
+//    [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request target:self selector:@selector(printResult:)];    
+
 }
 
 - (void)stop
@@ -299,6 +304,7 @@ static XBMCStateListener *sharedInstance = nil;
         }
         else
         {
+//			NSLog(@"player available: %@", result);
            if (!connectedstatus)
             {
 //                [self connect];

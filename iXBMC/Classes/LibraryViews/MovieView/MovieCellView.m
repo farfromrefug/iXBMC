@@ -71,12 +71,8 @@
             }
         }
 
-		CGFloat height = TTSTYLEVAR(moviesViewCellsMaxHeight)*[UIScreen mainScreen].scale;
-        if (_item.imageURL && [XBMCImage hasCachedImage:_item.imageURL thumbnailSize:height]) 
-        {
-            _item.poster = [XBMCImage cachedImage:_item.imageURL 
-									 thumbnailSize:height];
-        }
+		[self loadImage];
+		
 	}
 	// May be the same wrapper, but the date may have changed, so mark for redisplay.
 	[self setNeedsDisplay];
@@ -267,11 +263,17 @@
 
 - (void)loadImage
 {
-    if (_item.imageURL && !_item.poster )
+	CGFloat height = TTSTYLEVAR(moviesViewCellsMaxHeight)*[UIScreen mainScreen].scale;
+	
+	if (_item.imageURL && [XBMCImage hasCachedImage:_item.imageURL thumbnailSize:height]) 
+	{
+		_item.poster = [XBMCImage cachedImage:_item.imageURL 
+								thumbnailSize:height];
+	}
+	else if (_item.imageURL && !_item.poster )
     {
-//		NSLog(@"scale %f", [UIScreen mainScreen].scale);
-        NSInteger height = TTSTYLEVAR(moviesViewCellsMaxHeight)*[UIScreen mainScreen].scale;
-//        NSInteger height = TTSTYLEVAR(moviesViewCellsMaxHeight);
+		//		NSLog(@"scale %f", [UIScreen mainScreen].scale);
+		//        NSInteger height = TTSTYLEVAR(moviesViewCellsMaxHeight);
         [XBMCImage askForImage:_item.imageURL 
                         object:self selector:@selector(imageLoaded:) 
                  thumbnailSize:height];

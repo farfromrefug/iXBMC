@@ -2,7 +2,7 @@
 //  Genre.m
 //  iXBMC
 //
-//  Created by Martin Guillon on 5/4/11.
+//  Created by Martin Guillon on 6/13/11.
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
@@ -13,6 +13,7 @@
 @implementation Genre
 @dynamic name;
 @dynamic GenreToMovie;
+@dynamic GenreToTVShow;
 
 - (void)addGenreToMovieObject:(Movie *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
@@ -40,6 +41,35 @@
     [self willChangeValueForKey:@"GenreToMovie" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"GenreToMovie"] minusSet:value];
     [self didChangeValueForKey:@"GenreToMovie" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+}
+
+
+- (void)addGenreToTVShowObject:(NSManagedObject *)value {    
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    [self willChangeValueForKey:@"GenreToTVShow" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"GenreToTVShow"] addObject:value];
+    [self didChangeValueForKey:@"GenreToTVShow" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [changedObjects release];
+}
+
+- (void)removeGenreToTVShowObject:(NSManagedObject *)value {
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    [self willChangeValueForKey:@"GenreToTVShow" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"GenreToTVShow"] removeObject:value];
+    [self didChangeValueForKey:@"GenreToTVShow" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [changedObjects release];
+}
+
+- (void)addGenreToTVShow:(NSSet *)value {    
+    [self willChangeValueForKey:@"GenreToTVShow" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"GenreToTVShow"] unionSet:value];
+    [self didChangeValueForKey:@"GenreToTVShow" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+}
+
+- (void)removeGenreToTVShow:(NSSet *)value {
+    [self willChangeValueForKey:@"GenreToTVShow" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"GenreToTVShow"] minusSet:value];
+    [self didChangeValueForKey:@"GenreToTVShow" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
 

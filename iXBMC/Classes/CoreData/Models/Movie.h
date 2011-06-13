@@ -39,4 +39,15 @@
 @property (nonatomic, retain) NSSet* MovieToGenre;
 @property (nonatomic, retain) NSSet* MovieToRole;
 
+- (void)addMovieToGenreObject:(Genre *)value;
+- (void)removeMovieToGenreObject:(Genre *)value;
+- (void)addMovieToGenre:(NSSet *)value;
+- (void)removeMovieToGenre:(NSSet *)value;
+- (void)addMovieToRoleObject:(ActorRole *)value;
+- (void)removeMovieToRoleObject:(ActorRole *)value;
+- (void)addMovieToRole:(NSSet *)value;
+- (void)removeMovieToRole:(NSSet *)value;
+
++ (NSString*)defaultSort;
+
 @end

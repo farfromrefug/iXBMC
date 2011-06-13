@@ -34,7 +34,8 @@ extern NSString * const kNotificationMessage;
 
 + (XBMCTCP *) sharedInstance;
 - (void)connectToHost:(NSString *)hostName onPort:(int)port;
-- (void)sendMessage:(NSString *)message;
++ (void)sendMessage:(NSString *)message;
++ (void)sendData:(NSData *)data;
 - (void)disconnect;
 - (void)connect;
 

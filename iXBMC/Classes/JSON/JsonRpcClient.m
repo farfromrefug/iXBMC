@@ -145,8 +145,9 @@
 
 //    NSLog(@"sending message %@", serialized);
 	NSData *serializedData = [jsonRpc JSONData];
-    
+
     NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+	
     NSDictionary* tag = [NSDictionary dictionaryWithObjectsAndKeys:
                          [NSString stringWithFormat:@"%f",time], @"id",
                          info?info:[[[NSDictionary alloc] init] autorelease], @"info",
@@ -178,13 +179,13 @@
 - (void)jsonRpcClient:(JsonRpcClient *)client didReceiveResult:(id)result  tag:(NSDictionary*)tag {
 	if([[self delegate] respondsToSelector:@selector(jsonRpcClient:didReceiveResult:tag:)]) {
 		[[self delegate] jsonRpcClient:client didReceiveResult:result tag:tag];
-//           NSLog(@"test %@",result);
 	}	
 }
 
 - (void)jsonRpcClient:(JsonRpcClient *)client didFailWithErrorCode:(NSNumber *)code message:(NSDictionary *)message  tag:(NSDictionary*)tag {
 	if([[self delegate] respondsToSelector:@selector(jsonRpcClient:didFailWithErrorCode:message:tag:)]) {
 		[[self delegate] jsonRpcClient:client didFailWithErrorCode:code message: message tag:tag];
+		NSLog(@"error %@",message);
 	}	
 }
 

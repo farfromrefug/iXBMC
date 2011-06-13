@@ -79,16 +79,16 @@ NSString * const kNotificationMessage = @"kNotificationMessage";
     [_socket writeData:terminatedMessageData withTimeout:-1 tag:tag];
 }
 
-- (void)sendMessage:(NSString *)message {
-    [self sendMessage:message withTag:0];
++ (void)sendMessage:(NSString *)message {
+    [[XBMCTCP sharedInstance] sendMessage:message withTag:0];
 }
 
 - (void)sendData:(NSData *)data withTag:(long)tag{
     [_socket writeData:data withTimeout:-1 tag:tag];
 }
 
-- (void)sendData:(NSData *)data{
-    [self sendData:data withTag:0];
++ (void)sendData:(NSData *)data{
+    [[XBMCTCP sharedInstance] sendData:data withTag:0];
 }
 
 #pragma mark AsyncSocket Delegate

@@ -15,6 +15,7 @@
 @private
 }
 @property (nonatomic, retain) NSString * role;
+@property (nonatomic, retain) NSString * actorName;
 @property (nonatomic, retain) Actor * RoleToActor;
 @property (nonatomic, retain) NSSet* RoleToTVShow;
 @property (nonatomic, retain) NSSet* RoleToMovie;

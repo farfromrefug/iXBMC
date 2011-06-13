@@ -176,8 +176,8 @@
     
     [center
      addObserver:self
-     selector:@selector(disconnectedToXBMC:)
-     name:@"DisconnectedToXBMC"
+     selector:@selector(disconnectedFromXBMC:)
+     name:@"DisconnectedFromXBMC"
      object:nil ];
     
     [center
@@ -301,7 +301,7 @@
 {    
 	_isViewAppearing = FALSE;
     [super viewDidAppear:animated];
-    [self loadContentForVisibleCells];
+//    [self loadContentForVisibleCells];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -369,7 +369,7 @@
 
 
 - (void) updateLibrary {
-    [[LibraryUpdater sharedInstance] updateRecentlyAdded];
+    [[LibraryUpdater sharedInstance] updateRecentlyAddedMovies];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -543,7 +543,7 @@
     [self reloadTableView];
 }
 
-- (void)disconnectedToXBMC: (NSNotification *) notification
+- (void)disconnectedFromXBMC: (NSNotification *) notification
 {
     [self hideRecentlyAddedMovies];
     [self reloadTableView];

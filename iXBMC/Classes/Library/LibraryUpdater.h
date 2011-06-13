@@ -15,11 +15,17 @@
 
 @interface LibraryUpdater : NSObject {
     
-    NSOperationQueue *_moviesQueue;
+//    NSOperationQueue *_moviesQueue;
+	dispatch_queue_t _queue;
     NSArray* _recentlyAddedMovies; 
     NSTimer * _updatingTimer;
+	
+	NSCharacterSet *_lettersCharSet;
     
     BOOL _updating;
+	BOOL _valid;
+	
+	int _nbrunningUpdates;
 }
 
 + (LibraryUpdater *) sharedInstance;
@@ -34,7 +40,11 @@
 - (void) updateLibrary;
 - (void) updateLibrary:(NSInteger) number;
 - (void) updateMovies:(NSInteger) number;
-- (void) updateTVShows:(NSInteger) number;
-- (void) updateRecentlyAdded;
-- (void) updateRecentlyAdded:(NSInteger) number;
+- (void) updateAllTVShows:(NSInteger) number;
+
+- (void) updateRecentlyAddedMovies;
+- (void) updateRecentlyAddedMovies:(NSInteger) number;
+
+- (void) updateRecentlyAddedEpisodes;
+- (void) updateRecentlyAddedEpisodes:(NSInteger) number;
 @end
