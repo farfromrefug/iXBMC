@@ -2,12 +2,13 @@
 //  Movie.m
 //  iXBMC
 //
-//  Created by Martin Guillon on 5/4/11.
+//  Created by Martin Guillon on 6/13/11.
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
 #import "Movie.h"
 #import "ActorRole.h"
+#import "Genre.h"
 
 
 @implementation Movie
@@ -23,9 +24,8 @@
 @dynamic imdbid;
 @dynamic plotoutline;
 @dynamic label;
-@dynamic sortLabel;
-@dynamic firstLetter;
 @dynamic studio;
+@dynamic sortLabel;
 @dynamic director;
 @dynamic writer;
 @dynamic genre;
@@ -33,8 +33,37 @@
 @dynamic dateAdded;
 @dynamic rating;
 @dynamic movieid;
+@dynamic firstLetter;
 @dynamic MovieToGenre;
 @dynamic MovieToRole;
+
+- (void)addMovieToGenreObject:(Genre *)value {    
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    [self willChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"MovieToGenre"] addObject:value];
+    [self didChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [changedObjects release];
+}
+
+- (void)removeMovieToGenreObject:(Genre *)value {
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    [self willChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"MovieToGenre"] removeObject:value];
+    [self didChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [changedObjects release];
+}
+
+- (void)addMovieToGenre:(NSSet *)value {    
+    [self willChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"MovieToGenre"] unionSet:value];
+    [self didChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+}
+
+- (void)removeMovieToGenre:(NSSet *)value {
+    [self willChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"MovieToGenre"] minusSet:value];
+    [self didChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+}
 
 
 - (void)addMovieToRoleObject:(ActorRole *)value {    
@@ -65,18 +94,5 @@
     [self didChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
-+ (NSString*)defaultSort
-{
-    return @"firstLetter asc sortLabel asc";
-}
-
-+ (NSArray*)sorts
-{
-    return [NSArray arrayWithObjects:[self defaultSort], @"year des sortLabel asc", @"director asc sortLabel asc", nil];
-}
-+ (NSArray*)sortNames
-{
-    return [NSArray arrayWithObjects:@"Title", @"Year", @"Director", nil];
-}
 
 @end
