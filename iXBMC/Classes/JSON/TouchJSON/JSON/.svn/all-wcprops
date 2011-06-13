@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON
+END
+CJSONScanner.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CJSONScanner.m
+END
+CJSONSerializer.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CJSONSerializer.m
+END
+CJSONDeserializer.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CJSONDeserializer.h
+END
+CJSONDataSerializer.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CJSONDataSerializer.h
+END
+CSerializedJSONData.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CSerializedJSONData.h
+END
+CJSONDeserializer.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CJSONDeserializer.m
+END
+CJSONDataSerializer.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CJSONDataSerializer.m
+END
+CJSONSerializer.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CJSONSerializer.h
+END
+CJSONScanner.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CJSONScanner.h
+END
+CSerializedJSONData.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/30/trunk/src/Deviant%20Downloader/Classes/TouchJSON/JSON/CSerializedJSONData.m
+END
