@@ -226,7 +226,8 @@
     {
         [self.model.delegates perform:@selector(modelDidStartLoad:) withObject:self.model];
         NSPredicate * predicate = [NSPredicate predicateWithFormat:@"label contains[cd] %@", text];
-        self.filteredListContent = [[_fetchedResultsController fetchedObjects] filteredArrayUsingPredicate:predicate];        
+        self.filteredListContent = [[_fetchedResultsController fetchedObjects] filteredArrayUsingPredicate:predicate]; 
+		[self.tableView reloadData];
         [self.model.delegates perform:@selector(modelDidFinishLoad:) withObject:self.model];
     }
     else        

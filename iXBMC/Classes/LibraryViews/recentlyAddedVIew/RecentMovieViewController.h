@@ -25,5 +25,5 @@
 - (void)fanartLoaded:(NSDictionary*) result;
 
 - (CGFloat)posterHeight;
-- (CGFloat)fanartWidth;
+- (CGFloat)fanartHeight;
 @end

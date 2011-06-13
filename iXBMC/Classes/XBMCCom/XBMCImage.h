@@ -19,11 +19,11 @@
 + (XBMCImage *) sharedInstance;
 
 + (BOOL) hasCachedImage:(NSString*)url;
-+ (BOOL) hasCachedImage:(NSString*)url  thumbnailSize:(NSInteger)size;
++ (BOOL) hasCachedImage:(NSString*)url  thumbnailHeight:(NSInteger)height;
 + (UIImage*) cachedImage:(NSString*)url;
-+ (UIImage*) cachedImage:(NSString*)url thumbnailSize:(NSInteger)size;
++ (UIImage*) cachedImage:(NSString*)url thumbnailHeight:(NSInteger)height;
 + (void) askForImage:(NSString*)url object:(NSObject*)object selector:(SEL)sel;
-+ (void) askForImage:(NSString*)url object:(NSObject*)object selector:(SEL)sel thumbnailSize:(NSInteger)size;
++ (void) askForImage:(NSString*)url object:(NSObject*)object selector:(SEL)sel thumbnailHeight:(NSInteger)height;
 
 
 @end

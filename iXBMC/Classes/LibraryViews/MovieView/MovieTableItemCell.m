@@ -30,10 +30,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation MovieTableItemCell
 @synthesize delegate;
-//@synthesize photo = _photo;
-//@synthesize firstLabel = _firstLabel;
-//@synthesize secondLabel = _secondLabel;
-//@synthesize thirdLabel = _thirdLabel;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)identifier {
@@ -49,128 +45,6 @@
 		_movieView = [[MovieCellView alloc] initWithFrame:tzvFrame];
 		_movieView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		[self.contentView addSubview:_movieView];
-		
-        
-//        _firstLabel = [[[UILabel alloc] init] autorelease];
-//        _secondLabel = [[[UILabel alloc] init] autorelease];
-//        _thirdLabel = [[[UILabel alloc] init] autorelease];
-//
-//        _firstLabel.backgroundColor = [UIColor clearColor];
-//        _secondLabel.backgroundColor = [UIColor clearColor];
-//        _thirdLabel.backgroundColor = [UIColor clearColor];
-//
-//        _firstLabel.font = [UIFont systemFontOfSize:14];
-//        _secondLabel.font = [UIFont systemFontOfSize:12];
-//        _thirdLabel.font = [UIFont systemFontOfSize:12];
-//        
-//        _firstLabel.textColor = [UIColor whiteColor];
-//        _secondLabel.textColor = [UIColor grayColor];
-//        _thirdLabel.textColor = [UIColor grayColor];
-//        
-//        _firstLabel.highlightedTextColor = TTSTYLEVAR(themeColor);
-//        _secondLabel.highlightedTextColor = [UIColor darkGrayColor];
-//        _thirdLabel.highlightedTextColor = [UIColor darkGrayColor];
-//        
-//        _firstLabel.textAlignment = UITextAlignmentLeft;
-//        _secondLabel.textAlignment = UITextAlignmentLeft;
-//        _thirdLabel.textAlignment = UITextAlignmentLeft;
-//        
-//        _firstLabel.adjustsFontSizeToFitWidth = NO;
-//        _secondLabel.adjustsFontSizeToFitWidth = NO;
-//        _thirdLabel.adjustsFontSizeToFitWidth = NO;
-//
-//        _firstLabel.lineBreakMode = UILineBreakModeTailTruncation;
-//        _secondLabel.lineBreakMode = UILineBreakModeTailTruncation;
-//        _thirdLabel.lineBreakMode = UILineBreakModeTailTruncation;
-//
-//        _firstLabel.text = @"";
-//        _secondLabel.text = @"";
-//        _thirdLabel.text = @"";
-
-//        [self.contentView addSubview:_firstLabel];
-//        [self.contentView addSubview:_secondLabel];
-//        [self.contentView addSubview:_thirdLabel];
-
-//        self.selectedBackgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-//        self.selectedBackgroundView.backgroundColor = RGBACOLOR(100, 100, 100, 0.2);
-        
-//        UIImageView* cellBack = [[[UIImageView alloc] initWithImage:TTIMAGE(@"bundle://cellSelected.png")] autorelease];
-//        self.selectedBackgroundView = cellBack;
-//        self.selectedBackgroundView.backgroundColor = [UIColor clearColor];
-        
-//        _line = [[[UIImageView alloc] init] autorelease];
-//        _line.autoresizingMask = UIViewAutoresizingFlexibleWidth
-//            | UIViewAutoresizingFlexibleTopMargin;
-//        _line.image = TTIMAGE(@"bundle://cellline.png");
-////        [self.contentView addSubview:_line];
-//        
-//        _yearBackground = [[[UIView alloc] init] autorelease];
-//        _yearBackground.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-//        _yearBackground.backgroundColor = RGBACOLOR(100, 100, 100, 0.2);
-//        [self.contentView addSubview:_yearBackground];
-        
-//        scrollingWheel = [[[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(27.0, 27.0, 20.0, 20.0)] autorelease];
-//        scrollingWheel.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-//        scrollingWheel.hidesWhenStopped = YES;
-//        [scrollingWheel stopAnimating];
-//        [self.contentView addSubview:scrollingWheel];
-        
-//        _photoFrame = [[[UIImageView alloc] init] autorelease];
-//        _photoFrame.contentMode = UIViewContentModeScaleToFill;
-//        _photoFrame.clipsToBounds = YES;
-//        _photoFrame.backgroundColor = [UIColor clearColor];
-//        _photoFrame.image = TTIMAGE(@"bundle://posterShadow.png");
-//        [self.contentView addSubview:_photoFrame];
-////        
-//        _photo = [[[FadingImageView alloc] init] autorelease];
-//        _photo.contentMode = UIViewContentModeScaleToFill;
-//        _photo.backgroundColor = [UIColor clearColor];
-//        _photo.defaultImage = TTIMAGE(@"bundle://thumbnailNone.png");
-////        _photo.style = [TTContentStyle styleWithNext:nil];
-//        CALayer * layer = [_photo layer];
-//        [layer setMasksToBounds:YES];
-//        [layer setCornerRadius:4.0];
-//		layer.shouldRasterize = YES;
-//
-//        [_photoFrame addSubview:_photo];
-//        
-////        _selectedStyle = [[TTShapeStyle styleWithShape:[TTRoundedRectangleShape shapeWithRadius:4] next:
-////                            [TTShadowStyle styleWithColor:TTSTYLEVAR(themeColor) blur:5 offset:CGSizeMake(0, 0) next:
-////                             [TTContentStyle styleWithNext:nil]]] retain];
-////        _normalStyle = [[TTShapeStyle styleWithShape:[TTRoundedRectangleShape shapeWithRadius:4] next:
-////                            [TTShadowStyle styleWithColor:RGBACOLOR(0,0,0,1.0) blur:5 offset:CGSizeMake(0, 0) next:
-////                             [TTContentStyle styleWithNext:nil]]] retain];
-////
-////        _normalStyle = [[TTMaskStyle styleWithMask:TTIMAGE(@"bundle://posterShadowMask.png") next:[TTContentStyle styleWithNext:nil]] retain];
-//        
-//        _newFlag = [[[UIImageView alloc] init] autorelease];
-//        _newFlag.backgroundColor = [UIColor clearColor];
-//        _newFlag.image = TTIMAGE(@"bundle://UnWatched.png");
-////        _newFlag.style = [TTContentStyle styleWithNext:nil];
-//        [_photo addSubview:_newFlag];
-        
-//        _yearLabel = [[[UILabel alloc] init] autorelease];
-//        _yearLabel.font = [UIFont systemFontOfSize:12];
-//        _yearLabel.textColor = [UIColor whiteColor];
-//        _yearLabel.backgroundColor = [UIColor clearColor];
-//        _yearLabel.textAlignment = UITextAlignmentCenter;
-//        _yearLabel.contentMode = UIViewContentModeBottom;
-////        [self.contentView addSubview:_yearLabel];
-//        
-//        _ratingLabel = [[[UILabel alloc] init] autorelease];
-//        _ratingLabel.font = [UIFont systemFontOfSize:12];
-//        _ratingLabel.textColor = [UIColor whiteColor];
-//        _ratingLabel.backgroundColor = [UIColor clearColor];
-//        _ratingLabel.textAlignment = UITextAlignmentCenter;
-//        _ratingLabel.contentMode = UIViewContentModeTop;
-////        [self.contentView addSubview:_ratingLabel];
-//        
-//        _ratingStars = [[[UIImageView alloc] init] autorelease];
-//        _ratingStars.alpha = 0.7;
-//        _ratingStars.backgroundColor = [UIColor clearColor];
-//        _ratingStars.contentMode = UIViewContentModeScaleAspectFit;
-//        [self.contentView addSubview:_ratingStars];
-        
         _buttons = [[NSMutableArray alloc] init];
         _detailsButton = [[[TTButton alloc] initWithFrame:CGRectZero] autorelease];
         [_detailsButton setTitle:@"Info" forState:UIControlStateNormal];
@@ -248,7 +122,7 @@
 {
     [super setFrame:frame];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	CGFloat height = [[defaults valueForKey:@"moviesView:cellHeight"] floatValue];
+	CGFloat height = [[defaults valueForKey:@"movieCell:height"] floatValue];
 	CGRect tzvFrame = CGRectMake(0.0, 0.0, self.contentView.bounds.size.width, height);
 	_movieView.frame = tzvFrame;
 }
@@ -257,27 +131,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark TTTableViewCell class public
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//+ (CGFloat)tableView:(UITableView*)tableView rowHeightForObject:(id)object {
-//    MovieTableItem* item = object;
-//    
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    CGFloat height = [[defaults valueForKey:@"moviesView:cellHeight"] floatValue];
-//    
-//    if (item.forSearch)
-//    {
-//        height = FORSEARCH_HEIGHT ;
-//    }
-//    
-////    if (self.selected == YES)
-////    {
-////        height += MENU_HEIGHT;
-////    }
-//    
-//    return height;
-//}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -291,58 +144,8 @@
     [super layoutSubviews];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    CGFloat height = [[defaults valueForKey:@"moviesView:cellHeight"] floatValue];
+    CGFloat height = [[defaults valueForKey:@"movieCell:height"] floatValue];
     
-//    if (((MovieTableItem*)_item).forSearch)
-//    {
-//        height = FORSEARCH_HEIGHT ;
-//    }
-//    //    CGFloat width = self.contentView.width - (height + kTableCellSmallMargin);
-//    CGFloat left = 0;
-//    
-//    _line.frame = CGRectMake(0, height -1
-//               , self.contentView.width, 1);
-//    
-//    CGFloat photoHeight = height - 4;
-//    _photoFrame.frame = CGRectMake(5, 2, photoHeight*2/3, photoHeight);
-//    _photo.frame = CGRectMake(photoHeight/30, photoHeight/20, _photoFrame.width - photoHeight/15, _photoFrame.height - photoHeight/10);
-////    scrollingWheel.center =_photo.center;
-////    left = _photoFrame.right + kTableCellSmallMargin;
-//    
-//    int newFlagWidth = _photo.width*2/3;
-//    _newFlag.frame = CGRectMake(_photo.width - newFlagWidth, 0
-//                                , newFlagWidth, newFlagWidth);
-
-//    _yearBackground.frame = CGRectMake(self.contentView.width - 60, 0
-//                                , 60, height);
-//    
-//    CGFloat firstLabelHeight = self.firstLabel.font.ttLineHeight;
-//    CGFloat secondLabelHeight = self.secondLabel.font.ttLineHeight;
-//    CGFloat thirdLabelHeight = self.thirdLabel.font.ttLineHeight;
-//    CGFloat paddingY = (height - (firstLabelHeight + secondLabelHeight))/2;
-//    if (firstLabelHeight + secondLabelHeight  + paddingY > height)
-//    {
-//        secondLabelHeight = thirdLabelHeight = 0;
-//        paddingY = floor((height - (firstLabelHeight))/2);
-//    }
-//    else
-//    {
-//        paddingY = (height - (firstLabelHeight + secondLabelHeight + thirdLabelHeight))/2;
-//        if (firstLabelHeight + secondLabelHeight + thirdLabelHeight + paddingY > height)
-//        {
-//            thirdLabelHeight = 0;
-//            paddingY = (height - (firstLabelHeight + secondLabelHeight))/2;
-//        } 
-//    } 
-//    
-//    self.firstLabel.frame = CGRectMake(left, paddingY, _yearBackground.left - left, firstLabelHeight);
-//    self.secondLabel.frame = CGRectMake(left, self.firstLabel.bottom, _yearBackground.left - left, secondLabelHeight);
-//    self.thirdLabel.frame = CGRectMake(left, self.secondLabel.bottom, _yearBackground.left - left, thirdLabelHeight);
-//
-//    _yearLabel.frame = CGRectMake(_yearBackground.left, 0, _yearBackground.width, _yearBackground.height / 2);
-//    _ratingLabel.frame = CGRectMake(_yearBackground.left, _yearBackground.height / 2, _yearBackground.width, _yearBackground.height / 2);
-//    _ratingStars.frame = CGRectMake(_yearBackground.left, _yearBackground.height / 2, _yearBackground.width, _yearBackground.height / 2);
-//
     int nbButtons = [_buttons count];
     int buttonWidth = (self.contentView.width)/(nbButtons);
     int buttonHeight = MENU_HEIGHT;
@@ -372,8 +175,6 @@
     }
     if (_item != nil)
     {
-//        self.selectionStyle = TTSTYLEVAR(tableSelectionStyle);
-//
         MovieTableItem* item = (MovieTableItem*)_item;
 		
 		NSRange foundRange = [item.runtime rangeOfString:@"min"];
@@ -386,88 +187,7 @@
 		
 		[_movieView setItem:item];
 		
-		
-
-//        self.firstLabel.text = item.label;
-//        self.secondLabel.text = item.genre;
-//        self.thirdLabel.text = item.runtime;
-//        
-//        if (item.runtime && ![item.runtime isEqualToString:@""]) 
-//        {
-//            NSRange foundRange = [self.thirdLabel.text rangeOfString:@"min"];
-//            
-//            if ((foundRange.length == 0) ||
-//                (foundRange.location == 0))
-//            {
-//                self.thirdLabel.text = [self.thirdLabel.text stringByAppendingString:@" min"];
-//            }
-//        }
-//        
-//        if (item.year && ![item.year isEqual:@"0"]) {
-//            _yearLabel.text = item.year;
-//        }
-//        
-//        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//        BOOL showStars = [[defaults valueForKey:@"moviesView:ratingStars"] boolValue];
-//        if (showStars)
-//        {
-//            [_ratingStars setHidden:FALSE];
-//            [_ratingLabel setHidden:TRUE];
-//            if (item.rating && ![item.rating isEqual:@"0"]) 
-//            {
-//                
-//                NSString* url = [NSString stringWithFormat:@"bundle://star.%@.png",item.rating];
-//                _ratingStars.image = TTIMAGE(url);
-//            }
-//            else
-//            {
-//                _ratingStars.image = TTIMAGE(@"bundle://star.0.0.png");
-//            }
-//        }
-//        else
-//        {
-//            [_ratingStars setHidden:TRUE];
-//            [_ratingLabel setHidden:FALSE];
-//            if (item.rating && ![item.rating isEqual:@"0"]) 
-//            {
-//                _ratingLabel.text = item.rating;
-//            }
-//        }
-//        
-//        CGFloat height = TTSTYLEVAR(moviesViewCellsMaxHeight)*[UIScreen mainScreen].scale;
-//        
-//        _photo.image = nil;
-//        if (item.imageURL && [XBMCImage hasCachedImage:item.imageURL thumbnailSize:height]) 
-//        {
-//            
-//            _photo.image = [XBMCImage cachedImage:(NSString*)((MovieTableItem*)_item).imageURL 
-//                                           thumbnailSize:height];
-//            _imageLoaded = _photo.image != nil;
-//        }
-//        else
-//        {
-//            _imageLoaded = false;
-//        }
-//        
-//        if (self.selected)
-//        {
-//            _photoFrame.image = TTIMAGE(@"bundle://posterShadowSelected.png");
-//        }
-//        else
-//        {
-//            _photoFrame.image = TTIMAGE(@"bundle://posterShadow.png");
-//        }
-//        
-//        if(!item.watched)
-//        {
-//            _newFlag.hidden = FALSE;
-//        }
-//        else
-//        {
-//            _newFlag.hidden = TRUE;
-//        }
-//        
-        [_buttons removeAllObjects];
+	        [_buttons removeAllObjects];
         
         [_buttons addObject:_detailsButton];
         if ([XBMCStateListener connected])
@@ -507,15 +227,6 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
 	[super setSelected:selected animated:animated];
-	
-//	if (self.selected)
-//	{
-//		_photoFrame.image = TTIMAGE(@"bundle://posterShadowSelected.png");
-//	}
-//	else
-//	{
-//		_photoFrame.image = TTIMAGE(@"bundle://posterShadow.png");
-//	}
 	[_movieView setHighlighted:selected];
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -526,8 +237,6 @@
 - (void)prepareForReuse
 {
 	[self setSelected:FALSE];
-    //     [movie cancelLoading];
-    //     _photo.defaultImage = nil;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (UILabel*)subtitleLabel {
@@ -570,14 +279,6 @@
 - (void)loadImage
 {
 	[_movieView loadImage];
-//	[_movieView performSelectorInBackground:@selector(loadImage) withObject:nil];
-//    if (((MovieTableItem*)_item).imageURL && !_imageLoaded)
-//    {
-//        NSInteger height = TTSTYLEVAR(moviesViewCellsMaxHeight)*[UIScreen mainScreen].scale;
-//        [XBMCImage askForImage:(NSString*)((MovieTableItem*)_item).imageURL 
-//                        object:self selector:@selector(imageLoaded:) 
-//                 thumbnailSize:height];
-//    }
 }
 
 #pragma mark -

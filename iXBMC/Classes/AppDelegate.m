@@ -14,6 +14,8 @@
 #import "LibraryUpdater.h"
 
 #import "MovieViewController.h"
+#import "TVShowsViewController.h"
+
 #import "CustomMoviePlayerViewController.h"
 #import "FullscreenImageViewController.h"
 
@@ -46,15 +48,26 @@
 - (void) initDefaultValues
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults valueForKey:@"moviesView:cellHeight"] == nil)
+    if ([defaults valueForKey:@"movieCell:height"] == nil)
     {
-        [defaults setValue:[NSNumber numberWithFloat:TTSTYLEVAR(moviesViewCellsHeight)] 
-                    forKey:@"moviesView:cellHeight"];
+        [defaults setValue:[NSNumber numberWithFloat:TTSTYLEVAR(movieCellHeight)] 
+                    forKey:@"movieCell:height"];
     }
-    if ([defaults valueForKey:@"moviesView:ratingStars"] == nil)
+    if ([defaults valueForKey:@"movieCell:ratingStars"] == nil)
     {
-        [defaults setValue:[NSNumber numberWithBool:TTSTYLEVAR(moviesViewRatingStars)] 
-                    forKey:@"moviesView:ratingStars"];
+        [defaults setValue:[NSNumber numberWithBool:TTSTYLEVAR(movieCellRatingStars)] 
+                    forKey:@"movieCell:ratingStars"];
+    }
+	
+	if ([defaults valueForKey:@"tvshowCell:height"] == nil)
+    {
+        [defaults setValue:[NSNumber numberWithFloat:TTSTYLEVAR(tvshowCellHeight)] 
+                    forKey:@"tvshowCell:height"];
+    }
+    if ([defaults valueForKey:@"tvshowCell:ratingStars"] == nil)
+    {
+        [defaults setValue:[NSNumber numberWithBool:TTSTYLEVAR(tvshowCellRatingStars)] 
+                    forKey:@"tvshowCell:ratingStars"];
     }
     
     if ([defaults valueForKey:@"currenthost"] == nil) 
@@ -106,6 +119,7 @@
   // Menu controllers are also shared - we only create one to show in each tab, so opening
   // these URLs will switch to the tab containing the menu
     [map from:@"tt://library/movies" toSharedViewController:[MovieViewController class]];
+    [map from:@"tt://library/tvshows" toSharedViewController:[TVShowsViewController class]];
 	
 	[map from:@"tt://details/(initWithEntity:)/(id:)" toSharedViewController:[DetailViewController class]];
   

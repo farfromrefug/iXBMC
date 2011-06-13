@@ -26,15 +26,15 @@
   return 22;
 }
 
-- (CGFloat) moviesViewCellsHeight {
+- (CGFloat) movieCellHeight {
     return 80;
 }
 
-- (CGFloat) moviesViewCellsMinHeight {
+- (CGFloat) movieCellMinHeight {
     return 60;
 }
 
-- (CGFloat) moviesViewCellsMaxHeight {
+- (CGFloat) movieCellMaxHeight {
     return 100;
 }
 
@@ -42,7 +42,29 @@
     return 200;
 }
 
-- (BOOL) moviesViewRatingStars {
+- (BOOL) movieCellRatingStars {
+    return YES;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (CGFloat) tvshowCellHeight {
+    return 60;
+}
+
+- (CGFloat) tvshowCellMinHeight {
+    return 60;
+}
+
+- (CGFloat) tvshowCellMaxHeight {
+    return 60;
+}
+
+- (CGFloat) tvshowViewCoverHeight {
+    return 200;
+}
+
+- (BOOL) tvshowCellRatingStars {
     return YES;
 }
 

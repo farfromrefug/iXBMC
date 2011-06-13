@@ -20,11 +20,17 @@
 @interface StyleSheet : TTDefaultStyleSheet
 
 @property (nonatomic, readonly) CGFloat headerViewHeight;
-@property (nonatomic, readonly) CGFloat moviesViewCellsHeight;
-@property (nonatomic, readonly) CGFloat moviesViewCellsMinHeight;
-@property (nonatomic, readonly) CGFloat moviesViewCellsMaxHeight;
+@property (nonatomic, readonly) CGFloat movieCellHeight;
+@property (nonatomic, readonly) CGFloat movieCellMinHeight;
+@property (nonatomic, readonly) CGFloat movieCellMaxHeight;
+@property (nonatomic, readonly) BOOL movieCellRatingStars;
+
+@property (nonatomic, readonly) CGFloat tvshowCellHeight;
+@property (nonatomic, readonly) CGFloat tvshowCellMinHeight;
+@property (nonatomic, readonly) CGFloat tvshowCellMaxHeight;
+@property (nonatomic, readonly) BOOL tvshowCellRatingStars;
+
 @property (nonatomic, readonly) CGFloat movieDetailsViewCoverHeight;
-@property (nonatomic, readonly) BOOL moviesViewRatingStars;
 @property (nonatomic, readonly) UIColor*  navigationBarTintColor;
 @property (nonatomic, readonly) TTStyle* whiteText;
 @property (nonatomic, readonly) TTStyle* plotText;

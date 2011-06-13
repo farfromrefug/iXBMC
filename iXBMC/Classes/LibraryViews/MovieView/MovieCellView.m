@@ -56,7 +56,7 @@
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		TT_RELEASE_SAFELY(_stars);
-        BOOL showStars = [[defaults valueForKey:@"moviesView:ratingStars"] boolValue];
+        BOOL showStars = [[defaults valueForKey:@"movieCell:ratingStars"] boolValue];
         if (showStars)
         {
             if (_item.rating && ![_item.rating isEqual:@"0"]) 
@@ -183,7 +183,7 @@
 	if (_item.poster)
 	{
 		//		[_item.poster drawInRect:posterRect contentMode:UIViewContentModeScaleToFill];
-		[_item.poster drawInRect:posterRect radius:4/TTSTYLEVAR(moviesViewCellsMaxHeight)*posterRect.size.height contentMode:UIViewContentModeScaleToFill];
+		[_item.poster drawInRect:posterRect radius:4 contentMode:UIViewContentModeScaleToFill];
 	}
 	
 	if (!_item.watched)
@@ -263,12 +263,12 @@
 
 - (void)loadImage
 {
-	CGFloat height = TTSTYLEVAR(moviesViewCellsMaxHeight)*[UIScreen mainScreen].scale;
+	CGFloat height = TTSTYLEVAR(movieCellMaxHeight)*[UIScreen mainScreen].scale;
 	
-	if (_item.imageURL && [XBMCImage hasCachedImage:_item.imageURL thumbnailSize:height]) 
+	if (_item.imageURL && [XBMCImage hasCachedImage:_item.imageURL thumbnailHeight:height]) 
 	{
 		_item.poster = [XBMCImage cachedImage:_item.imageURL 
-								thumbnailSize:height];
+								thumbnailHeight:height];
 	}
 	else if (_item.imageURL && !_item.poster )
     {
@@ -276,7 +276,7 @@
 		//        NSInteger height = TTSTYLEVAR(moviesViewCellsMaxHeight);
         [XBMCImage askForImage:_item.imageURL 
                         object:self selector:@selector(imageLoaded:) 
-                 thumbnailSize:height];
+                 thumbnailHeight:height];
     }
 }
 

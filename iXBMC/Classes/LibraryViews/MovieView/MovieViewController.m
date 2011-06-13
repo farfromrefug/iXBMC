@@ -189,13 +189,13 @@
     [center
      addObserver:self
      selector:@selector(reloadTableView)
-     name:@"moviesViewCellHeightChanged"
+     name:@"movieCellHeightChanged"
      object:nil ];
     
     [center
      addObserver:self
      selector:@selector(reloadTableView)
-     name:@"moviesViewRatingStarsChanged"
+     name:@"movieCellRatingStarsChanged"
      object:nil ];
     
     UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeLeft:)];

@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface HostTableItemCell : TTTableSubtitleItemCell 
+@interface HostTableItemCell : TTTableSubtitleItemCell <UIActionSheetDelegate>
 {
     TTTableViewController *delegate;
     UIImageView* _line;
 }
 @property (nonatomic, retain) TTTableViewController *delegate;
+
+- (void)clearCache:(id)sender;
+
+- (void)deleteHost:(id)sender;
 
 @end

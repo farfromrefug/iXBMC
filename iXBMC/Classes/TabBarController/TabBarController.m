@@ -114,6 +114,7 @@
     
     [self setTabURLs:[NSArray arrayWithObjects:@"tt://gesture",
                       @"tt://library/movies",
+                      @"tt://library/tvshows",
                       @"tt://settings",
                       nil]];
 	
@@ -350,7 +351,15 @@
 
 - (void)handleTap:(UILongPressGestureRecognizer *)recognizer 
 {
-	[_tabBarController setSelectedIndex:0];
+	if ([_tabBarController selectedIndex] == 0)
+	{
+		[[[self topSubcontroller] topSubcontroller].navigationController popViewControllerAnimated:YES];
+//		[_tabBarController.selectedViewController.navigationController popViewControllerAnimated:YES];
+	}
+	else
+	{
+		[_tabBarController setSelectedIndex:0];
+	}
 }
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)recognizer 

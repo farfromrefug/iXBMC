@@ -1035,10 +1035,6 @@ static LibraryUpdater *sharedInstance = nil;
             {
                 [oldepisode setValue:[newepisode valueForKey:@"playcount"] forKey:@"playcount"];
             }
-			if (![[newepisode valueForKey:@"episode"] isEqual: [oldepisode valueForKey:@"nbepisodes"]])
-            {
-                [oldepisode setValue:[newepisode valueForKey:@"episode"] forKey:@"nbepisodes"];
-            }
 			
             anObject = [enumerator nextObject];
         }

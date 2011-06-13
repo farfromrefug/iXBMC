@@ -12,7 +12,7 @@
 @interface XBMCImage()
 - (void) downloadImage:(NSDictionary*)params;
 -(void) imageLoaded:(NSDictionary*)object;
-+ (UIImage*) getCachedImage:(NSString*)url thumbnailSize:(NSInteger)size;
++ (UIImage*) getCachedImage:(NSString*)url thumbnailHeight:(NSInteger)size;
 @end
 
 @implementation XBMCImage
@@ -48,12 +48,12 @@ static XBMCImage *sharedInstance = nil;
     [super dealloc];
 }
 
-+ (BOOL) hasCachedImage:(NSString*)url  thumbnailSize:(NSInteger)size
++ (BOOL) hasCachedImage:(NSString*)url  thumbnailHeight:(NSInteger)height
 {
     NSString* realUrl = url;
-    if (size != -1)
+    if (height != -1)
     {
-        realUrl = [realUrl stringByAppendingString:[[NSNumber numberWithInt:size] stringValue]];
+        realUrl = [realUrl stringByAppendingString:[[NSNumber numberWithInt:height] stringValue]];
     }
     return ([[TTURLCache sharedCache] hasDataForURL:realUrl]
 //			|| [[TTURLCache sharedCache] hasImageForURL:realUrl fromDisk:NO]
@@ -62,25 +62,25 @@ static XBMCImage *sharedInstance = nil;
 
 + (BOOL) hasCachedImage:(NSString*)url
 {
-    return [XBMCImage hasCachedImage:url thumbnailSize:-1];
+    return [XBMCImage hasCachedImage:url thumbnailHeight:-1];
 }
 
 + (UIImage*) cachedImage:(NSString*)url
 {
-    return [XBMCImage getCachedImage:url thumbnailSize:-1];
+    return [XBMCImage getCachedImage:url thumbnailHeight:-1];
 }
 
-+ (UIImage*) cachedImage:(NSString*)url thumbnailSize:(NSInteger)size
++ (UIImage*) cachedImage:(NSString*)url thumbnailHeight:(NSInteger)height
 {
-    return [XBMCImage getCachedImage:url thumbnailSize:size];
+    return [XBMCImage getCachedImage:url thumbnailHeight:height];
 }
 
-+ (UIImage*) getCachedImage:(NSString*)url thumbnailSize:(NSInteger)size
++ (UIImage*) getCachedImage:(NSString*)url thumbnailHeight:(NSInteger)height
 {
     NSString* realUrl = url;
-    if (size != -1)
+    if (height != -1)
     {
-        realUrl = [realUrl stringByAppendingString:[[NSNumber numberWithInt:size] stringValue]];
+        realUrl = [realUrl stringByAppendingString:[[NSNumber numberWithInt:height] stringValue]];
     }
 
     UIImage* image = nil;
@@ -119,13 +119,13 @@ static XBMCImage *sharedInstance = nil;
     
     NSString* xbmcURL = [XBMCHttpInterface getUrlFromSpecial:url];
 //	NSLog(@"downloading %@", xbmcURL);
-    NSInteger thumbnailSize = [[params valueForKey:@"thumbnailSize"] integerValue];
+    NSInteger thumbnailHeight = [[params valueForKey:@"thumbnailHeight"] integerValue];
     UIImage* image = nil;
     NSData *imageData = nil;
 
-    if (thumbnailSize != -1)
+    if (thumbnailHeight != -1)
     {
-        url = [url stringByAppendingString:[[NSNumber numberWithInt:thumbnailSize] stringValue]];
+        url = [url stringByAppendingString:[[NSNumber numberWithInt:thumbnailHeight] stringValue]];
     }
         
 //    image = [[TTURLCache sharedCache] imageForURL:url];
@@ -139,15 +139,16 @@ static XBMCImage *sharedInstance = nil;
             {
                 image = [UIImage imageWithData:imageData]; 
                 [imageData release];
-                if (image && thumbnailSize != -1 && thumbnailSize < MAX(image.size.width,image.size.height))
+                if (image && thumbnailHeight != -1 && thumbnailHeight < image.size.height)
                 {
-                    //CGSize itemSize = CGSizeMake(width, width*image.size.height/image.size.width);
-                    UIGraphicsBeginImageContextWithOptions(image.size, YES, thumbnailSize / MAX(image.size.width,image.size.height));
-                    CGRect imageRect = CGRectMake(0.0, 0.0, image.size.width, image.size.height);
-                    [image drawInRect:imageRect];
-                    image = UIGraphicsGetImageFromCurrentImageContext();
-                    UIGraphicsEndImageContext();
-//                    image = [image thumbnailImage:thumbnailSize transparentBorder:0 cornerRadius:radius interpolationQuality:kCGInterpolationHigh];
+                //CGSize itemSize = CGSizeMake(width, width*image.size.height/image.size.width);
+//                    UIGraphicsBeginImageContextWithOptions(image.size, YES, thumbnailHeight / image.size.height);
+//                    CGRect imageRect = CGRectMake(0.0, 0.0, image.size.width, image.size.height);
+//                    [image drawInRect:imageRect];
+//                    image = UIGraphicsGetImageFromCurrentImageContext();
+//                    UIGraphicsEndImageContext();
+					NSInteger thumbnailWidth = thumbnailHeight/image.size.height*image.size.width;
+					image = [image transformWidth:thumbnailWidth height:thumbnailHeight rotate:FALSE];
                     
                 }
                 [[TTURLCache sharedCache] storeData:UIImagePNGRepresentation(image) forURL:url];
@@ -181,11 +182,11 @@ static XBMCImage *sharedInstance = nil;
     }
 }
 
--(void) addDownloadImageOP:(NSString*)url object:(NSObject*)object selector:(SEL)sel thumbnailSize:(NSInteger)size
+-(void) addDownloadImageOP:(NSString*)url object:(NSObject*)object selector:(SEL)sel thumbnailHeight:(NSInteger)height
 {
     NSDictionary* params = [NSDictionary dictionaryWithObjectsAndKeys:
                              url, @"url",
-                            [NSNumber numberWithInt:size], @"thumbnailSize",
+                            [NSNumber numberWithInt:height], @"thumbnailHeight",
                              object, @"object",
                              [NSValue valueWithPointer:sel], @"selector",
                              nil];
@@ -203,14 +204,14 @@ static XBMCImage *sharedInstance = nil;
 //    [operation release];
 }
 
-+ (void) askForImage:(NSString*)url object:(NSObject*)object selector:(SEL)sel thumbnailSize:(NSInteger)size
++ (void) askForImage:(NSString*)url object:(NSObject*)object selector:(SEL)sel thumbnailHeight:(NSInteger)height
 {
-    [[XBMCImage sharedInstance] addDownloadImageOP:url object:object selector:sel thumbnailSize:size];
+    [[XBMCImage sharedInstance] addDownloadImageOP:url object:object selector:sel thumbnailHeight:height];
 }
 
 + (void) askForImage:(NSString*)url object:(NSObject*)object selector:(SEL)sel
 {
-    [[XBMCImage sharedInstance] addDownloadImageOP:url object:object selector:sel thumbnailSize:-1];
+    [[XBMCImage sharedInstance] addDownloadImageOP:url object:object selector:sel thumbnailHeight:-1];
 }
 
 

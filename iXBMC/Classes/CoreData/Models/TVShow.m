@@ -149,4 +149,18 @@
 }
 
 
++ (NSString*)defaultSort
+{
+    return @"firstLetter asc sortLabel asc";
+}
+
++ (NSArray*)sorts
+{
+    return [NSArray arrayWithObjects:[self defaultSort], @"premiered des sortLabel asc", nil];
+}
++ (NSArray*)sortNames
+{
+    return [NSArray arrayWithObjects:@"Title", @"Premier", nil];
+}
+
 @end

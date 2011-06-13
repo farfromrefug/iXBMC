@@ -72,15 +72,27 @@
 {
     if (((UILongPressGestureRecognizer *)_sender).state == UIGestureRecognizerStateBegan)
     {
-        [self becomeFirstResponder];
-        UIMenuItem *first = [[[UIMenuItem alloc] initWithTitle:@"ClearCache" action:@selector(clearCache:)] autorelease];
-        UIMenuItem *second = [[[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteHost:)] autorelease];
-        
-        UIMenuController *menuController = [UIMenuController sharedMenuController];
-        menuController.menuItems = [NSArray arrayWithObjects:first,second,nil];
-        
-        [menuController setTargetRect:self.frame inView:self.superview];
-        [menuController setMenuVisible:YES animated:YES];
+//        [self becomeFirstResponder];
+//        UIMenuItem *first = [[[UIMenuItem alloc] initWithTitle:@"ClearCache" action:@selector(clearCache:)] autorelease];
+//        UIMenuItem *second = [[[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteHost:)] autorelease];
+//        
+//        UIMenuController *menuController = [UIMenuController sharedMenuController];
+//        menuController.menuItems = [NSArray arrayWithObjects:first,second,nil];
+//        
+//        [menuController setTargetRect:self.frame inView:self.superview];
+//        [menuController setMenuVisible:YES animated:YES];
+		
+		NSMutableArray* titles = [NSMutableArray array];
+		[titles addObject:@"ClearCache"];
+		[titles addObject:@"Delete"];
+		
+		UIActionSheet *alert = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Option for %@",[(HostTableItem*)_item text]]
+														   delegate:self cancelButtonTitle:@"Cancel" 
+											 destructiveButtonTitle:nil otherButtonTitles:nil];
+		alert.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+		for (NSString * tt in titles) { [alert addButtonWithTitle:tt]; }
+		[alert showInView:self];
+		[alert release];
     }
 }
 
@@ -108,6 +120,15 @@
              object:nil];	
         }
     }
+}
+
+//
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Delete"]) {
+		[self deleteHost:nil];
+	} else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"ClearCache"]) {
+		[self clearCache:nil];
+	}
 }
 
 -(BOOL)canBecomeFirstResponder {

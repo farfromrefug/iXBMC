@@ -108,38 +108,66 @@
     [slider setMaximumTrackImage:maxImage forState:UIControlStateNormal];
     [slider setThumbImage:tumbImage forState:UIControlStateNormal];
     [slider setThumbImage:tumbImageOn forState:UIControlStateHighlighted];
-//    [slider setThumbImage:TTIMAGE(@"osd_slidernub.png") forState:UIControlStateNormal];
-//    [slider setThumbImage:TTIMAGE(@"osd_slidernubf.png") forState:UIControlStateHighlighted];
-//    [slider setThumbImage:TTIMAGE(@"osd_slidernubf.png") forState:UIControlStateSelected];
 
-    [slider addTarget:self action:@selector(moviesViewCellHeightChanged:) 
+    [slider addTarget:self action:@selector(movieCellHeightChanged:) 
      forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
-    slider.minimumValue = TTSTYLEVAR(moviesViewCellsMinHeight);
-    slider.maximumValue = TTSTYLEVAR(moviesViewCellsMaxHeight);
+    slider.minimumValue = TTSTYLEVAR(movieCellMinHeight);
+    slider.maximumValue = TTSTYLEVAR(movieCellMaxHeight);
     slider.continuous = YES;
-    [slider setValue:[[defaults valueForKey:@"moviesView:cellHeight"] floatValue]];
+    [slider setValue:[[defaults valueForKey:@"movieCell:height"] floatValue]];
     
     TTTableControlItem* sliderItem = [TTTableControlItem itemWithCaption:@"Cells Height" control:slider];
     [moviesViewData addObject:sliderItem];
     
     CustomSwitch* button =  [CustomSwitch switchWithTitle:@""];
-//    button. = CGRectMake(0, 0, 71, 25);
     button.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
                         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
                         | UIViewAutoresizingFlexibleTopMargin ;      
-    [button addTarget:self action:@selector(moviesViewRatingStarsChanged:) 
+    [button addTarget:self action:@selector(movieCellRatingStarsChanged:) 
      forControlEvents:UIControlEventTouchUpInside];
 
-    [button setSelected:[[defaults valueForKey:@"moviesView:ratingStars"] boolValue]];
+    [button setSelected:[[defaults valueForKey:@"movieCell:ratingStars"] boolValue]];
     
     TTTableControlItem* switchControlItem = [TTTableControlItem itemWithCaption:@"rating Stars" control:button];
     [moviesViewData addObject:switchControlItem];
+	
+	NSMutableArray* tvshowsViewData = [[NSMutableArray alloc] init];
+    
+    slider = [[[UISlider alloc] init] autorelease];
+    minImage=[minImage stretchableImageWithLeftCapWidth:10.0 topCapHeight:4.0];
+    maxImage=[maxImage stretchableImageWithLeftCapWidth:10.0 topCapHeight:4.0];
+    [slider setMinimumTrackImage:minImage forState:UIControlStateNormal];
+    [slider setMaximumTrackImage:maxImage forState:UIControlStateNormal];
+    [slider setThumbImage:tumbImage forState:UIControlStateNormal];
+    [slider setThumbImage:tumbImageOn forState:UIControlStateHighlighted];
+	
+    [slider addTarget:self action:@selector(tvshowCellHeightChanged:) 
+     forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    slider.minimumValue = TTSTYLEVAR(tvshowCellMinHeight);
+    slider.maximumValue = TTSTYLEVAR(tvshowCellMaxHeight);
+    slider.continuous = YES;
+    [slider setValue:[[defaults valueForKey:@"tvshowCell:height"] floatValue]];
+    
+    sliderItem = [TTTableControlItem itemWithCaption:@"Cells Height" control:slider];
+    [tvshowsViewData addObject:sliderItem];
+    
+    button =  [CustomSwitch switchWithTitle:@""];
+    button.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
+	| UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
+	| UIViewAutoresizingFlexibleTopMargin ;      
+    [button addTarget:self action:@selector(tvshowCellRatingStarsChanged:) 
+     forControlEvents:UIControlEventTouchUpInside];
+	
+    [button setSelected:[[defaults valueForKey:@"tvshowCell:ratingStars"] boolValue]];
+    
+    switchControlItem = [TTTableControlItem itemWithCaption:@"rating Stars" control:button];
+    [tvshowsViewData addObject:switchControlItem];
     
     
     // This demonstrates how to create a table with standard table "fields".  Many of these
     // fields with URLs that will be visited when the row is selected
     self.dataSource = [SettingsViewDataSource dataSourceWithArrays:@"Hosts",hostsData
-                       ,@"Movies View", moviesViewData, nil];
+                       ,@"Movies View", moviesViewData,@"TVShows View", tvshowsViewData, nil];
     [hostsData release];
     [moviesViewData release];
 }
@@ -237,58 +265,54 @@
 	return [[[SettingsViewControllerDelegate alloc] initWithController:self] autorelease];
 }
 
-- (void)moviesViewCellHeightChanged:(id)sender {
+- (void)movieCellHeightChanged:(id)sender {
     
     UISlider *slider = (UISlider *)sender;
     
     CGFloat value = slider.value;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setValue:[NSNumber numberWithFloat:value] forKey:@"moviesView:cellHeight"];
+    [defaults setValue:[NSNumber numberWithFloat:value] forKey:@"movieCell:height"];
     [[NSNotificationCenter defaultCenter] 
-     postNotificationName:@"moviesViewCellHeightChanged" 
+     postNotificationName:@"movieCellHeightChanged" 
      object:nil];
 }
 
-- (void)moviesViewRatingStarsChanged:(id)sender {
+- (void)tvshowCellHeightChanged:(id)sender {
+    
+    UISlider *slider = (UISlider *)sender;
+    
+    CGFloat value = slider.value;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:[NSNumber numberWithFloat:value] forKey:@"tvshowCell:height"];
+    [[NSNotificationCenter defaultCenter] 
+     postNotificationName:@"tvshowCellHeightChanged" 
+     object:nil];
+}
+
+- (void)movieCellRatingStarsChanged:(id)sender {
     
     TTButton *control = (TTButton *)sender;
     
     BOOL value = !control.selected;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setValue:[NSNumber numberWithBool:value] forKey:@"moviesView:ratingStars"];
+    [defaults setValue:[NSNumber numberWithBool:value] forKey:@"movieCell:ratingStars"];
     [[NSNotificationCenter defaultCenter] 
-     postNotificationName:@"moviesViewRatingStarsChanged" 
+     postNotificationName:@"movieCellRatingStarsChanged" 
      object:nil];
     control.selected = value;
 }
 
--(void)longPress:(id)sender
-{
-    if (((UILongPressGestureRecognizer *)sender).state == UIGestureRecognizerStateBegan)
-    {
-        UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:@"Actions" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Item Details", @"IMDB page", nil];
-        popupQuery.actionSheetStyle = UIActionSheetStyleAutomatic;
-        [popupQuery showFromBarButtonItem: self.navigationItem.rightBarButtonItem animated:TRUE];
-        [popupQuery release];
-    }
-}
-
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-//    if (buttonIndex == 0) {
-//        if ([_type isEqualToString:@"movie"])
-//        {
-//            [((AppDelegate*)[UIApplication sharedApplication].delegate) showMovieDetails:[NSNumber numberWithInt:[_id intValue]]];
-//        }
-////        self.label.text = @"Destructive Button Clicked";
-//    } else if (buttonIndex == 1) {
-//        [((AppDelegate*)[UIApplication sharedApplication].delegate) showImdb:_imdb];
-//
-////        self.label.text = @"Other Button 1 Clicked";
-//    } else if (buttonIndex == 2) {
-////        self.label.text = @"Other Button 2 Clicked";
-//    } else if (buttonIndex == 3) {
-////        self.label.text = @"Cancel Button Clicked";
-//    }
+- (void)tvshowCellRatingStarsChanged:(id)sender {
+    
+    TTButton *control = (TTButton *)sender;
+    
+    BOOL value = !control.selected;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:[NSNumber numberWithBool:value] forKey:@"tvshowCell:ratingStars"];
+    [[NSNotificationCenter defaultCenter] 
+     postNotificationName:@"tvshowCellRatingStarsChanged" 
+     object:nil];
+    control.selected = value;
 }
 
 @end

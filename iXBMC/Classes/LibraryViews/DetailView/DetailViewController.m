@@ -234,14 +234,15 @@
 		[tapgr release];    
 		[XBMCImage askForImage:_coverUrl 
 						object:self selector:@selector(coverLoaded:) 
-				 thumbnailSize:coverHeight];
+				 thumbnailHeight:coverHeight];
 	}
 	
 	if (_fanartUrl)
 	{
+		NSInteger fanartHeight = TTScreenBounds().size.height;
 		[XBMCImage askForImage:_fanartUrl 
 						object:self selector:@selector(fanartLoaded:) 
-				 thumbnailSize:TTScreenBounds().size.width*2];
+				 thumbnailHeight:fanartHeight];
 	}
 	
 	[UIView beginAnimations:nil context:_detailView];

@@ -53,4 +53,7 @@
 - (void)removeTVShowToEpisodeObject:(Episode *)value;
 - (void)addTVShowToEpisode:(NSSet *)value;
 - (void)removeTVShowToEpisode:(NSSet *)value;
+
++ (NSString*)defaultSort;
+
 @end

@@ -48,7 +48,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    CGFloat height = [[defaults valueForKey:@"moviesView:cellHeight"] floatValue];
+    CGFloat height = [[defaults valueForKey:@"movieCell:height"] floatValue];
     
     if ([(MovieViewController*)_controller forSearch])
     {

@@ -45,10 +45,11 @@
         [self.view addSubview:errorView];
     }
     
-	[[self view] setBackgroundColor:[UIColor blackColor]];
+	self.view.backgroundColor = [UIColor blackColor];
     
     _image = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
     _image.alpha = 0.0;
+	_image.backgroundColor = [UIColor blackColor];
     _image.contentMode = UIViewContentModeScaleAspectFit;
     _image.clipsToBounds = YES;
     [self.view addSubview:_image];
@@ -61,9 +62,9 @@
     
     if (![XBMCStateListener connected])
     {
-        _image.image = [XBMCImage cachedImage:_url];
-        if (_image.image != nil)
+		if ([XBMCImage hasCachedImage:_url])
         {
+			_image.image = [XBMCImage cachedImage:_url];
             _image.alpha = 1.0;            
         }
     }

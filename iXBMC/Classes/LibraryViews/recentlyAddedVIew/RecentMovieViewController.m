@@ -61,7 +61,7 @@
 
 - (CGFloat)posterHeight
 {
-	return TTSTYLEVAR(moviesViewCellsMaxHeight)*[UIScreen mainScreen].scale;
+	return TTSTYLEVAR(movieCellMaxHeight)*[UIScreen mainScreen].scale;
 }
 
 - (UIImage *)fanart
@@ -74,9 +74,9 @@
     _mainView.fanart = var;
 }
 
-- (CGFloat)fanartWidth
+- (CGFloat)fanartHeight
 {
-	return 300;
+	return [self posterHeight];
 }
 
 - (BOOL)watched

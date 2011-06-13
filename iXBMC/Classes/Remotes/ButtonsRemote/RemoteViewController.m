@@ -583,9 +583,9 @@
 
 -(void)downloadCover:(NSString*)url
 {
-    [XBMCImage askForImage:url
-                    object:self selector:@selector(coverLoaded:) 
-             thumbnailSize:self.view.width];
+//    [XBMCImage askForImage:url
+//                    object:self selector:@selector(coverLoaded:) 
+//             thumbnailHeight:self.view.width];
 
 }
 
@@ -599,9 +599,10 @@
 
 -(void)downloadFanart:(NSString*)url
 {
+    NSInteger height = TTScreenBounds().size.height;
     [XBMCImage askForImage:url 
 					object:self selector:@selector(fanartLoaded:) 
-			 thumbnailSize:_fanart.width*2];
+		   thumbnailHeight:height];
 }
 
 - (void)playingStopped: (NSNotification *) notification 

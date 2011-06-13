@@ -257,36 +257,36 @@
 	CGFloat posterHeight = [page posterHeight];
 	if (page.posterURL
 		&& [XBMCImage hasCachedImage:page.posterURL 
-					   thumbnailSize:posterHeight])
+					   thumbnailHeight:posterHeight])
 	{
 		page.poster = [XBMCImage cachedImage:page.posterURL
-							   thumbnailSize:posterHeight];
+							   thumbnailHeight:posterHeight];
 	}
 	else
 	{
 		page.poster = nil;
 		[XBMCImage askForImage:page.posterURL
 						object:page selector:@selector(thumbnailLoaded:) 
-				 thumbnailSize:posterHeight];
+				 thumbnailHeight:posterHeight];
 	}
 	
 	page.watched = ([[[_movies objectAtIndex:page.index] objectForKey:@"playcount"] intValue] > 0);
 	
-	CGFloat fanartWidth = [page fanartWidth];
+	CGFloat fanartHeight = [page fanartHeight];
 	
 	if (page.fanartURL
 		&& [XBMCImage hasCachedImage:page.fanartURL 
-					   thumbnailSize:fanartWidth])
+					   thumbnailHeight:fanartHeight])
 	{  
 		page.fanart = [XBMCImage cachedImage:[[_movies objectAtIndex:page.index] objectForKey:@"fanart"]
-							   thumbnailSize:fanartWidth];
+							   thumbnailHeight:fanartHeight];
 	}
 	else
 	{
 		page.fanart = nil;
 		[XBMCImage askForImage:page.fanartURL
 						object:page selector:@selector(fanartLoaded:) 
-				 thumbnailSize:fanartWidth];
+				 thumbnailHeight:fanartHeight];
 	}
 	
 	page.movieid = [[_movies objectAtIndex:page.index] objectForKey:@"id"];

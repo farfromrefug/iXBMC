@@ -640,15 +640,16 @@
 	NSInteger height = TTSTYLEVAR(movieDetailsViewCoverHeight)*[UIScreen mainScreen].scale;
    [XBMCImage askForImage:url
                     object:self selector:@selector(coverLoaded:) 
-             thumbnailSize:height];
+             thumbnailHeight:height];
 
 }
 
 -(void)downloadFanart:(NSString*)url
 {
+	NSInteger height = TTScreenBounds().size.height;
     [XBMCImage askForImage:url 
 					object:self selector:@selector(fanartLoaded:) 
-			 thumbnailSize:_fanart.width*2];
+			 thumbnailHeight:height];
 }
 
 - (void)playingStopped: (NSNotification *) notification 
