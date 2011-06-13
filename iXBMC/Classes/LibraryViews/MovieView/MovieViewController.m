@@ -383,6 +383,7 @@
     [((MovieViewDataSource*)self.dataSource).delegates addObject:self];
     ((MovieViewDataSource*)self.dataSource).forSearch = _forSearch;
 	NSLog(@"createModel: %f", -[start timeIntervalSinceNow]);
+	[start release];
 //    if ([LibraryUpdater updating])
 //    {
 //        [self modelDidBeginUpdates:self.model];

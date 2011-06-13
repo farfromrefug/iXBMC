@@ -372,14 +372,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)createModel {
 //	if (_isViewAppearing) return;
-	NSDate *start = [[NSDate date] retain];
     self.dataSource = [[[TVShowsViewDataSource alloc]
                         initWithEntity:[[[[ActiveManager shared] managedObjectModel] 
 										 entitiesByName] objectForKey:@"TVShow"] 
                         controllerTableView:self.tableView] autorelease];
     [((TVShowsViewDataSource*)self.dataSource).delegates addObject:self];
     ((TVShowsViewDataSource*)self.dataSource).forSearch = _forSearch;
-	NSLog(@"createModel: %f", -[start timeIntervalSinceNow]);
 //    if ([LibraryUpdater updating])
 //    {
 //        [self modelDidBeginUpdates:self.model];

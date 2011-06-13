@@ -170,6 +170,7 @@
                        ,@"Movies View", moviesViewData,@"TVShows View", tvshowsViewData, nil];
     [hostsData release];
     [moviesViewData release];
+    [tvshowsViewData release];
 }
 
 -(void)addHost: (NSNotification *) notification
