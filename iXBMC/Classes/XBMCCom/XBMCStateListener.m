@@ -9,7 +9,7 @@
 #import "XBMCStateListener.h"
 
 #import "XBMCJSONCommunicator.h"
-#import "CJSONDeserializer.h"
+#import "JSONKit.h"
 #import "CJSONSerializer.h"
 
 
@@ -71,11 +71,9 @@ static XBMCStateListener *sharedInstance = nil;
 {
     if (_playingInfo)
     {
-        NSError *error = nil;
-        NSData *serializedData = [_playingInfo dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *dictionary = [[CJSONDeserializer deserializer] 
-                                    deserializeAsDictionary:serializedData
-                                    error:&error];
+//        NSError *error = nil;
+//        NSData *serializedData = [_playingInfo dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dictionary = [_playingInfo objectFromJSONData];
         return dictionary;
     }
     else
@@ -249,9 +247,7 @@ static XBMCStateListener *sharedInstance = nil;
                                                                         currentPlayer, @"player",nil]];
         }
     }
-    
-    CJSONSerializer *jsonSerializer = [CJSONSerializer serializer];
-    
+        
     NSInteger current = [[[[result objectForKey:@"result"] 
                            objectForKey:@"state"] 
                           objectForKey:@"current"] 
@@ -261,10 +257,10 @@ static XBMCStateListener *sharedInstance = nil;
                           objectAtIndex:current];
     if (item)
     {
-        NSString * info = [jsonSerializer serializeDictionary:item];
+        NSData * info = [item JSONData];
 
         if (playing && info != nil 
-            && (_playingInfo == nil || ![_playingInfo isEqualToString:info]))
+            && (_playingInfo == nil || ![_playingInfo isEqualToData:info]))
         {
             TT_RELEASE_SAFELY(_playingInfo);
             _playingInfo = [info retain];

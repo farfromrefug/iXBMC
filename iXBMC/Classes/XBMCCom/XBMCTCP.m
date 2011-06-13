@@ -7,8 +7,7 @@
 //
 
 #import "XBMCTCP.h"
-#import "CJSONDeserializer.h"
-#import "CJSONSerializer.h"
+#import "JSONKit.h"
 
 static XBMCTCP *sharedInstance = nil;
 
@@ -84,6 +83,14 @@ NSString * const kNotificationMessage = @"kNotificationMessage";
     [self sendMessage:message withTag:0];
 }
 
+- (void)sendData:(NSData *)data withTag:(long)tag{
+    [_socket writeData:data withTimeout:-1 tag:tag];
+}
+
+- (void)sendData:(NSData *)data{
+    [self sendData:data withTag:0];
+}
+
 #pragma mark AsyncSocket Delegate
 
 - (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port {
@@ -100,7 +107,6 @@ NSString * const kNotificationMessage = @"kNotificationMessage";
     NSData *truncatedData = [data subdataWithRange:NSMakeRange(0, [data length] - 1)];
 //    NSString *message = [[[NSString alloc] initWithData:truncatedData encoding:NSASCIIStringEncoding] autorelease];
     NSString * requestId = [NSString stringWithFormat:@"%d",tag];
-    CJSONDeserializer *jsonDeserializer = [CJSONDeserializer deserializer];
     
 //    if (message)
 //        NSLog(@"%@", message);
@@ -109,7 +115,7 @@ NSString * const kNotificationMessage = @"kNotificationMessage";
 //
 //    
     NSError *error = nil;
-    NSDictionary *dictionary = [jsonDeserializer deserializeAsDictionary:truncatedData error:&error];
+    NSDictionary *dictionary = [truncatedData objectFromJSONData];
         
     if (error)
     {
@@ -175,7 +181,7 @@ NSString * const kNotificationMessage = @"kNotificationMessage";
 						@"1", @"id",
 						nil];
     
-	NSString *serialized = [[CJSONSerializer serializer] serializeObject:jsonRpc];
+	NSData *serialized = [jsonRpc JSONData];
     //    NSLog(@"sending message %@", serialized);
     //	NSData *serializedData = [serialized dataUsingEncoding:NSUTF8StringEncoding];
     
@@ -189,7 +195,7 @@ NSString * const kNotificationMessage = @"kNotificationMessage";
     
     [_requestInfos setValue:tag forKey:[NSString stringWithFormat:@"%d",requestId]];
     
-    [self sendMessage:serialized withTag:requestId];
+    [self sendData:serialized withTag:requestId];
     
     //    [serialized release];
 }

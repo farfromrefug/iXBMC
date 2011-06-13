@@ -24,7 +24,7 @@
     
     BOOL _needsUpdate;
     
-    NSString* _playingInfo;
+    NSData* _playingInfo;
 
     NSTimer * connectionTimer;
 }

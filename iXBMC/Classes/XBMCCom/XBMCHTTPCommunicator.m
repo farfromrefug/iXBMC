@@ -201,9 +201,7 @@ static XBMCHTTPCommunicator *sharedInstance = nil;
     // do something with the data
     // receivedData is declared as a method instance elsewhere
     NSLog(@"Succeeded! Received %d bytes of data",[receivedData length]);
-    
-//    CJSONDeserializer *jsonDeserializer = [CJSONDeserializer deserializer];
-	
+    	
 	NSError *error = nil;
     
     // convert tostring

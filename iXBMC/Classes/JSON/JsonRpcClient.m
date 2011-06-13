@@ -5,8 +5,7 @@
 //
 
 #import "JsonRpcClient.h"
-#import "CJSONDeserializer.h"
-#import "CJSONSerializer.h"
+#import "JSONKit.h"
 
 @implementation CustomURLConnection
 
@@ -31,12 +30,8 @@
 @implementation JsonRpcClient
 
 @synthesize requestId;
-
 @synthesize url;
-
 @synthesize delegate;
-
-
 
 - (NSMutableData*)dataForConnection:(CustomURLConnection*)connection {
    NSMutableData *data = [receivedData objectForKey:[connection.tag objectForKey:@"id"]];
@@ -70,11 +65,9 @@
 - (void)connectionDidFinishLoading:(CustomURLConnection *)connection {
     NSMutableData *dataForConnection = [self dataForConnection:(CustomURLConnection*)connection];
     //[connection release];
-    
-    CJSONDeserializer *jsonDeserializer = [CJSONDeserializer deserializer];
-	
+    	
 	NSError *error = nil;
-	NSDictionary *dictionary = [jsonDeserializer deserializeAsDictionary:dataForConnection error:&error];
+	NSDictionary *dictionary = [dataForConnection objectFromJSONData];
  	//NSLog(@"json %@",dictionary);
     [receivedData removeObjectForKey:[connection.tag objectForKey:@"id"]];
 	NSDictionary *tag = [NSDictionary dictionaryWithDictionary:connection.tag];
@@ -150,9 +143,8 @@
 						self.requestId, @"id",
 						nil];
 
-	NSString *serialized = [[CJSONSerializer serializer] serializeObject:jsonRpc];
 //    NSLog(@"sending message %@", serialized);
-	NSData *serializedData = [serialized dataUsingEncoding:NSUTF8StringEncoding];
+	NSData *serializedData = [jsonRpc JSONData];
     
     NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
     NSDictionary* tag = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -163,7 +155,6 @@
 						[NSValue valueWithPointer:sel], @"selector",
 						nil];
 	[self requestWithUrl:self.url data:serializedData tag:tag];
-    //    [serialized release];
 }
 - (void)requestWithMethod:(NSString *)method params:(NSObject *)params {
     [self requestWithMethod:method params:params info:nil target:nil selector:nil];
