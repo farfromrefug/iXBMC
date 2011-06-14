@@ -263,7 +263,12 @@
 
 - (void)loadImage
 {
-	CGFloat height = TTSTYLEVAR(movieCellMaxHeight)*[UIScreen mainScreen].scale;
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	CGFloat height = TTSTYLEVAR(movieCellMaxHeight);
+	if ([[defaults valueForKey:@"images:highQuality"] boolValue])
+	{
+		height *= [UIScreen mainScreen].scale;
+	}
 	
 	if (_item.imageURL && [XBMCImage hasCachedImage:_item.imageURL thumbnailHeight:height]) 
 	{

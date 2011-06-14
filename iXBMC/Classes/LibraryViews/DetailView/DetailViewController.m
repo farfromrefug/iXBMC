@@ -129,13 +129,13 @@
         
         ///ACTORS
         NSString* castText = @"";
-        for (ActorRole* role in movie.MovieToRole)
+        for (ActorRole* role in movie.roles)
         {
 //            NSLog(@"role: %@ - %@", role.RoleToActor.name, role.role);
             castText = [castText stringByAppendingFormat:@"\
 <img src=\"bundle://defaultPerson.png\" width=\"25\" height=\"25\"/>\
 <span class=\"whiteText\">  %@ </span>\
-<span class=\"grayText\">  %@</span>\n\n", role.RoleToActor.name, role.role]; 
+<span class=\"grayText\">  %@</span>\n\n", role.actor.name, role.role]; 
         }
  		self.cast = castText;
 		

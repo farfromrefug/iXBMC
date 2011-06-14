@@ -19,6 +19,7 @@
 
 @interface StyleSheet : TTDefaultStyleSheet
 
+@property (nonatomic, readonly) BOOL highQualityImages;
 @property (nonatomic, readonly) CGFloat headerViewHeight;
 @property (nonatomic, readonly) CGFloat movieCellHeight;
 @property (nonatomic, readonly) CGFloat movieCellMinHeight;

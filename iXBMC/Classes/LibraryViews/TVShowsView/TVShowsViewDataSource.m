@@ -3,6 +3,7 @@
 
 #import "TVShowsViewModel.h"
 #import "TVShow.h"
+#import "Episode.h"
 #import "TVShowTableItem.h"
 #import "TVShowTableItemCell.h"
 
@@ -129,7 +130,7 @@
     self.predicate = nil;
     if(_hideWatched)
     {
-        self.predicate = [NSPredicate predicateWithFormat:@"playcount == 0"];
+        self.predicate = [NSPredicate predicateWithFormat:@"ANY episodes.playcount == 0"];
     }
     [self performFetch];
 //    [self silentDidLoad];        
@@ -204,7 +205,19 @@
     item.itemId = show.tvshowid;
 //    item.year = [show.year stringValue];
     item.rating = [NSString stringWithFormat:@"%.1f",[show.rating floatValue]];
-    item.watched = [show.playcount intValue] > 0;
+	
+    item.watched = TRUE;
+	item.nbUnWatched = [NSNumber numberWithInt:0];
+	item.nbEpisodes = [NSNumber numberWithInt:[show.episodes count]];
+	for (Episode* ep in show.episodes)
+	{
+		if ([ep.playcount intValue] == 0)
+		{
+			item.watched = FALSE;
+			item.nbUnWatched = [NSNumber numberWithInt:[item.nbUnWatched intValue] + 1];
+		}
+	}
+	
     
 //
     return item;

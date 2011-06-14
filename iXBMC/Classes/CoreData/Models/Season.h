@@ -23,12 +23,12 @@
 @property (nonatomic, retain) NSString * label;
 @property (nonatomic, retain) NSNumber * nbepisodes;
 
-@property (nonatomic, retain) TVShow * SeasonToTVShow;
-@property (nonatomic, retain) NSSet* SeasonToEpisode;
+@property (nonatomic, retain) TVShow * tvshow;
+@property (nonatomic, retain) NSSet* episodes;
 
-- (void)addSeasonToEpisodeObject:(Episode *)value;
-- (void)removeSeasonToEpisodeObject:(Episode *)value;
-- (void)addSeasonToEpisode:(NSSet *)value;
-- (void)removeSeasonToEpisode:(NSSet *)value;
+- (void)addEpisodesObject:(Episode *)value;
+- (void)removeEpisodesObject:(Episode *)value;
+- (void)addEpisodes:(NSSet *)value;
+- (void)removeEpisodes:(NSSet *)value;
 
 @end

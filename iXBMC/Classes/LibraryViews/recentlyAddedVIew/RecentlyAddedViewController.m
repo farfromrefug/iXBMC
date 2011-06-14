@@ -99,6 +99,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)reloadData {
+	[recycledPages removeAllObjects];
+	[visiblePages removeAllObjects];
+//	TT_RELEASE_SAFELY(recycledPages);
+//	TT_RELEASE_SAFELY(visiblePages);
+//	recycledPages = [[NSMutableSet alloc] init];
+//    visiblePages  = [[NSMutableSet alloc] init];
     self.scrollView.contentSize = [self contentSizeForPagingScrollView];
 	[self tilePages];
 }
@@ -166,6 +172,13 @@
     // Step 2: prepare to tile content
     recycledPages = [[NSMutableSet alloc] init];
     visiblePages  = [[NSMutableSet alloc] init];
+	
+	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+	[center
+     addObserver:self
+     selector:@selector(reloadData)
+     name:@"highQualityChanged"
+     object:nil ];
 }
 
 - (void) setViewFrame:(CGRect) frame

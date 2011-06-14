@@ -185,6 +185,12 @@
      selector:@selector(updateRecentlyAddedMovies:)
      name:@"recentlyAddedMovies"
      object:nil ];
+	
+	[center
+     addObserver:self
+     selector:@selector(reloadTableView)
+     name:@"highQualityChanged"
+     object:nil ];
     
     [center
      addObserver:self

@@ -16,10 +16,10 @@
 }
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * firstLetter;
-@property (nonatomic, retain) NSSet* ActorToRole;
+@property (nonatomic, retain) NSSet* roles;
 
-- (void)addActorToRoleObject:(ActorRole *)value;
-- (void)removeActorToRoleObject:(ActorRole *)value;
-- (void)addActorToRole:(NSSet *)value;
-- (void)removeActorToRole:(NSSet *)value;
+- (void)addRolesObject:(ActorRole *)value;
+- (void)removeRolesObject:(ActorRole *)value;
+- (void)addRoles:(NSSet *)value;
+- (void)removeRoles:(NSSet *)value;
 @end

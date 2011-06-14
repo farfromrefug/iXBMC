@@ -34,64 +34,64 @@
 @dynamic rating;
 @dynamic movieid;
 @dynamic firstLetter;
-@dynamic MovieToGenre;
-@dynamic MovieToRole;
+@dynamic genres;
+@dynamic roles;
 
-- (void)addMovieToGenreObject:(Genre *)value {    
+- (void)addGenresObject:(Genre *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"MovieToGenre"] addObject:value];
-    [self didChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"genres"] addObject:value];
+    [self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)removeMovieToGenreObject:(Genre *)value {
+- (void)removeGenresObject:(Genre *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"MovieToGenre"] removeObject:value];
-    [self didChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"genres"] removeObject:value];
+    [self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)addMovieToGenre:(NSSet *)value {    
-    [self willChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"MovieToGenre"] unionSet:value];
-    [self didChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+- (void)addGenres:(NSSet *)value {    
+    [self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"genres"] unionSet:value];
+    [self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
-- (void)removeMovieToGenre:(NSSet *)value {
-    [self willChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"MovieToGenre"] minusSet:value];
-    [self didChangeValueForKey:@"MovieToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+- (void)removeGenres:(NSSet *)value {
+    [self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"genres"] minusSet:value];
+    [self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
 
-- (void)addMovieToRoleObject:(ActorRole *)value {    
+- (void)addRolesObject:(ActorRole *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"MovieToRole"] addObject:value];
-    [self didChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"roles" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"roles"] addObject:value];
+    [self didChangeValueForKey:@"roles" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)removeMovieToRoleObject:(ActorRole *)value {
+- (void)removeRolesObject:(ActorRole *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"MovieToRole"] removeObject:value];
-    [self didChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"roles" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"roles"] removeObject:value];
+    [self didChangeValueForKey:@"roles" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)addMovieToRole:(NSSet *)value {    
-    [self willChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"MovieToRole"] unionSet:value];
-    [self didChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+- (void)addRoles:(NSSet *)value {    
+    [self willChangeValueForKey:@"roles" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"roles"] unionSet:value];
+    [self didChangeValueForKey:@"roles" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
-- (void)removeMovieToRole:(NSSet *)value {
-    [self willChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"MovieToRole"] minusSet:value];
-    [self didChangeValueForKey:@"MovieToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+- (void)removeRoles:(NSSet *)value {
+    [self willChangeValueForKey:@"roles" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"roles"] minusSet:value];
+    [self didChangeValueForKey:@"roles" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
 + (NSString*)defaultSort

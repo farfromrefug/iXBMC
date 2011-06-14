@@ -182,6 +182,12 @@
      selector:@selector(updateRecentlyAddedTVShowss:)
      name:@"recentlyAddedTVShowss"
      object:nil ];
+	
+	[center
+     addObserver:self
+     selector:@selector(reloadTableView)
+     name:@"highQualityChanged"
+     object:nil ];
     
     [center
      addObserver:self

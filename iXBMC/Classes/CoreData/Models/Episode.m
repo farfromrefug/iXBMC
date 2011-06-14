@@ -22,13 +22,13 @@
 @dynamic showtitle;
 @dynamic rating;
 @dynamic runtime;
-@dynamic season;
+@dynamic seasonid;
 @dynamic thumbnail;
 @dynamic firstaired;
 @dynamic writer;
 @dynamic tvshowid;
-@dynamic EpisodeToSeason;
-@dynamic EpisodeToTVShow;
+@dynamic season;
+@dynamic tvshow;
 
 
 

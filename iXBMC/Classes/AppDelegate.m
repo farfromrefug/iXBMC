@@ -48,6 +48,12 @@
 - (void) initDefaultValues
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	if ([defaults valueForKey:@"images:highQuality"] == nil)
+    {
+        [defaults setValue:[NSNumber numberWithBool:TTSTYLEVAR(highQualityImages)] 
+                    forKey:@"images:highQuality"];
+    }
     if ([defaults valueForKey:@"movieCell:height"] == nil)
     {
         [defaults setValue:[NSNumber numberWithFloat:TTSTYLEVAR(movieCellHeight)] 

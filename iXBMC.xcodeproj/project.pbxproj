@@ -658,7 +658,6 @@
 		D574C695138FFA5F00B35D01 /* LambdaAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LambdaAlert.m; sourceTree = "<group>"; };
 		D574C696138FFA6000B35D01 /* LambdaSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LambdaSheet.h; sourceTree = "<group>"; };
 		D574C697138FFA6000B35D01 /* LambdaSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LambdaSheet.m; sourceTree = "<group>"; };
-		D576116413A66F2C0004EE96 /* iXBMC 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iXBMC 10.xcdatamodel"; sourceTree = "<group>"; };
 		D576116C13A67AB90004EE96 /* TVShowCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVShowCellView.h; sourceTree = "<group>"; };
 		D576116D13A67AB90004EE96 /* TVShowCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVShowCellView.m; sourceTree = "<group>"; };
 		D576116E13A67AB90004EE96 /* TVShowTableItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVShowTableItem.h; sourceTree = "<group>"; };
@@ -674,6 +673,7 @@
 		D576117813A67AB90004EE96 /* TVShowsViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVShowsViewModel.h; sourceTree = "<group>"; };
 		D576117913A67AB90004EE96 /* TVShowsViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVShowsViewModel.m; sourceTree = "<group>"; };
 		D576118113A67CA80004EE96 /* 70-tv.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "70-tv.png"; sourceTree = "<group>"; };
+		D576118313A7F99C0004EE96 /* iXBMC 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iXBMC 2.xcdatamodel"; sourceTree = "<group>"; };
 		D58763A5136A1B0F004E3719 /* detailsback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = detailsback.png; sourceTree = "<group>"; };
 		D58C8FF5138695050037248C /* XBMCCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBMCCommand.h; sourceTree = "<group>"; };
 		D58C8FF6138695050037248C /* XBMCCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XBMCCommand.m; sourceTree = "<group>"; };
@@ -2402,9 +2402,9 @@
 		D553A0501347669F00BE026D /* iXBMC.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				D576116413A66F2C0004EE96 /* iXBMC 10.xcdatamodel */,
+				D576118313A7F99C0004EE96 /* iXBMC 2.xcdatamodel */,
 			);
-			currentVersion = D576116413A66F2C0004EE96 /* iXBMC 10.xcdatamodel */;
+			currentVersion = D576118313A7F99C0004EE96 /* iXBMC 2.xcdatamodel */;
 			path = iXBMC.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

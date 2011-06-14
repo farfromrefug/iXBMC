@@ -29,30 +29,30 @@
 @property (nonatomic, retain) NSString * thumbnail;
 @property (nonatomic, retain) NSNumber * nbepisodes;
 @property (nonatomic, retain) NSString * premiered;
-@property (nonatomic, retain) NSSet* TVShowToGenre;
-@property (nonatomic, retain) NSSet* TVShowToRole;
-@property (nonatomic, retain) NSSet* TVShowToSeason;
-@property (nonatomic, retain) NSSet * TVShowToEpisode;
+@property (nonatomic, retain) NSSet* genres;
+@property (nonatomic, retain) NSSet* roles;
+@property (nonatomic, retain) NSSet* seasons;
+@property (nonatomic, retain) NSSet * episodes;
 
-- (void)addTVShowToGenreObject:(Genre *)value;
-- (void)removeTVShowToGenreObject:(Genre *)value;
-- (void)addTVShowToGenre:(NSSet *)value;
-- (void)removeTVShowToGenre:(NSSet *)value;
+- (void)addGenresObject:(Genre *)value;
+- (void)removeGenresObject:(Genre *)value;
+- (void)addGenres:(NSSet *)value;
+- (void)removeGenres:(NSSet *)value;
 
-- (void)addTVShowToRoleObject:(ActorRole *)value;
-- (void)removeTVShowToRoleObject:(ActorRole *)value;
-- (void)addTVShowToRole:(NSSet *)value;
-- (void)removeTVShowToRole:(NSSet *)value;
+- (void)addRolesObject:(ActorRole *)value;
+- (void)removeRolesObject:(ActorRole *)value;
+- (void)addRoles:(NSSet *)value;
+- (void)removeRoles:(NSSet *)value;
 
-- (void)addTVShowToSeasonObject:(Season *)value;
-- (void)removeTVShowToSeasonObject:(Season *)value;
-- (void)addTVShowToSeason:(NSSet *)value;
-- (void)removeTVShowToSeason:(NSSet *)value;
+- (void)addSeasonsObject:(Season *)value;
+- (void)removeSeasonsObject:(Season *)value;
+- (void)addSeasons:(NSSet *)value;
+- (void)removeSeasons:(NSSet *)value;
 
-- (void)addTVShowToEpisodeObject:(Episode *)value;
-- (void)removeTVShowToEpisodeObject:(Episode *)value;
-- (void)addTVShowToEpisode:(NSSet *)value;
-- (void)removeTVShowToEpisode:(NSSet *)value;
+- (void)addEpisodesObject:(Episode *)value;
+- (void)removeEpisodesObject:(Episode *)value;
+- (void)addEpisodes:(NSSet *)value;
+- (void)removeEpisodes:(NSSet *)value;
 
 + (NSString*)defaultSort;
 

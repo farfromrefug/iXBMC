@@ -25,12 +25,12 @@
 @property (nonatomic, retain) NSString * showtitle;
 @property (nonatomic, retain) NSNumber * rating;
 @property (nonatomic, retain) NSString * runtime;
-@property (nonatomic, retain) NSNumber * season;
+@property (nonatomic, retain) NSNumber * seasonid;
 @property (nonatomic, retain) NSString * thumbnail;
 @property (nonatomic, retain) NSString * firstaired;
 @property (nonatomic, retain) NSString * writer;
 @property (nonatomic, retain) NSNumber * tvshowid;
-@property (nonatomic, retain) Season * EpisodeToSeason;
-@property (nonatomic, retain) TVShow * EpisodeToTVShow;
+@property (nonatomic, retain) Season * season;
+@property (nonatomic, retain) TVShow * tvshow;
 
 @end

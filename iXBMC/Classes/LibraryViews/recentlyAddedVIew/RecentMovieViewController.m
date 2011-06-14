@@ -61,7 +61,13 @@
 
 - (CGFloat)posterHeight
 {
-	return TTSTYLEVAR(movieCellMaxHeight)*[UIScreen mainScreen].scale;
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	CGFloat height = TTSTYLEVAR(movieCellMaxHeight);
+	if ([[defaults valueForKey:@"images:highQuality"] boolValue])
+	{
+		height *= [UIScreen mainScreen].scale;
+	}
+	return height;
 }
 
 - (UIImage *)fanart

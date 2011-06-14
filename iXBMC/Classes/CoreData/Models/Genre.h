@@ -15,15 +15,15 @@
 @private
 }
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSSet* GenreToMovie;
-@property (nonatomic, retain) NSSet* GenreToTVShow;
+@property (nonatomic, retain) NSSet* movies;
+@property (nonatomic, retain) NSSet* tvshows;
 
-- (void)addGenreToMovieObject:(Movie *)value;
-- (void)removeGenreToMovieObject:(Movie *)value;
-- (void)addGenreToMovie:(NSSet *)value;
-- (void)removeGenreToMovie:(NSSet *)value;
-- (void)addGenreToTVShowObject:(NSManagedObject *)value;
-- (void)removeGenreToTVShowObject:(NSManagedObject *)value;
-- (void)addGenreToTVShow:(NSSet *)value;
-- (void)removeGenreToTVShow:(NSSet *)value;
+- (void)addMoviesObject:(Movie *)value;
+- (void)removeMoviesObject:(Movie *)value;
+- (void)addMovies:(NSSet *)value;
+- (void)removeMovies:(NSSet *)value;
+- (void)addTvshowsObject:(NSManagedObject *)value;
+- (void)removeTvshowsObject:(NSManagedObject *)value;
+- (void)addTvshows:(NSSet *)value;
+- (void)removeTvshows:(NSSet *)value;
 @end

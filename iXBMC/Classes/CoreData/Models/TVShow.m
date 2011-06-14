@@ -29,123 +29,123 @@
 @dynamic thumbnail;
 @dynamic nbepisodes;
 @dynamic premiered;
-@dynamic TVShowToGenre;
-@dynamic TVShowToRole;
-@dynamic TVShowToSeason;
-@dynamic TVShowToEpisode;
+@dynamic genres;
+@dynamic roles;
+@dynamic seasons;
+@dynamic episodes;
 
-- (void)addTVShowToGenreObject:(Genre *)value {    
+- (void)addGenresObject:(Genre *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"TVShowToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"TVShowToGenre"] addObject:value];
-    [self didChangeValueForKey:@"TVShowToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"genres"] addObject:value];
+    [self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)removeTVShowToGenreObject:(Genre *)value {
+- (void)removeGenresObject:(Genre *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"TVShowToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"TVShowToGenre"] removeObject:value];
-    [self didChangeValueForKey:@"TVShowToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"genres"] removeObject:value];
+    [self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)addTVShowToGenre:(NSSet *)value {    
-    [self willChangeValueForKey:@"TVShowToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"TVShowToGenre"] unionSet:value];
-    [self didChangeValueForKey:@"TVShowToGenre" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+- (void)addGenres:(NSSet *)value {    
+    [self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"genres"] unionSet:value];
+    [self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
-- (void)removeTVShowToGenre:(NSSet *)value {
-    [self willChangeValueForKey:@"TVShowToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"TVShowToGenre"] minusSet:value];
-    [self didChangeValueForKey:@"TVShowToGenre" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+- (void)removeGenres:(NSSet *)value {
+    [self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"genres"] minusSet:value];
+    [self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
 
-- (void)addTVShowToRoleObject:(ActorRole *)value {    
+- (void)addRolesObject:(ActorRole *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"TVShowToRole" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"TVShowToRole"] addObject:value];
-    [self didChangeValueForKey:@"TVShowToRole" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"roles" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"roles"] addObject:value];
+    [self didChangeValueForKey:@"roles" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)removeTVShowToRoleObject:(ActorRole *)value {
+- (void)removeRolesObject:(ActorRole *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"TVShowToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"TVShowToRole"] removeObject:value];
-    [self didChangeValueForKey:@"TVShowToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"roles" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"roles"] removeObject:value];
+    [self didChangeValueForKey:@"roles" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)addTVShowToRole:(NSSet *)value {    
-    [self willChangeValueForKey:@"TVShowToRole" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"TVShowToRole"] unionSet:value];
-    [self didChangeValueForKey:@"TVShowToRole" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+- (void)addRoles:(NSSet *)value {    
+    [self willChangeValueForKey:@"roles" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"roles"] unionSet:value];
+    [self didChangeValueForKey:@"roles" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
-- (void)removeTVShowToRole:(NSSet *)value {
-    [self willChangeValueForKey:@"TVShowToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"TVShowToRole"] minusSet:value];
-    [self didChangeValueForKey:@"TVShowToRole" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+- (void)removeRoles:(NSSet *)value {
+    [self willChangeValueForKey:@"roles" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"roles"] minusSet:value];
+    [self didChangeValueForKey:@"roles" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
 
-- (void)addTVShowToSeasonObject:(Season *)value {    
+- (void)addSeasonsObject:(Season *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"TVShowToSeason" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"TVShowToSeason"] addObject:value];
-    [self didChangeValueForKey:@"TVShowToSeason" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"seasons" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"seasons"] addObject:value];
+    [self didChangeValueForKey:@"seasons" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)removeTVShowToSeasonObject:(Season *)value {
+- (void)removeSeasonsObject:(Season *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"TVShowToSeason" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"TVShowToSeason"] removeObject:value];
-    [self didChangeValueForKey:@"TVShowToSeason" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"seasons" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"seasons"] removeObject:value];
+    [self didChangeValueForKey:@"seasons" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)addTVShowToSeason:(NSSet *)value {    
-    [self willChangeValueForKey:@"TVShowToSeason" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"TVShowToSeason"] unionSet:value];
-    [self didChangeValueForKey:@"TVShowToSeason" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+- (void)addSeasons:(NSSet *)value {    
+    [self willChangeValueForKey:@"seasons" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"seasons"] unionSet:value];
+    [self didChangeValueForKey:@"seasons" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
-- (void)removeTVShowToSeason:(NSSet *)value {
-    [self willChangeValueForKey:@"TVShowToSeason" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"TVShowToSeason"] minusSet:value];
-    [self didChangeValueForKey:@"TVShowToSeason" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+- (void)removeSeasons:(NSSet *)value {
+    [self willChangeValueForKey:@"seasons" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"seasons"] minusSet:value];
+    [self didChangeValueForKey:@"seasons" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
-- (void)addTVShowToEpisodeObject:(Episode *)value {    
+- (void)addEpisodesObject:(Episode *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"TVShowToEpisode" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"TVShowToEpisode"] addObject:value];
-    [self didChangeValueForKey:@"TVShowToEpisode" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"episodes"] addObject:value];
+    [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)removeTVShowToEpisodeObject:(Episode *)value {
+- (void)removeEpisodesObject:(Episode *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"TVShowToEpisode" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"TVShowToEpisode"] removeObject:value];
-    [self didChangeValueForKey:@"TVShowToEpisode" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"episodes"] removeObject:value];
+    [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)addTVShowToEpisode:(NSSet *)value {    
-    [self willChangeValueForKey:@"TVShowToEpisode" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"TVShowToEpisode"] unionSet:value];
-    [self didChangeValueForKey:@"TVShowToEpisode" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+- (void)addEpisodes:(NSSet *)value {    
+    [self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"episodes"] unionSet:value];
+    [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
-- (void)removeTVShowToEpisode:(NSSet *)value {
-    [self willChangeValueForKey:@"TVShowToEpisode" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"TVShowToEpisode"] minusSet:value];
-    [self didChangeValueForKey:@"TVShowToEpisode" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+- (void)removeEpisodes:(NSSet *)value {
+    [self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"episodes"] minusSet:value];
+    [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
 

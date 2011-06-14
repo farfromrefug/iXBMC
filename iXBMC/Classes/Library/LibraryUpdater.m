@@ -315,9 +315,9 @@ static LibraryUpdater *sharedInstance = nil;
                         ActorRole *newRole = [NSEntityDescription insertNewObjectForEntityForName:@"ActorRole" inManagedObjectContext:context];;
                         newRole.role = actorRole;
                         newRole.actorName = actorName;
-						newRole.RoleToActor = actor;
-                        [actor addActorToRoleObject:newRole];
-                        [movie addMovieToRoleObject:newRole];
+						newRole.actor = actor;
+                        [actor addRolesObject:newRole];
+                        [movie addRolesObject:newRole];
                     }
                 }
 
@@ -783,9 +783,9 @@ static LibraryUpdater *sharedInstance = nil;
 					return;
 				}
 				TVShow* show = (TVShow*)[array objectAtIndex:0];
-				[show addTVShowToSeasonObject:season];
-				[season setValue:show forKey:@"SeasonToTVShow"];
-            }
+				[show addSeasonsObject:season];
+				season.tvshow = show;
+			}
             anObject = [enumerator nextObject];
         }
         
@@ -899,7 +899,7 @@ static LibraryUpdater *sharedInstance = nil;
         NSFetchRequest *episodeFetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *episodeEntity = [NSEntityDescription entityForName:@"Episode" inManagedObjectContext:context];
         [episodeFetchRequest setPredicate:[NSPredicate 
-										  predicateWithFormat:@"(tvshowid == %@) AND (season == %@)"
+										  predicateWithFormat:@"(tvshowid == %@) AND (seasonid == %@)"
 										  ,[[result objectForKey:@"info"] objectForKey:@"tvshowid"]
 										   ,[[result objectForKey:@"info"] objectForKey:@"season"]]];
 		[episodeFetchRequest setEntity:episodeEntity];
@@ -950,7 +950,7 @@ static LibraryUpdater *sharedInstance = nil;
                 [episode setValue:label forKey:@"label"];
 				
 				[episode setValue:[[result objectForKey:@"info"] objectForKey:@"tvshowid"] forKey:@"tvshowid"];
-				[episode setValue:[NSNumber numberWithInt:[[newepisode valueForKey:@"season"] intValue]] forKey:@"season"];
+				[episode setValue:[NSNumber numberWithInt:[[newepisode valueForKey:@"season"] intValue]] forKey:@"seasonid"];
                 [episode setValue:[NSNumber numberWithInt:[[newepisode valueForKey:@"episodeid"] intValue]] forKey:@"episodeid"];
                 [episode setValue:[NSNumber numberWithInt:[[newepisode valueForKey:@"episode"] intValue]] forKey:@"episode"];
 
@@ -1014,10 +1014,10 @@ static LibraryUpdater *sharedInstance = nil;
 					return;
 				}
 				Season* season = (Season*)[array objectAtIndex:0];
-				[season addSeasonToEpisodeObject:episode];
-				[season.SeasonToTVShow addTVShowToEpisodeObject:episode];
-				episode.EpisodeToTVShow = season.SeasonToTVShow;
-				episode.EpisodeToSeason = season;
+				[season addEpisodesObject:episode];
+				[season.tvshow addEpisodesObject:episode];
+				episode.tvshow = season.tvshow;
+				episode.season = season;
             }
             anObject = [enumerator nextObject];
         }

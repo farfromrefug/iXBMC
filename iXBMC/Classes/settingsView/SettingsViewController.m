@@ -93,6 +93,20 @@
 
     TTTableLink* addHost = [TTTableLink itemWithText:@"Add Host" URL:@"tt://addserver"];
     [hostsData addObject:addHost];
+	
+	NSMutableArray* generalSettingsData = [[NSMutableArray alloc] init];
+
+	CustomSwitch* button =  [CustomSwitch switchWithTitle:@""];
+    button.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
+	| UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
+	| UIViewAutoresizingFlexibleTopMargin ;      
+    [button addTarget:self action:@selector(highQualityChanged:) 
+     forControlEvents:UIControlEventTouchUpInside];
+	
+    [button setSelected:[[defaults valueForKey:@"images:highQuality"] boolValue]];
+    
+    TTTableControlItem* switchControlItem = [TTTableControlItem itemWithCaption:@"HD images (Slower)" control:button];
+    [generalSettingsData addObject:switchControlItem];
     
     NSMutableArray* moviesViewData = [[NSMutableArray alloc] init];
     
@@ -119,7 +133,7 @@
     TTTableControlItem* sliderItem = [TTTableControlItem itemWithCaption:@"Cells Height" control:slider];
     [moviesViewData addObject:sliderItem];
     
-    CustomSwitch* button =  [CustomSwitch switchWithTitle:@""];
+    button =  [CustomSwitch switchWithTitle:@""];
     button.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
                         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
                         | UIViewAutoresizingFlexibleTopMargin ;      
@@ -128,7 +142,7 @@
 
     [button setSelected:[[defaults valueForKey:@"movieCell:ratingStars"] boolValue]];
     
-    TTTableControlItem* switchControlItem = [TTTableControlItem itemWithCaption:@"rating Stars" control:button];
+    switchControlItem = [TTTableControlItem itemWithCaption:@"rating Stars" control:button];
     [moviesViewData addObject:switchControlItem];
 	
 	NSMutableArray* tvshowsViewData = [[NSMutableArray alloc] init];
@@ -167,8 +181,11 @@
     // This demonstrates how to create a table with standard table "fields".  Many of these
     // fields with URLs that will be visited when the row is selected
     self.dataSource = [SettingsViewDataSource dataSourceWithArrays:@"Hosts",hostsData
-                       ,@"Movies View", moviesViewData,@"TVShows View", tvshowsViewData, nil];
+                       ,@"General", generalSettingsData
+					   ,@"Movies View", moviesViewData
+					   ,@"TVShows View", tvshowsViewData, nil];
     [hostsData release];
+    [generalSettingsData release];
     [moviesViewData release];
     [tvshowsViewData release];
 }
@@ -264,6 +281,19 @@
 
 - (id<UITableViewDelegate>)createDelegate {
 	return [[[SettingsViewControllerDelegate alloc] initWithController:self] autorelease];
+}
+
+- (void)highQualityChanged:(id)sender {
+    
+    TTButton *control = (TTButton *)sender;
+    
+    BOOL value = !control.selected;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:[NSNumber numberWithBool:value] forKey:@"images:highQuality"];
+    [[NSNotificationCenter defaultCenter] 
+     postNotificationName:@"highQualityChanged" 
+     object:nil];
+    control.selected = value;
 }
 
 - (void)movieCellHeightChanged:(id)sender {

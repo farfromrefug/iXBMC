@@ -19,36 +19,36 @@
 @dynamic tvshowid;
 @dynamic label;
 @dynamic nbepisodes;
-@dynamic SeasonToTVShow;
-@dynamic SeasonToEpisode;
+@dynamic tvshow;
+@dynamic episodes;
 
 
-- (void)addSeasonToEpisodeObject:(Episode *)value {    
+- (void)addEpisodesObject:(Episode *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"SeasonToEpisode" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"SeasonToEpisode"] addObject:value];
-    [self didChangeValueForKey:@"SeasonToEpisode" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"episodes"] addObject:value];
+    [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)removeSeasonToEpisodeObject:(Episode *)value {
+- (void)removeEpisodesObject:(Episode *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"SeasonToEpisode" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"SeasonToEpisode"] removeObject:value];
-    [self didChangeValueForKey:@"SeasonToEpisode" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"episodes"] removeObject:value];
+    [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
 }
 
-- (void)addSeasonToEpisode:(NSSet *)value {    
-    [self willChangeValueForKey:@"SeasonToEpisode" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"SeasonToEpisode"] unionSet:value];
-    [self didChangeValueForKey:@"SeasonToEpisode" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+- (void)addEpisodes:(NSSet *)value {    
+    [self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"episodes"] unionSet:value];
+    [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
-- (void)removeSeasonToEpisode:(NSSet *)value {
-    [self willChangeValueForKey:@"SeasonToEpisode" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"SeasonToEpisode"] minusSet:value];
-    [self didChangeValueForKey:@"SeasonToEpisode" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+- (void)removeEpisodes:(NSSet *)value {
+    [self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"episodes"] minusSet:value];
+    [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
 

@@ -237,10 +237,12 @@
 		point = CGPointMake(left, paddingY + firstLabelHeight);
 		[_item.genre drawAtPoint:point forWidth:textWidth withFont:secondaryFont minFontSize:SECONDARY_FONT_SIZE actualFontSize:&actualFontSize lineBreakMode:UILineBreakModeTailTruncation baselineAdjustment:UIBaselineAdjustmentAlignBaselines];
 		
-		//	[thirdTextColor set];
-		//	point = CGPointMake(left, paddingY + firstLabelHeight + secondLabelHeight);
-		//	[_item.runtime drawAtPoint:point forWidth:textWidth withFont:thirdFont minFontSize:THIRD_FONT_SIZE actualFontSize:&actualFontSize lineBreakMode:UILineBreakModeTailTruncation baselineAdjustment:UIBaselineAdjustmentAlignBaselines];
-		//		
+		NSString* thirdline = [NSString stringWithFormat:@"%@ Episodes ● %@ Unwatched"
+							   ,_item.nbEpisodes, _item.nbUnWatched];
+		[thirdTextColor set];
+		point = CGPointMake(left, paddingY + firstLabelHeight + secondLabelHeight);
+		[thirdline drawAtPoint:point forWidth:textWidth withFont:thirdFont minFontSize:THIRD_FONT_SIZE actualFontSize:&actualFontSize lineBreakMode:UILineBreakModeTailTruncation baselineAdjustment:UIBaselineAdjustmentAlignBaselines];
+			
 		//	[[UIColor whiteColor] set];
 		//	[_item.year drawInRect:CGRectMake(yearBgdLeft, height/4 - secondLabelHeight/2
 		//								  ,yearBgdWidth, secondLabelHeight) withFont:secondaryFont lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
@@ -276,7 +278,12 @@
 
 - (void)loadImage
 {
-	CGFloat height = TTSTYLEVAR(tvshowCellMaxHeight)*[UIScreen mainScreen].scale;
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	CGFloat height = TTSTYLEVAR(tvshowCellMaxHeight);
+	if ([[defaults valueForKey:@"images:highQuality"] boolValue])
+	{
+		height *= [UIScreen mainScreen].scale;
+	}
 	
 	if (_item.imageURL && [XBMCImage hasCachedImage:_item.imageURL thumbnailHeight:height]) 
 	{

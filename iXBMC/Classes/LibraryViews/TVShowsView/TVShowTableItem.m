@@ -17,6 +17,8 @@
 @synthesize rating = _rating;
 @synthesize watched = _watched;
 @synthesize forSearch = _forSearch;
+@synthesize nbEpisodes = _nbEpisodes;
+@synthesize nbUnWatched = _nbUnWatched;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +39,10 @@
     TT_RELEASE_SAFELY(_tagline);
     TT_RELEASE_SAFELY(_genre);
     TT_RELEASE_SAFELY(_imageURL);
+    TT_RELEASE_SAFELY(_itemId);
     TT_RELEASE_SAFELY(_imdb);
+    TT_RELEASE_SAFELY(_nbEpisodes);
+    TT_RELEASE_SAFELY(_nbUnWatched);
     
     [super dealloc];
 }

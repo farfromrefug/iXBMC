@@ -46,7 +46,8 @@
     TT_RELEASE_SAFELY(_imageURL);
     TT_RELEASE_SAFELY(_trailer);
     TT_RELEASE_SAFELY(_imdb);
-    
+	TT_RELEASE_SAFELY(_itemId);
+   
     [super dealloc];
 }
 

@@ -9,6 +9,8 @@
     NSString* _imdb;
     NSString* _rating;
     NSNumber* _itemId;
+    NSNumber* _nbEpisodes;
+    NSNumber* _nbUnWatched;
     BOOL _watched;
 //    BOOL _selected;
     BOOL _forSearch;
@@ -22,6 +24,8 @@
 @property (nonatomic, retain)   NSString* imdb;
 @property (nonatomic, retain)   NSString* rating;
 @property (nonatomic, retain)   NSNumber* itemId;
+@property (nonatomic, retain)   NSNumber* nbEpisodes;
+@property (nonatomic, retain)   NSNumber* nbUnWatched;
 @property (nonatomic)   BOOL watched;
 //@property (nonatomic)   BOOL selected;
 @property (nonatomic)   BOOL forSearch;
