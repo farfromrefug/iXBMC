@@ -169,7 +169,7 @@ static XBMCImage *sharedInstance = nil;
 //            [[TTURLCache sharedCache] storeImage:image forURL:url];
 //        }
 //    }  
-    
+
     id  obj = [params objectForKey:@"object"];
     if (obj) {
         SEL aSel = [[params objectForKey:@"selector"] pointerValue];

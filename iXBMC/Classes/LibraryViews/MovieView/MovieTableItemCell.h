@@ -19,9 +19,7 @@
 #import "MovieTableItem.h"
 #import "MovieViewController.h"
 
-@class TTImageView;
 @class MovieTableItemCell;
-@class FadingImageView;
 @class MovieCellView;
 @protocol MovieTableItemCellDelegate
 
@@ -34,26 +32,6 @@
 @interface MovieTableItemCell : TTTableLinkedItemCell {
 	
 	MovieCellView *_movieView;
-
-	
-//    UIImageView* _line;
-//    UIView* _yearBackground;
-//
-//    UILabel* _firstLabel;
-//    UILabel* _secondLabel;
-//    UILabel* _thirdLabel;
-
-//    TTStyle*  _normalStyle;
-//    TTStyle*  _selectedStyle;
-//    
-//    UIImageView* _photoFrame;
-//    FadingImageView *_photo;
-//    UIImageView *_newFlag;
-//    UILabel* subtitleLabel;
-//    UILabel* _yearLabel;
-//    UILabel* _ratingLabel;
-//    UIImageView* _ratingStars;
-//    UIActivityIndicatorView *scrollingWheel;
     MovieViewController *delegate;
     
     TTButton *_playButton;
@@ -66,16 +44,9 @@
     BOOL _imageLoaded;
 }
 
-//@property (nonatomic, readonly, retain) UILabel*      firstLabel;
-//@property (nonatomic, readonly, retain) UILabel*      secondLabel;
-//@property (nonatomic, readonly, retain) UILabel*      thirdLabel;
-//@property (nonatomic, readonly, retain) FadingImageView*  photo;
 @property (nonatomic, assign) MovieViewController *delegate;
-//@property (nonatomic, retain) Movie *movie;
 
 - (void)loadImage;
-- (void)toggleImage:(BOOL)animated;
-
 
 -(void) showTrailer:(id)sender;
 -(void) play:(id)sender;

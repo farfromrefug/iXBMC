@@ -15,11 +15,11 @@
 //
 
 #import "TVShowTableItemCell.h"
+#import "TVShowsViewDataSource.h"
 
 #import "XBMCStateListener.h"
 #import "XBMCImage.h"
 
-#import "FadingImageView.h"
 #import "TVShowCellView.h"
 
 #define MENU_HEIGHT 25;
@@ -79,16 +79,16 @@
         [_enqueueButton addTarget:self action:@selector(enqueue:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:_enqueueButton];
         
-        _imdbButton = [[[TTButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 20.0, 20.0)] autorelease];
-        [_imdbButton setTitle:@"Imdb" forState:UIControlStateNormal];
-        [_imdbButton setBackgroundColor:[UIColor clearColor]];
-        [_imdbButton setStyle:[TTLinearGradientBorderStyle styleWithColor1:[UIColor clearColor] 
+        _tvdbButton = [[[TTButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 20.0, 20.0)] autorelease];
+        [_tvdbButton setTitle:@"TheTvdb" forState:UIControlStateNormal];
+        [_tvdbButton setBackgroundColor:[UIColor clearColor]];
+        [_tvdbButton setStyle:[TTLinearGradientBorderStyle styleWithColor1:[UIColor clearColor] 
                                                                color2:[UIColor grayColor] 
                                                                 width:1 next:
                           [TTTextStyle styleWithFont:[UIFont systemFontOfSize:12] 
                                                color:[UIColor grayColor] next:nil]] forState:UIControlStateNormal];
-        [_imdbButton addTarget:self action:@selector(imdb:) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:_imdbButton];
+        [_tvdbButton addTarget:self action:@selector(tvdb:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:_tvdbButton];
         
     }
     
@@ -178,14 +178,14 @@
             _enqueueButton.hidden = TRUE;
         }
         
-        if (item.imdb != nil && ![item.imdb isEqual:@""])
+        if (item.tvdb != nil && ![item.tvdb isEqual:@""])
         {
-            _imdbButton.hidden = FALSE;
-            [_buttons addObject:_imdbButton];
+            _tvdbButton.hidden = FALSE;
+            [_buttons addObject:_tvdbButton];
         }
         else
         {
-            _imdbButton.hidden = TRUE;
+            _tvdbButton.hidden = TRUE;
         }
     }
 }
@@ -236,18 +236,27 @@
 //    }
 }
 -(void) moreInfos:(id)sender
-{
-    if (((TVShowTableItem*)_item).itemId)
-    {
-//        [((AppDelegate*)[UIApplication sharedApplication].delegate) showTVShowsDetails:((TVShowTableItem*)_item).itemId];
-    }
+{	
+//	[[NSNotificationCenter defaultCenter] 
+//	 postNotificationName:@"showSeasons" 
+//	 object:nil userInfo:[NSDictionary 
+//						  dictionaryWithObjectsAndKeys:((TVShowTableItem*)_item).itemId, @"tvshowid"
+//						  , nil]];
+//	
+//	NSNumber* tvshowId = [[notification userInfo] objectForKey:@"tvshowid"];
+//	NSLog(@"Asking for seasons %@",tvshowId);
+	
+	NSString* url = [NSString stringWithFormat:@"tt://library/seasons/%@/%d"
+					 ,((TVShowTableItem*)_item).itemId, !((TVShowTableItem*)_item).dataSource.hideWatched];
+	TTOpenURL(url);
 }
 
--(void) imdb:(id)sender
+-(void) tvdb:(id)sender
 {
-    if (((TVShowTableItem*)_item).imdb)
+    if (((TVShowTableItem*)_item).tvdb)
     {
-        [((AppDelegate*)[UIApplication sharedApplication].delegate) showImdb:((TVShowTableItem*)_item).imdb];
+		NSLog(@"tvdb %@", ((TVShowTableItem*)_item).tvdb);
+        [((AppDelegate*)[UIApplication sharedApplication].delegate) showTvdb:((TVShowTableItem*)_item).tvdb];
     }
 }
 

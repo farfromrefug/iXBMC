@@ -18,7 +18,6 @@
 @dynamic season;
 @dynamic tvshowid;
 @dynamic label;
-@dynamic nbepisodes;
 @dynamic tvshow;
 @dynamic episodes;
 
@@ -51,5 +50,18 @@
     [self didChangeValueForKey:@"episodes" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
++ (NSString*)defaultSort
+{
+    return @"season asc";
+}
+
++ (NSArray*)sorts
+{
+    return [NSArray arrayWithObjects:[self defaultSort], nil];
+}
++ (NSArray*)sortNames
+{
+    return [NSArray arrayWithObjects:@"Season", nil];
+}
 
 @end

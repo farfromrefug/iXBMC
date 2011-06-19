@@ -9,7 +9,9 @@
 
 #import "ActiveManager.h"
 
-//#import "RecentlyAddedViewController.h"
+#import "BCTab.h"
+
+#import "RecentlyAddedEpisodesViewController.h"
 #import "CustomTitleView.h"
 
 #import "LibraryUpdater.h"
@@ -24,15 +26,28 @@
 @synthesize forSearch = _forSearch;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+
+- (NSString *)iconImageName {
+	return @"70-tv.png";
+}
+
+- (void)setTabBarButton:(BCTab*) tabBarButton
+{
+}
+
+- (NSString *)iconTitle {
+	return @"TVShows";
+}
+
+- (id)initWithWatched:(BOOL)watched
+{
+    self = [super initWithNibName:nil bundle:nil];
     if (self) {
-    self.title = @"TVShows";
-      self.tabBarItem.image = [UIImage imageNamed:@"70-tv.png"];
-    self.variableHeightRows = YES;
-    self.showTableShadows = YES;
-      _forSearch = FALSE;
+		self.variableHeightRows = YES;
+		self.showTableShadows = YES;
+		_forSearch = FALSE;
         _selectedCellIndexPath = nil;
+		_startWithWatched = watched;
 	}
 
   return self;
@@ -40,12 +55,8 @@
 
 
 - (id)initForSearch {
-    self = [super init];
+    self = [self initWithWatched:YES];
     if (self) {
-        self.title = @"TVShows";
-        self.tabBarItem.image = [UIImage imageNamed:@"70-tv.png"];
-        self.variableHeightRows = YES;
-        self.showTableShadows = YES;
         _forSearch = YES;
     }
     
@@ -54,7 +65,7 @@
 
 - (void)dealloc
 {    
-//    TT_RELEASE_SAFELY(_recentlyAddedTVShowss);
+    TT_RELEASE_SAFELY(_recentlyAddedEpisodes);
     TT_RELEASE_SAFELY(_toolBar);
     TT_RELEASE_SAFELY(_selectedCellIndexPath);
     TT_RELEASE_SAFELY(_titleBackground);
@@ -114,7 +125,7 @@
 - (void) hideToolbar
 {
     [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
     _toolBar.bottom =  0;
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
@@ -129,7 +140,7 @@
     }
     
     [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
     if (_toolBar.top == 0)
         _toolBar.bottom = 0;
     else _toolBar.top = 0;
@@ -177,29 +188,38 @@
      name:@"DisconnectedFromXBMC"
      object:nil ];
     
-    [center
-     addObserver:self
-     selector:@selector(updateRecentlyAddedTVShowss:)
-     name:@"recentlyAddedTVShowss"
-     object:nil ];
+	if (!_forSearch)
+	{
+		[center
+		 addObserver:self
+		 selector:@selector(updateRecentlyAddedEpisodes:)
+		 name:@"recentlyAddedEpisodes"
+		 object:nil ];
+		
+		[center
+		 addObserver:self
+		 selector:@selector(reloadTableView)
+		 name:@"tvshowCellHeightChanged"
+		 object:nil ];
+	}
 	
 	[center
-     addObserver:self
-     selector:@selector(reloadTableView)
-     name:@"highQualityChanged"
-     object:nil ];
-    
-    [center
-     addObserver:self
-     selector:@selector(reloadTableView)
-     name:@"tvshowCellHeightChanged"
-     object:nil ];
-    
-    [center
-     addObserver:self
-     selector:@selector(reloadTableView)
-     name:@"tvshowCellRatingStarsChanged"
-     object:nil ];
+	 addObserver:self
+	 selector:@selector(reloadTableView)
+	 name:@"cacheCleared"
+	 object:nil ];
+	
+	[center
+	 addObserver:self
+	 selector:@selector(reloadTableView)
+	 name:@"highQualityChanged"
+	 object:nil ];
+	
+	[center
+	 addObserver:self
+	 selector:@selector(reloadTableView)
+	 name:@"tvshowCellRatingStarsChanged"
+	 object:nil ];
     
     UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeLeft:)];
     gesture.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -209,19 +229,20 @@
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone]; 
     
     //clear background color of uitableview
-    self.tableView.backgroundColor = [UIColor clearColor];
+	self.tableView.backgroundColor = [UIColor clearColor];
+    self.view.backgroundColor = [UIColor clearColor];
     
-    //create new uiview with a background image
-    UIImage *backgroundImage = TTIMAGE(@"bundle://tableViewback.png");
-    UIImageView *backgroundView = [[[UIImageView alloc] 
-                                   initWithImage:backgroundImage] autorelease];
-    
-    //adjust the frame for the case of navigation or tabbars
-    backgroundView.frame = self.tableView.frame;
-    
-    //add background view and send it to the back
-    [self.view addSubview:backgroundView];
-    [self.view sendSubviewToBack:backgroundView];
+//    //create new uiview with a background image
+//    UIImage *backgroundImage = TTIMAGE(@"bundle://tableViewback.png");
+//    UIImageView *backgroundView = [[[UIImageView alloc] 
+//                                   initWithImage:backgroundImage] autorelease];
+//    
+//    //adjust the frame for the case of navigation or tabbars
+//    backgroundView.frame = self.tableView.frame;
+//    
+//    //add background view and send it to the back
+//    [self.view addSubview:backgroundView];
+//    [self.view sendSubviewToBack:backgroundView];
     
     _titleBackground = [[[CustomTitleView alloc] init] retain];
     
@@ -242,19 +263,19 @@
 
         self.searchViewController = searchController;
         
-//        _recentlyAddedTVShows = [[RecentlyAddedViewController alloc] init];
-//        _recentlyAddedTVShows.pageControl.hidden = TRUE;
-//        [_recentlyAddedTVShows.view setFrame:CGRectMake(0, _searchController.searchBar.height
-//                                                       , _searchController.searchBar.width
-//                                                       , 100)];
+        _recentlyAddedEpisodes = [[RecentlyAddedEpisodesViewController alloc] init];
+        _recentlyAddedEpisodes.pageControl.hidden = TRUE;
+        [_recentlyAddedEpisodes.view setFrame:CGRectMake(0, _searchController.searchBar.height
+                                                       , _searchController.searchBar.width
+                                                       , 75)];
         
         UIView* header = [[[UIView alloc] initWithFrame:CGRectMake(0, 0
                                           , _searchController.searchBar.width
                                           , _searchController.searchBar.height
-                                          /*+ _recentlyAddedTVShowss.view.height*/)] 
+                                          + _recentlyAddedEpisodes.view.height)] 
                           autorelease];
         [header setClipsToBounds:YES];
-//        [header addSubview:_recentlyAddedTVShows.view];
+        [header addSubview:_recentlyAddedEpisodes.view];
         [header addSubview:_searchController.searchBar];
         self.tableView.tableHeaderView = header;
         
@@ -262,20 +283,11 @@
         self.searchViewController.tableView.backgroundColor = [UIColor clearColor];
         [self.searchViewController.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone]; 
         
-        [self updateRecentlyAddedTVShows:nil];
+        [self updateRecentlyAddedEpisodes:nil];
 
         self.tableView.contentOffset = CGPointMake(0, _searchController.searchBar.height);
 
         [self.tableView setCanCancelContentTouches:NO];
-//        TTButton* item = [TTButton buttonWithStyle:@"navigationButton:" title:@"Update"];
-//        [item addTarget:self action:@selector(updateLibrary) forControlEvents:UIControlEventTouchUpInside];
-//        [item sizeToFit];
-////        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Update" style:UIBarButtonItemStyleBordered target:self action:@selector(updateLibrary)];
-//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:item];;
-//        item = [TTButton buttonWithStyle:@"navigationButton:" title:@"Options"];
-//        [item addTarget:self action:@selector(toggleToolbar) forControlEvents:UIControlEventTouchUpInside];
-//        [item sizeToFit];
-//        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:item];;
     }
 }
 
@@ -290,7 +302,7 @@
 //	[self modelDidStartLoad:nil];
     [super viewWillAppear:animated];
     
-//    [_recentlyAddedTVShowss viewWillAppear:animated];
+    [_recentlyAddedEpisodes viewWillAppear:animated];
     
     if (self.tableView.contentOffset.y <
         self.searchDisplayController.searchBar.frame.size.height)
@@ -298,50 +310,57 @@
         self.tableView.contentOffset =
         CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
     }
+	[self updateLibrary];
 }
 
 - (void)viewDidAppear:(BOOL)animated 
 {    
 	_isViewAppearing = FALSE;
     [super viewDidAppear:animated];
-//    [self loadContentForVisibleCells];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-//    [_recentlyAddedTVShowss viewWillDisappear:animated];
+    [_recentlyAddedEpisodes viewWillDisappear:animated];
     [self hideToolbar];
-    //    [self showEmpty:NO];
+}
+
+- (void) updateSubtitle
+{
+	_titleBackground.subtitle = [NSString stringWithFormat:@"%d shows"
+								 , [((TVShowsViewDataSource*)self.dataSource) 
+									count]];
 }
 
 - (void) reloadTableView
 {
 	[self setSelectedCellIndexPath:nil];
 	[self.tableView reloadData];
-	_titleBackground.subtitle = [NSString stringWithFormat:@"%d items"
-								 , [((TVShowsViewDataSource*)self.dataSource) 
-									count]];
+	[self updateSubtitle];
 }
 
--(void) hideRecentlyAddedTVShowss
+-(void) hideRecentlyAddedEpisodes
 {
-//    [_recentlyAddedTVShowss setTVShowss:nil];
+    [_recentlyAddedEpisodes setEpisodes:nil];
     
+	[UIView beginAnimations:nil context:self.tableView];
+	[UIView setAnimationDuration:0.5];
+	
     UIView* header = self.tableView.tableHeaderView; 
     [header setFrame:CGRectMake(0, 0
                                 , _searchController.searchBar.width
                                 , _searchController.searchBar.height)];
     self.tableView.tableHeaderView = header;
+	[UIView commitAnimations];
     
 }
 
 - (void) persistentStoreChanged: (NSNotification *) notification 
 {
     [[self navigationController] popToViewController:self animated:YES];
-    [self hideRecentlyAddedTVShowss];
+    [self hideRecentlyAddedEpisodes];
     [self invalidateModel];
-//    _titleBackground.subtitle = [NSString stringWithFormat:@"%d items", [((TVShowsViewDataSource*)self.dataSource) count]];
 }
 
 - (void) updateStarted: (NSNotification *) notification 
@@ -365,44 +384,25 @@
 
 - (void) updateFinished: (NSNotification *) notification 
 {
-//    if(self.tableBannerView) {
-//        [self setTableBannerView:nil animated:YES];
-//    }
 }
 
 
 - (void) updateLibrary {
-//    [[LibraryUpdater sharedInstance] updateRecentlyAddedTVShowss];
+    [[LibraryUpdater sharedInstance] updateRecentlyAddedEpisodes:TRUE];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)createModel {
-//	if (_isViewAppearing) return;
     self.dataSource = [[[TVShowsViewDataSource alloc]
-                        initWithEntity:[[[[ActiveManager shared] managedObjectModel] 
-										 entitiesByName] objectForKey:@"TVShow"] 
+                        initWithWatched:_startWithWatched 
                         controllerTableView:self.tableView] autorelease];
     [((TVShowsViewDataSource*)self.dataSource).delegates addObject:self];
     ((TVShowsViewDataSource*)self.dataSource).forSearch = _forSearch;
-//    if ([LibraryUpdater updating])
-//    {
-//        [self modelDidBeginUpdates:self.model];
-//    }
-//    _titleBackground.subtitle = [NSString stringWithFormat:@"%d items", [((TVShowsViewDataSource*)self.dataSource) count]];
 }
-
-//- (void)modelDidFinishLoad:(id)sender
-//{
-//    _titleBackground.subtitle = [NSString stringWithFormat:@"%d items", [((TVShowsViewDataSource*)self.dataSource) count]];
-//    
-//}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didRefreshModel {
-// 	[super didRefreshModel];
-	_titleBackground.subtitle = [NSString stringWithFormat:@"%d items"
-									 , [((TVShowsViewDataSource*)self.dataSource) 
-										count]];
+	[self updateSubtitle];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -431,46 +431,29 @@
 //- (void)showError:(BOOL)show {
 //}
 
-
-
-- (void)loadContentForVisibleCells
+-(void) updateRecentlyAddedEpisodes: (NSNotification *) notification
 {
-    if ([XBMCStateListener connected])
-    {
-        NSArray *cells = [self.tableView visibleCells];
-        [cells retain];
-        for (int i = 0; i < [cells count]; i++) 
-        { 
-            // Go through each cell in the array and call its loadContent method if it responds to it.
-            TVShowTableItemCell *TVShowCell = (TVShowTableItemCell *)[[cells objectAtIndex: i] retain];
-            [TVShowCell loadImage];
-            [TVShowCell release];
-            TVShowCell = nil;
-        }
-        [cells release];
-    }
-}
-
--(void) updateRecentlyAddedTVShows: (NSNotification *) notification
-{
-//    [_recentlyAddedTVShows setTVShowss:[[LibraryUpdater sharedInstance] recentlyAddedTVShowss]];
+    [_recentlyAddedEpisodes setEpisodes:[[LibraryUpdater sharedInstance] recentlyAddedEpisodes]];
     
     UIView* header = self.tableView.tableHeaderView; 
-//    if ([_recentlyAddedTVShows.TVShows count] > 0)
-//    {
-//        [header setFrame:CGRectMake(0, 0
-//                   , _searchController.searchBar.width
-//                   , _searchController.searchBar.height
-//                    + _recentlyAddedTVShowss.view.height)];
-//    }
-//    else
+	
+	[UIView beginAnimations:nil context:self.tableView];
+	[UIView setAnimationDuration:0.5];
+    if ([_recentlyAddedEpisodes nbEpisodes] > 0)
+    {
+        [header setFrame:CGRectMake(0, 0
+                   , _searchController.searchBar.width
+                   , _searchController.searchBar.height
+                    + _recentlyAddedEpisodes.view.height)];
+    }
+    else
     {
         [header setFrame:CGRectMake(0, 0
                                 , _searchController.searchBar.width
                                 , _searchController.searchBar.height)];
     }
     self.tableView.tableHeaderView = header;
-    
+    [UIView commitAnimations];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -485,8 +468,6 @@
 {
     NSIndexPath* oldIndex = [_selectedCellIndexPath retain];
     [self setSelectedCellIndexPath:nil];
-//	TVShowTableItemCell *cell = (TVShowTableItemCell *)[self.tableView cellForRowAtIndexPath:oldIndex];
-//    [self.tableView deselectRowAtIndexPath:oldIndex animated:NO];
 	[[self.tableView cellForRowAtIndexPath:oldIndex] setSelected:FALSE];
     [self didDeselectRowAtIndexPath:oldIndex];
     [oldIndex release];
@@ -495,25 +476,15 @@
 - (void)didSelectObject:(id)object atIndexPath:(NSIndexPath*)indexPath {
     
     NSIndexPath* oldIndex = [_selectedCellIndexPath retain];
-    
-//    NSIndexPath* newIndex = indexPath;
-//    NSLog(@"selected %d %d", indexPath.row, indexPath.section);
     if ([indexPath isEqual:oldIndex]) 
     {
         [self deselectCurrentObject];
-//        [oldIndex release];
         return;
     }
     else
     {
-//    [oldIndex release];
-
         [self setSelectedCellIndexPath:indexPath];
-//        TVShowTableItemCell *cell = (TVShowTableItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-//        [cell setDelegate:self];
-		[[self.tableView cellForRowAtIndexPath:indexPath] setSelected:TRUE];
-//        [cell toggleImage:TRUE];
-        
+		[[self.tableView cellForRowAtIndexPath:indexPath] setSelected:TRUE];        
         [self.tableView beginUpdates];
         [self.tableView endUpdates];
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
@@ -522,14 +493,8 @@
 
 - (void)didDeselectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-//    TVShowTableItemCell *cell = (TVShowTableItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-//    [cell setDelegate:self];
-//    [cell toggleImage:FALSE];
-    
     [self.tableView beginUpdates];
     [self.tableView endUpdates];
-//    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -546,7 +511,7 @@
 
 - (void)disconnectedFromXBMC: (NSNotification *) notification
 {
-//    [self hideRecentlyAddedTVShows];
+    [self hideRecentlyAddedEpisodes];
     [self reloadTableView];
 }
 
@@ -568,7 +533,6 @@
     [((TVShowsViewDataSource*)self.dataSource) toggleWatched];
     _hideWatchedButton.selected = ((TVShowsViewDataSource*)self.dataSource).hideWatched;
 	[self reloadTableView];
-//    _titleBackground.subtitle = [NSString stringWithFormat:@"%d items", [((TVShowsViewDataSource*)self.dataSource) count]];
 }
 
 - (void) switchSort:(id)sender

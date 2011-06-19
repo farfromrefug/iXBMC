@@ -10,9 +10,6 @@
 {
     AppDelegate* appDelegate;
     
-    NSDictionary* sortTypes;
-    NSString* currentSort;
-    
     NSString* _query;
     BOOL _forSearch;
     BOOL _hideWatched;
@@ -24,9 +21,9 @@
 @property (nonatomic) BOOL forSearch;
 @property (nonatomic) BOOL hideWatched;
 @property (nonatomic, retain) NSArray *filteredListContent;
-@property (nonatomic, retain, readonly) NSDictionary* sortTypes;
 @property (nonatomic, retain) NSString* query;
 
+- (id) initWithWatched:(BOOL )watched controllerTableView:(UITableView *)controllerTableView;
 - (void) toggleWatched;
 
 -(NSUInteger) count;

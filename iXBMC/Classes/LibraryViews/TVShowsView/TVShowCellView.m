@@ -62,12 +62,12 @@
             if (_item.rating && ![_item.rating isEqual:@"0"]) 
             {
                 
-                NSString* url = [NSString stringWithFormat:@"bundle://star.%@.png",item.rating];
+                NSString* url = [NSString stringWithFormat:@"bundle://star.%@_small.png",item.rating];
                 _stars = [TTIMAGE(url) retain];
             }
             else
             {
-                _stars = [TTIMAGE(@"bundle://star.0.0.png") retain];
+                _stars = [TTIMAGE(@"bundle://star.0.0_small.png") retain];
             }
         }
 
@@ -82,12 +82,7 @@
 	// If highlighted state changes, need to redisplay.
 	if (highlighted != lit) {
 		highlighted = lit;	
-		if (!highlighted) {
-			self.backgroundColor = [UIColor clearColor];
-		}
-		else {
-			self.backgroundColor = RGBACOLOR(100, 100, 100, 0.2);
-		}
+
 		[self setNeedsDisplay];
 	}
 }
@@ -105,6 +100,11 @@
 	// Get the graphics context and clear it
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextClearRect(ctx, rect);
+	
+	if (highlighted) {
+		CGContextSetRGBFillColor(ctx, 100, 100, 100, 0.2);
+		CGContextFillRect(ctx, self.bounds);
+	}
 	
 	// Color and font for the main text items (time zone name, time)
 	UIColor *mainTextColor = nil;
@@ -126,8 +126,8 @@
 	}
 	else {
 		mainTextColor = TTSTYLEVAR(themeColor);
-		secondaryTextColor = [UIColor darkGrayColor];
-		thirdTextColor = [UIColor darkGrayColor];
+		secondaryTextColor = [UIColor whiteColor];
+		thirdTextColor = [UIColor whiteColor];
 	}
 	
 	CGRect contentRect = self.bounds;
@@ -137,6 +137,10 @@
 	CGFloat width = contentRect.size.width;
 	CGFloat yearBgdWidth = 60;
 	CGFloat yearBgdLeft = boundsX +  width - yearBgdWidth;
+	CGFloat left = 0;
+	CGFloat photoHeight = height - 4;
+	left = boundsX + 5 + photoHeight*2/3 + kTableCellSmallMargin;
+	BOOL drawText = TRUE;
 	
 	CGPoint point;
 	
@@ -153,12 +157,18 @@
 		CGRect posterRect = CGRectMake(boundsX, boundsY
 									   , width
 									   , height);
-		[_item.poster drawInRect:posterRect contentMode:UIViewContentModeScaleToFill];	
+		if (highlighted) 
+		{
+			[_item.poster drawInRect:posterRect blendMode:kCGBlendModeNormal alpha:0.2];
+		}
+		else
+		{
+			[_item.poster drawInRect:posterRect blendMode:kCGBlendModeNormal alpha:1.0];
+			drawText = FALSE;
+		}
 	}
 	else
 	{
-		CGFloat photoHeight = height - 4;
-		CGFloat left = boundsX + 5 + photoHeight*2/3 + kTableCellSmallMargin;
 		
 		CGRect shadowRect = CGRectMake(boundsX + 5, boundsY + 2
 									   , photoHeight*2/3, photoHeight);
@@ -206,8 +216,10 @@
 						 contentMode:UIViewContentModeScaleToFill];
 			}
 		}
-		
-		
+	}
+	if (drawText)
+	{
+	
 		CGFloat firstLabelHeight = mainFont.ttLineHeight;
 		CGFloat secondLabelHeight = secondaryFont.ttLineHeight;
 		CGFloat thirdLabelHeight = thirdFont.ttLineHeight;
@@ -237,31 +249,32 @@
 		point = CGPointMake(left, paddingY + firstLabelHeight);
 		[_item.genre drawAtPoint:point forWidth:textWidth withFont:secondaryFont minFontSize:SECONDARY_FONT_SIZE actualFontSize:&actualFontSize lineBreakMode:UILineBreakModeTailTruncation baselineAdjustment:UIBaselineAdjustmentAlignBaselines];
 		
-		NSString* thirdline = [NSString stringWithFormat:@"%@ Episodes ● %@ Unwatched"
-							   ,_item.nbEpisodes, _item.nbUnWatched];
+		NSString* thirdline = [NSString stringWithFormat:@"%@ Episodes"
+							   ,_item.nbEpisodes];
+		if ([_item.nbUnWatched intValue] > 0)
+		{
+			thirdline = [thirdline stringByAppendingFormat:@" ● %@ Unwatched", _item.nbUnWatched];
+		}
+		
 		[thirdTextColor set];
 		point = CGPointMake(left, paddingY + firstLabelHeight + secondLabelHeight);
 		[thirdline drawAtPoint:point forWidth:textWidth withFont:thirdFont minFontSize:THIRD_FONT_SIZE actualFontSize:&actualFontSize lineBreakMode:UILineBreakModeTailTruncation baselineAdjustment:UIBaselineAdjustmentAlignBaselines];
-			
-		//	[[UIColor whiteColor] set];
-		//	[_item.year drawInRect:CGRectMake(yearBgdLeft, height/4 - secondLabelHeight/2
-		//								  ,yearBgdWidth, secondLabelHeight) withFont:secondaryFont lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
+		
+		NSString* year = [_item.premiered substringToIndex:4];
+		[[UIColor whiteColor] set];
+		[year drawInRect:CGRectMake(yearBgdLeft, height/4 - secondLabelHeight/2
+									  ,yearBgdWidth, secondLabelHeight) withFont:secondaryFont lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
 		if (_stars != nil)
 		{
-			//		point = CGPointMake(yearBgdLeft, height*3/4 - _stars.size.height/2);
-			//		[_stars drawAtPoint:point];
 			[_stars drawInRect:CGRectMake(yearBgdLeft, height/2, yearBgdWidth, height/2) 
 				   contentMode:UIViewContentModeScaleAspectFit];
 		}
 		else
 		{
-			//		point = CGPointMake(yearBgdLeft, height*3/4 - secondLabelHeight/2);
 			[_item.rating drawInRect:CGRectMake(yearBgdLeft, height*3/4 - secondLabelHeight/2
 												,yearBgdWidth, secondLabelHeight) withFont:secondaryFont lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
-			
-		}	
+		}
 	}
-	
 }
 
 - (void)imageLoaded:(NSDictionary*) result
@@ -282,13 +295,15 @@
 	CGFloat height = TTSTYLEVAR(tvshowCellMaxHeight);
 	if ([[defaults valueForKey:@"images:highQuality"] boolValue])
 	{
-		height *= [UIScreen mainScreen].scale;
+		height *= (CGFloat)TTSTYLEVAR(highQualityFactor);
 	}
+	
 	
 	if (_item.imageURL && [XBMCImage hasCachedImage:_item.imageURL thumbnailHeight:height]) 
 	{
 		_item.poster = [XBMCImage cachedImage:_item.imageURL 
 								thumbnailHeight:height];
+
 	}
 	else if (_item.imageURL && !_item.poster )
     {

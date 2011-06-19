@@ -3,8 +3,8 @@
 #import "SettingsViewDataSource.h"
 #import "HostTableItem.h"
 #import "HostTableItemCell.h"
-#import "AppDelegate.h"
 
+#import "BCTab.h"
 #import "CustomSwitch.h"
 
 @implementation SettingsViewController
@@ -13,34 +13,32 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
 
+- (NSString *)iconImageName {
+	return @"106-sliders.png";
+}
+
+- (void)setTabBarButton:(BCTab*) tabBarButton
+{
+}
+
+- (NSString *)iconTitle {
+	return @"Settings";
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = @"Settings";
-        self.tabBarItem.image = [UIImage imageNamed:@"106-sliders.png"];
-        
-//        UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-//        longGesture.minimumPressDuration = 0.5;
-//        [[self tabBarItem] addGestureRecognizer:longGesture];
-//        [longGesture release];
-        
         self.variableHeightRows = YES;
 //        self.tableViewStyle = UITableViewStylePlain;      
         self.showTableShadows = YES;
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
-        self.tableView.allowsSelectionDuringEditing = YES;
-        [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone]; 
         
-        //clear background color of uitableview
-        self.tableView.backgroundColor = [UIColor clearColor];
-        self.view.backgroundColor = [UIColor greenColor];
-        
-        //create new uiview with a background image
-        UIImage *backgroundImage = TTIMAGE(@"bundle://tableViewback.png");
-        UIImageView *backgroundView = [[[UIImageView alloc] 
-                                        initWithImage:backgroundImage] autorelease];
-        self.tableView.backgroundView = backgroundView;
+//        //create new uiview with a background image
+//        UIImage *backgroundImage = TTIMAGE(@"bundle://tableViewback.png");
+//        UIImageView *backgroundView = [[[UIImageView alloc] 
+//                                        initWithImage:backgroundImage] autorelease];
+//        self.tableView.backgroundView = backgroundView;
 //        //adjust the frame for the case of navigation or tabbars
 //        backgroundView.frame = self.view.frame;
 //        
@@ -55,6 +53,11 @@
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
+	
+	self.tableView.allowsSelectionDuringEditing = YES;
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone]; 
+	self.tableView.backgroundColor = [UIColor clearColor];
+	self.view.backgroundColor = [UIColor clearColor];
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center
@@ -94,19 +97,22 @@
     TTTableLink* addHost = [TTTableLink itemWithText:@"Add Host" URL:@"tt://addserver"];
     [hostsData addObject:addHost];
 	
+	CustomSwitch* button;
+	TTTableControlItem* switchControlItem;
+	
 	NSMutableArray* generalSettingsData = [[NSMutableArray alloc] init];
 
-	CustomSwitch* button =  [CustomSwitch switchWithTitle:@""];
-    button.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
+	button =  [CustomSwitch switchWithTitle:@""];
+	button.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin
 	| UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
 	| UIViewAutoresizingFlexibleTopMargin ;      
-    [button addTarget:self action:@selector(highQualityChanged:) 
-     forControlEvents:UIControlEventTouchUpInside];
+	[button addTarget:self action:@selector(highQualityChanged:) 
+	 forControlEvents:UIControlEventTouchUpInside];
 	
-    [button setSelected:[[defaults valueForKey:@"images:highQuality"] boolValue]];
-    
-    TTTableControlItem* switchControlItem = [TTTableControlItem itemWithCaption:@"HD images (Slower)" control:button];
-    [generalSettingsData addObject:switchControlItem];
+	[button setSelected:[[defaults valueForKey:@"images:highQuality"] boolValue]];
+	
+	switchControlItem = [TTTableControlItem itemWithCaption:@"HD images (Slower)" control:button];
+	[generalSettingsData addObject:switchControlItem];
     
     NSMutableArray* moviesViewData = [[NSMutableArray alloc] init];
     

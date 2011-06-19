@@ -3,7 +3,7 @@
 //#import "CustomTabBarViewController.h"
 
 @class ConnectionActivityLabel;
-@interface TabBarController : UIViewController<UIAlertViewDelegate> {
+@interface HeaderTabBarController : UIViewController {
     ConnectionActivityLabel* _connectionlabel;
     
     MyTabBarController* _tabBarController;

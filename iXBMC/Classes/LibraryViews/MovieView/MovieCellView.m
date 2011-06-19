@@ -62,12 +62,12 @@
             if (_item.rating && ![_item.rating isEqual:@"0"]) 
             {
                 
-                NSString* url = [NSString stringWithFormat:@"bundle://star.%@.png",item.rating];
+                NSString* url = [NSString stringWithFormat:@"bundle://star.%@_small.png",item.rating];
                 _stars = [TTIMAGE(url) retain];
             }
             else
             {
-                _stars = [TTIMAGE(@"bundle://star.0.0.png") retain];
+                _stars = [TTIMAGE(@"bundle://star.0.0_small.png") retain];
             }
         }
 
@@ -82,12 +82,12 @@
 	// If highlighted state changes, need to redisplay.
 	if (highlighted != lit) {
 		highlighted = lit;	
-		if (!highlighted) {
-			self.backgroundColor = [UIColor clearColor];
-		}
-		else {
-			self.backgroundColor = RGBACOLOR(100, 100, 100, 0.2);
-		}
+//		if (!highlighted) {
+//			self.backgroundColor = [UIColor clearColor];
+//		}
+//		else {
+//			self.backgroundColor = RGBACOLOR(100, 100, 100, 0.2);
+//		}
 		[self setNeedsDisplay];
 	}
 }
@@ -105,6 +105,11 @@
 	// Get the graphics context and clear it
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextClearRect(ctx, rect);
+	
+	if (highlighted) {
+		CGContextSetRGBFillColor(ctx, 100, 100, 100, 0.2);
+		CGContextFillRect(ctx, self.bounds);
+	}
 	
 	// Color and font for the main text items (time zone name, time)
 	UIColor *mainTextColor = nil;
@@ -126,8 +131,8 @@
 	}
 	else {
 		mainTextColor = TTSTYLEVAR(themeColor);
-		secondaryTextColor = [UIColor darkGrayColor];
-		thirdTextColor = [UIColor darkGrayColor];
+		secondaryTextColor = [UIColor whiteColor];
+		thirdTextColor = [UIColor whiteColor];
 	}
 	
 	CGRect contentRect = self.bounds;
@@ -267,7 +272,7 @@
 	CGFloat height = TTSTYLEVAR(movieCellMaxHeight);
 	if ([[defaults valueForKey:@"images:highQuality"] boolValue])
 	{
-		height *= [UIScreen mainScreen].scale;
+		height *= (CGFloat)TTSTYLEVAR(highQualityFactor);
 	}
 	
 	if (_item.imageURL && [XBMCImage hasCachedImage:_item.imageURL thumbnailHeight:height]) 

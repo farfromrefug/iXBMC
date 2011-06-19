@@ -23,6 +23,7 @@
 @property (nonatomic, retain) NSArray *filteredListContent;
 @property (nonatomic, retain) NSString* query;
 
+- (id) initWithWatched:(BOOL)watched controllerTableView:(UITableView *)controllerTableView;
 - (void) toggleWatched;
 
 -(NSUInteger) count;

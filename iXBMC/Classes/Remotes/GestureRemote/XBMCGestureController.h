@@ -10,7 +10,7 @@
 #import "ConnectedViewController.h"
 
 @class XBMCTouchView;
-@class RecentlyAddedViewController;
+@class BCTab;
 @class FadingImageView;
 @class CustomTitleView;
 
@@ -20,10 +20,10 @@
     NSString* _type;
     NSString* _id;
     
-    RecentlyAddedViewController* _recentlyAddedMovies;
+    BCTab* _tabButton;
  
     TTView* _toolBar;
-    UIImageView *_backgroundView;
+//    UIImageView *_backgroundView;
     TTView *_infosView;
     FadingImageView* _cover;
     FadingImageView* _fanart;
@@ -33,11 +33,11 @@
     
     CustomTitleView* _titleBackground;
 }
+@property (nonatomic, retain) BCTab* tabButton;
 @property (nonatomic, retain) NSString* imdb;
 @property (nonatomic, retain) NSString* type;
 @property (nonatomic, retain) NSString* itemId;
 
-//@property (nonatomic, retain) IBOutlet XBMCTouchView* gestureView;
 //
 //- (void)handleTap:(UITapGestureRecognizer *)recognizer;
 //- (void)handleDoubleTap:(UITapGestureRecognizer *)recognizer; 
@@ -45,12 +45,7 @@
 
 -(void)updatePlayingInfo: (NSNotification *) notification;
 -(void)cleanPlayingInfo;
-//- (void)getImagePathResponse:(id)result;
 -(void)downloadCover:(NSString*)url;
--(void) updateRecentlyAddedMovies: (NSNotification *) notification;
-
-//-(IBAction)showActionSheet:(id)sender;
-
 
 - (void)applicationDidBecomeActive: (NSNotification *) notification; 
 - (void)applicationWillResignActive: (NSNotification *) notification; 

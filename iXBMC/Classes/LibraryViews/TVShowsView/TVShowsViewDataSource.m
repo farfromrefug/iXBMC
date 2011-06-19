@@ -7,7 +7,8 @@
 #import "TVShowTableItem.h"
 #import "TVShowTableItemCell.h"
 
-#import "AppDelegate.h"
+#import "ActiveManager.h"
+
 #import "XBMCHttpInterface.h"
 
 // Three20 Additions
@@ -23,10 +24,20 @@
 @synthesize filteredListContent = _filteredListContent;
 @synthesize hideWatched = _hideWatched;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-- (id) initWithEntity:(NSEntityDescription *)entity controllerTableView:(UITableView *)controllerTableView
+- (void)setPredicate
 {
-    self = [super initWithEntity:entity controllerTableView:controllerTableView];
+	self.predicate = nil;
+	if(_hideWatched)
+	{
+		self.predicate = [NSPredicate predicateWithFormat:@"ANY episodes.playcount == 0"];
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (id) initWithWatched:(BOOL)watched controllerTableView:(UITableView *)controllerTableView
+{
+    self = [super initWithEntity:[[[[ActiveManager shared] managedObjectModel] 
+								   entitiesByName] objectForKey:@"TVShow"] controllerTableView:controllerTableView];
     if (self) 
     {
         appDelegate = ((AppDelegate*)[UIApplication sharedApplication].delegate); 
@@ -35,7 +46,8 @@
         _model = [[TTModel alloc] init];
         _query = @"";
         _forSearch = false;
-        _hideWatched = false;
+        _hideWatched = !watched;
+		[self setPredicate];
     }
 
   return self;
@@ -127,11 +139,7 @@
 - (void) toggleWatched
 {
     _hideWatched = !_hideWatched;
-    self.predicate = nil;
-    if(_hideWatched)
-    {
-        self.predicate = [NSPredicate predicateWithFormat:@"ANY episodes.playcount == 0"];
-    }
+	[self setPredicate];
     [self performFetch];
 //    [self silentDidLoad];        
 } 
@@ -190,22 +198,17 @@
     {
 		show = (TVShow*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     }
-    
     TVShowTableItem* item = [TVShowTableItem item];
+	item.dataSource = self;
     item.forSearch = _forSearch;
     item.label = show.label;
     item.imageURL = show.thumbnail;
     item.genre = show.genre;
-//    item.runtime = show.runtime;
     item.tagline = show.tagline;
-//    item.selected = [_selectedCellIndexPath isEqual:indexPath];
-//    item.file = show.file;
-//    item.trailer = show.trailer;
-    item.imdb = show.imdbid;
+    item.tvdb = show.tvdbid;
     item.itemId = show.tvshowid;
-//    item.year = [show.year stringValue];
     item.rating = [NSString stringWithFormat:@"%.1f",[show.rating floatValue]];
-	
+	item.premiered = show.premiered;
     item.watched = TRUE;
 	item.nbUnWatched = [NSNumber numberWithInt:0];
 	item.nbEpisodes = [NSNumber numberWithInt:[show.episodes count]];

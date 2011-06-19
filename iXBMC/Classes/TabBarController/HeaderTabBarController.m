@@ -1,13 +1,11 @@
-#import "TabBarController.h"
+#import "HeaderTabBarController.h"
 #import "AppDelegate.h"
 #import "StyleSheet.h"
 #import "ConnectionActivityLabel.h"
 #import "LibraryUpdater.h"
-#import "XBMCStateListener.h"
-#import "XBMCCommand.h"
-#import "LambdaAlert.h"
 
-@implementation TabBarController
+
+@implementation HeaderTabBarController
 @synthesize headerVisible = _headerVisible;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,17 +78,29 @@
 
 - (void)viewDidLoad {
 
-    [self.view setBackgroundColor:[UIColor grayColor]];
+//    [self.view setBackgroundColor:[UIColor grayColor]];
+	//create new uiview with a background image
+    UIImage *backgroundImage = TTIMAGE(@"bundle://background.png");
+    UIImageView *backgroundView = [[[UIImageView alloc] 
+									initWithImage:backgroundImage] autorelease];
+	backgroundView.contentMode = UIViewContentModeScaleToFill;
+    [self.view addSubview:backgroundView];
+	
     _tabBarController = [[MyTabBarController alloc] init];
+    _tabBarController.view.frame = self.view.frame;
+	[self setTabURLs:[NSArray arrayWithObjects:@"tt://gesture",
+                      @"tt://library/movies/1",
+                      @"tt://library/tvshows/1",
+                      @"tt://settings",
+                      nil]];
 //    _tabBarController = [[CustomTabBarViewController alloc] init];
     _tabBarController.surrogateParent  = self;
     [self.view addSubview:_tabBarController.view];
-    _tabBarController.view.frame = self.view.frame;
     
-    UIImageView* background = [[[UIImageView alloc] initWithImage:TTIMAGE(@"bundle://tabbar.png")] autorelease];
-    background.frame = CGRectMake(0, 0, 320, 49);
-    background.contentMode = UIViewContentModeScaleToFill;
-    [_tabBarController.tabBar insertSubview:background atIndex:0];
+//    UIImageView* background = [[[UIImageView alloc] initWithImage:TTIMAGE(@"bundle://tabbar.png")] autorelease];
+//    background.frame = CGRectMake(0, 0, 320, 52);
+//    background.contentMode = UIViewContentModeScaleToFill;
+//    [_tabBarController.tabBar insertSubview:background atIndex:0];
     
     _connectionlabel = [[ConnectionActivityLabel alloc] init];
     
@@ -110,13 +120,7 @@
 //    self.navigationController.navigationBar.height = 89;
 //    [self.view setClipsToBounds:TRUE];
     _tabBarController.view.autoresizingMask = UIViewAutoresizingNone;
-    [_tabBarController setDelegate:(AppDelegate*)[UIApplication sharedApplication]];
-    
-    [self setTabURLs:[NSArray arrayWithObjects:@"tt://gesture",
-                      @"tt://library/movies",
-                      @"tt://library/tvshows",
-                      @"tt://settings",
-                      nil]];
+//    [_tabBarController setDelegate:(AppDelegate*)[UIApplication sharedApplication]];
 	
 	UIButton *remoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	
@@ -127,22 +131,22 @@
 //						[UIImage imageNamed:@"86-camera.png"]];
 //	cam.frame = CGRectMake(20, 16, 24, 18);
 //	[btn addSubview:cam];
-	CGRect tabBarFrame = _tabBarController.tabBar.frame;
-	remoteButton.frame = CGRectMake(tabBarFrame.origin.x, tabBarFrame.origin.y
-									, tabBarFrame.size.width / [_tabBarController.viewControllers count]
-									, tabBarFrame.size.height);
-	[remoteButton addTarget:self action:@selector(actionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-	UITapGestureRecognizer *taprecognizer;
-    taprecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [remoteButton addGestureRecognizer:taprecognizer];
-    [taprecognizer release];
-    UILongPressGestureRecognizer *longpress;
-    longpress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-    [remoteButton addGestureRecognizer:longpress];
-    [longpress release];
-	
-	
-	[self.view addSubview:remoteButton];
+//	CGRect tabBarFrame = _tabBarController.tabBar.frame;
+//	remoteButton.frame = CGRectMake(tabBarFrame.origin.x, tabBarFrame.origin.y
+//									, tabBarFrame.size.width / [_tabBarController.viewControllers count]
+//									, tabBarFrame.size.height);
+//	[remoteButton addTarget:self action:@selector(actionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+//	UITapGestureRecognizer *taprecognizer;
+//    taprecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+//    [remoteButton addGestureRecognizer:taprecognizer];
+//    [taprecognizer release];
+//    UILongPressGestureRecognizer *longpress;
+//    longpress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+//    [remoteButton addGestureRecognizer:longpress];
+//    [longpress release];
+//	
+//	
+//	[self.view addSubview:remoteButton];
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center
@@ -359,37 +363,6 @@
 	else
 	{
 		[_tabBarController setSelectedIndex:0];
-	}
-}
-
-- (void)handleLongPress:(UILongPressGestureRecognizer *)recognizer 
-{
-    if (recognizer.state != UIGestureRecognizerStateBegan) return;
-	
-	if ([XBMCStateListener connected])
-	{
-		LambdaAlert *alert = [[LambdaAlert alloc]
-							  initWithTitle:@"iXBMC"
-							  message:@"System Menu"];
-		
-		[alert addButtonWithTitle:@"Settings" block:^{ [XBMCCommand send:@"settings"]; }];
-		[alert addButtonWithTitle:@"Update Library" block:^{ [[LibraryUpdater sharedInstance] updateLibrary]; }];
-		[alert addButtonWithTitle:@"Exit XBMC" block:^{ [XBMCCommand send:@"exit"]; }];
-		[alert addButtonWithTitle:@"Shutdown Menu" block:^{ [XBMCCommand send:@"shutdownmenu"]; }];
-		[alert addButtonWithTitle:@"Cancel" block:NULL];
-		[alert show];
-		[alert release];
-	}
-	else
-	{
-		LambdaAlert *alert = [[LambdaAlert alloc]
-							  initWithTitle:@"iXBMC"
-							  message:@"Not Connected"];
-		
-		[alert addButtonWithTitle:@"Settings" block:^{ [XBMCCommand send:@"settings"]; }];
-		[alert addButtonWithTitle:@"Cancel" block:NULL];
-		[alert show];
-		[alert release];
 	}
 }
 

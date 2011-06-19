@@ -18,9 +18,7 @@
 #import "Three20UI/TTTableLinkedItemCell.h"
 #import "TVShowTableItem.h"
 
-@class TTImageView;
 @class TVShowTableItemCell;
-@class FadingImageView;
 @class TVShowCellView;
 @protocol TVShowTableItemCellDelegate
 
@@ -35,7 +33,7 @@
 	TVShowCellView *_infoView;
     
     TTButton *_playButton;
-    TTButton *_imdbButton;
+    TTButton *_tvdbButton;
     TTButton *_detailsButton;
     TTButton *_enqueueButton;
         
@@ -50,7 +48,7 @@
 -(void) play:(id)sender;
 -(void) enqueue:(id)sender;
 -(void) moreInfos:(id)sender;
--(void) imdb:(id)sender;
+-(void) tvdb:(id)sender;
 
 - (void)redisplay;
 

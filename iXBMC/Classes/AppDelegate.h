@@ -18,6 +18,7 @@
 
 - (void)showTrailer:(NSString *)url name:(NSString*)name;
 - (void)showImdb:(NSString *)imdbid;
+- (void)showTvdb:(NSString *)tvdbid;
 - (void)showMovieDetails:(NSNumber *)movieid;
 - (void)showFullscreenImage:(NSString *)imageurl;
 

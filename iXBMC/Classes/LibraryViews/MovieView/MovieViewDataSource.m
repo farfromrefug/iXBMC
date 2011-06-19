@@ -6,7 +6,7 @@
 #import "MovieTableItem.h"
 #import "MovieTableItemCell.h"
 
-#import "AppDelegate.h"
+#import "ActiveManager.h"
 #import "XBMCHttpInterface.h"
 
 // Three20 Additions
@@ -17,28 +17,35 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation MovieViewDataSource
-@synthesize sortTypes;
 @synthesize query = _query;
 @synthesize forSearch = _forSearch;
 @synthesize filteredListContent = _filteredListContent;
 @synthesize hideWatched = _hideWatched;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-- (id) initWithEntity:(NSEntityDescription *)entity controllerTableView:(UITableView *)controllerTableView
+- (void)setPredicate
 {
-    self = [super initWithEntity:entity controllerTableView:controllerTableView];
+	self.predicate = nil;
+	if(_hideWatched)
+	{
+		self.predicate = [NSPredicate predicateWithFormat:@"playcount == 0"];
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (id) initWithWatched:(BOOL )watched controllerTableView:(UITableView *)controllerTableView
+{
+    self = [super initWithEntity:[[[[ActiveManager shared] managedObjectModel] 
+								   entitiesByName] objectForKey:@"Movie"] controllerTableView:controllerTableView];
     if (self) 
     {
         appDelegate = ((AppDelegate*)[UIApplication sharedApplication].delegate); 
         self.tableView = controllerTableView;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(libraryContextDidSave:) name:NSManagedObjectContextDidSaveNotification object:nil];
         _model = [[TTModel alloc] init];
-        sortTypes = [[NSDictionary alloc] initWithObjectsAndKeys:
-                  @"title", @"Title", @"year", @"Year", @"director", @"Director", @"dateAdded", @"date Added", nil];
-        currentSort = @"title";
         _query = @"";
         _forSearch = false;
-        _hideWatched = false;
+        _hideWatched = !watched;
+		[self setPredicate];
     }
 
   return self;
@@ -49,9 +56,6 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	TT_RELEASE_SAFELY(_model);
-    //    TT_RELEASE_SAFELY(managedObjectContext);
-    TT_RELEASE_SAFELY(sortTypes);
-    TT_RELEASE_SAFELY(currentSort);
     TT_RELEASE_SAFELY(_query);
     TT_RELEASE_SAFELY(_filteredListContent);
   [super dealloc];
@@ -76,13 +80,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSString*)titleForLoading:(BOOL)reloading {
-  return NSLocalizedString(@"Updating Library...", @"");
+  return NSLocalizedString(@"Looking For Movies...", @"");
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSString*)titleForEmpty {
-  return NSLocalizedString(@"No movies found.", @"");
+  return NSLocalizedString(@"No Movie found.", @"");
 }
 
 
@@ -132,11 +136,7 @@
 - (void) toggleWatched
 {
     _hideWatched = !_hideWatched;
-    self.predicate = nil;
-    if(_hideWatched)
-    {
-        self.predicate = [NSPredicate predicateWithFormat:@"playcount == 0"];
-    }
+	[self setPredicate];
     [self performFetch];
 //    [self silentDidLoad];        
 } 

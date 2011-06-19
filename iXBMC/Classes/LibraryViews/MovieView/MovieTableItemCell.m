@@ -19,7 +19,6 @@
 #import "XBMCStateListener.h"
 #import "XBMCImage.h"
 
-#import "FadingImageView.h"
 #import "MovieCellView.h"
 
 #define MENU_HEIGHT 25;
@@ -242,39 +241,6 @@
 - (UILabel*)subtitleLabel {
     return self.detailTextLabel;
 }
-
-- (void)toggleImage:(BOOL)animated
-{
-//    if (animated)
-//    {
-//        [UIView beginAnimations:nil context:_photoFrame];
-//        [UIView setAnimationDuration:0.5];
-//        [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:_photoFrame cache:YES];
-//        [UIView setAnimationDelegate:self];
-//    }
-//    if (self.selected)
-//    {
-//        _photoFrame.image = TTIMAGE(@"bundle://posterShadowSelected.png");
-//    }
-//    else
-//    {
-//        _photoFrame.image = TTIMAGE(@"bundle://posterShadow.png");
-//    }
-//    if (animated)
-//    {
-//        [UIView commitAnimations];
-//    }
-}
-
-//- (void)imageLoaded:(NSDictionary*) result
-//{
-//    if ([[result valueForKey:@"url"] isEqualToString:((MovieTableItem*)_item).imageURL]
-//        && [result objectForKey:@"image"])
-//    {
-//        _imageLoaded = true;
-//        [_photo animateNewImage:[result objectForKey:@"image"]];
-//    }
-//}
 
 - (void)loadImage
 {

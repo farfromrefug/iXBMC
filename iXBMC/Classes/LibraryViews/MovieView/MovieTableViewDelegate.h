@@ -5,7 +5,7 @@
 
 
 
-@interface MovieTableViewDelegate : TTTableViewDragRefreshDelegate{
+@interface MovieTableViewDelegate : TTTableViewDelegate{
 
 }
 

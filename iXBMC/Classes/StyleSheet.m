@@ -21,10 +21,61 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation StyleSheet
 
-- (BOOL) highQualityImages {
-    return YES;
+- (CGFloat) toolbarAnimationDuration
+{
+	return 0.2;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (UIFont *) tabBarTextFont
+{
+	return [UIFont systemFontOfSize:12];
 }
 
+- (UIColor *) tabBarTextColor
+{
+	return [UIColor whiteColor];
+}
+
+- (UIColor*) tabBarTextShadowColor
+{
+	return [UIColor clearColor];
+	
+}
+- (CGSize) tabBarTextShadowOffset
+{
+	return CGSizeMake(0.0, 0.0);
+}
+- (UILineBreakMode) tabBarTextLineBreakMode
+{
+	return UILineBreakModeTailTruncation;
+}
+
+- (UIEdgeInsets) tabBarTextEdgeInsets
+{
+	return UIEdgeInsetsMake(0.0, 0.0, -30.0, 0.0);
+}
+
+- (UIControlContentHorizontalAlignment) tabBarTextHAlignment
+{
+	return UIControlContentHorizontalAlignmentCenter;
+}
+
+- (UIControlContentVerticalAlignment) tabBarTextVAlignment
+{
+	return UIControlContentVerticalAlignmentBottom;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL) highQualityImages {
+    return NO;
+}
+
+- (CGFloat) highQualityFactor
+{
+//	return [UIScr een mainScreen].scale;
+	return 2.0;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (CGFloat) headerViewHeight {
@@ -62,7 +113,7 @@
 }
 
 - (CGFloat) tvshowCellMaxHeight {
-    return 100;
+    return 60;
 }
 
 - (CGFloat) tvshowViewCoverHeight {
@@ -70,6 +121,46 @@
 }
 
 - (BOOL) tvshowCellRatingStars {
+    return YES;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (CGFloat) seasonCellHeight {
+    return 60;
+}
+
+- (CGFloat) seasonCellMinHeight {
+    return 60;
+}
+
+- (CGFloat) seasonCellMaxHeight {
+    return 100;
+}
+
+- (CGFloat) seasonViewCoverHeight {
+    return 200;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (CGFloat) episodeCellHeight {
+    return 60;
+}
+
+- (CGFloat) episodeCellMinHeight {
+    return 60;
+}
+
+- (CGFloat) episodeCellMaxHeight {
+    return 100;
+}
+
+- (CGFloat) episodeViewCoverHeight {
+    return 200;
+}
+
+- (BOOL) episodeCellRatingStars {
     return YES;
 }
 

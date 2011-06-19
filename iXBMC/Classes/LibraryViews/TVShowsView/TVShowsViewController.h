@@ -3,20 +3,21 @@
 @protocol TVShowsViewControllerDelegate;
 
 @class CustomTitleView;
-//@class RecentlyAddedViewController;
+@class RecentlyAddedEpisodesViewController;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TVShowsViewController : TTTableViewCoreDataController<TTSearchTextFieldDelegate> {
     id<TVShowsViewControllerDelegate> _delegate;
 
-//    RecentlyAddedViewController* _recentlyAddedTVShowss;
+    RecentlyAddedEpisodesViewController* _recentlyAddedEpisodes;
     TTView* _toolBar;
     TTButton* _hideWatchedButton;
     TTButton* _sortButton;
     
     CustomTitleView* _titleBackground;
     BOOL _forSearch;
+	BOOL _startWithWatched;
 
     NSIndexPath *_selectedCellIndexPath;
 }
@@ -25,9 +26,10 @@
 @property (nonatomic, retain) NSIndexPath* selectedCellIndexPath;
 @property (nonatomic) BOOL forSearch;
 
-- (void)loadContentForVisibleCells;
--(void) updateRecentlyAddedTVShows: (NSNotification *) notification;
+- (id)initWithWatched:(BOOL)watched;
+-(void) updateRecentlyAddedEpisodes: (NSNotification *) notification;
 - (void)didDeselectRowAtIndexPath:(NSIndexPath*)indexPath;
+- (void) updateLibrary;
 
 @end
 

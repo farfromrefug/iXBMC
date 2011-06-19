@@ -154,6 +154,9 @@
 {
     [[TTURLCache cacheWithName:[(TTTableSubtitleItem*)_item text]] removeAll:YES];
     [self resignFirstResponder];
+	[[NSNotificationCenter defaultCenter] 
+     postNotificationName:@"cacheCleared" 
+     object:nil];
 }
 
 - (void)deleteHost:(id)sender 

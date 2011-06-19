@@ -11,14 +11,15 @@
 @synthesize tagline      = _tagline;
 @synthesize genre      = _genre;
 @synthesize imageURL      = _imageURL;
-//@synthesize selected      = _selected;
-@synthesize imdb       = _imdb;
+@synthesize tvdb       = _tvdb;
 @synthesize itemId = _itemId;
 @synthesize rating = _rating;
+@synthesize premiered = _premiered;
 @synthesize watched = _watched;
 @synthesize forSearch = _forSearch;
 @synthesize nbEpisodes = _nbEpisodes;
 @synthesize nbUnWatched = _nbUnWatched;
+@synthesize dataSource = _dataSource;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,9 +41,10 @@
     TT_RELEASE_SAFELY(_genre);
     TT_RELEASE_SAFELY(_imageURL);
     TT_RELEASE_SAFELY(_itemId);
-    TT_RELEASE_SAFELY(_imdb);
+    TT_RELEASE_SAFELY(_tvdb);
     TT_RELEASE_SAFELY(_nbEpisodes);
     TT_RELEASE_SAFELY(_nbUnWatched);
+    TT_RELEASE_SAFELY(_dataSource);
     
     [super dealloc];
 }

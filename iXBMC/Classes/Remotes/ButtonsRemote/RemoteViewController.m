@@ -295,10 +295,11 @@
     
     //        [_titleLabel setText:@""];
     
+    self.view.backgroundColor = [UIColor clearColor];
     //create new uiview with a background image
-    _backgroundView = [[[UIImageView alloc] 
-                        initWithImage:TTIMAGE(@"bundle://detailsback.png")] autorelease];
-    _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+//    _backgroundView = [[[UIImageView alloc] 
+//                        initWithImage:TTIMAGE(@"bundle://detailsback.png")] autorelease];
+//    _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     //add background view and send it to the back
     
     _infosView = [[[TTView alloc] init] autorelease];
@@ -315,13 +316,11 @@
     _buttonsView.autoresizingMask = UIViewAutoresizingFlexibleHeight
                                     | UIViewAutoresizingFlexibleBottomMargin;
     _buttonsView.userInteractionEnabled= YES;
-//    _buttonsView = [[[[NSBundle mainBundle] loadNibNamed:@"remoteButtonsView" owner:self options:nil] objectAtIndex:0] retain];
-    // assuming the view is the only top-level object in the nib file (besides File's Owner and First Responder)
-    
+
     [self addButtons];
     
     
-    _backgroundView.frame = self.view.frame;
+//    _backgroundView.frame = self.view.frame;
     _infosView.frame = self.view.frame;
     _buttonsView.frame = self.view.frame;
 	
@@ -348,14 +347,15 @@
     [_infosView addSubview:_infoLabel]; 
 //    [_infosView addSubview:_cover];
 
-    [self.view addSubview:_backgroundView];  
+//    [self.view addSubview:_backgroundView];  
     [self.view addSubview:_infosView];
     
+    [self.view addSubview:_buttonsView];
+
     PlayingOSDView* osdView = [[[PlayingOSDView alloc] initWithFrame:self.view.frame] autorelease];
     //        mainView.frame  = self.view.frame;
     [self.view addSubview:osdView];
 
-    [self.view addSubview:_buttonsView];
    
     ////toolbar
     _toolBar = [self createToolbar];
@@ -455,7 +455,7 @@
 - (void) hideToolbar
 {
     [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:0.2];
+    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
     _toolBar.bottom =  0;
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
@@ -464,7 +464,7 @@
 - (void) toggleToolbar
 {
     [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:0.2];
+    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
     if (_toolBar.top == 0)
         _toolBar.bottom = 0;
     else _toolBar.top = 0;

@@ -39,9 +39,6 @@
 #pragma mark UIScrollViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-//    if ([[((TVShowsViewDataSource*)((TVShowsViewController*)_controller).dataSource) currentSortName] isEqualToString:@"Title"])
-//        return 30;
-//    else 
         return 30;
 }
 
@@ -94,7 +91,6 @@
 	// package and return
 	[customSectionView addSubview:labelBackImage];
 	[customSectionView addSubview:headerLabel];
-//	[headerLabel release];
 	return [customSectionView autorelease];
 	
 }
@@ -103,8 +99,6 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView 
 {
     [super scrollViewDidEndDecelerating:scrollView];
-
-//    [(TVShowsViewController*)_controller loadContentForVisibleCells]; 
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -115,11 +109,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
     [super scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
-
-    if (!decelerate) 
-    {
-//        [(TVShowsViewController*)_controller loadContentForVisibleCells]; 
-    }
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -138,7 +127,6 @@
 	{
 		[(TVShowTableItemCell *)cell setSelected:TRUE];
 	}
-    //[(TVShowsTableItemCell*)cell loadImage];
 }
 
 @end

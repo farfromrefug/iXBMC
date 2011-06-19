@@ -11,19 +11,23 @@
 #import "XBMCCommand.h"
 #import "XBMCStateListener.h"
 //#import "XBMCJSONCommunicator.h"
-#import "RecentlyAddedViewController.h"
+#import "RecentlyAddedMoviesViewController.h"
 #import "LibraryUpdater.h"
 #import "XBMCImage.h"
-#import "AppDelegate.h"
+
+#import "LambdaAlert.h"
 
 #import "FadingImageView.h"
 #import "PlayingOSDView.h"
 #import "CustomTitleView.h"
 
+#import	"BCTab.h"
+
 @implementation XBMCGestureController
 @synthesize itemId = _id;
 @synthesize imdb = _imdb;
 @synthesize type = _type;
+@synthesize tabButton= _tabButton;
 
 - (TTView*) createToolbar
 {
@@ -123,19 +127,28 @@
     [panrecognizer release];
 }
 
+- (NSString *)iconImageName {
+	return @"156-controlpad.png";
+}
+
+- (void)setTabBarButton:(BCTab*) tabBarButton
+{
+	self.tabButton = tabBarButton;
+	
+	UILongPressGestureRecognizer *longpress;
+    longpress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressOnTab:)];
+    [self.tabButton addGestureRecognizer:longpress];
+    [longpress release];
+}
+
+- (NSString *)iconTitle {
+	return @"Remote";
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        // Custom initialization
-        self.title = @"Remote";
-        self.tabBarItem.image = [UIImage imageNamed:@"156-controlpad.png"];
-        
-        // Configure the add button.
-//        UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleToolbar)];
-//        self.navigationItem.rightBarButtonItem = menuButton;
-//        [menuButton release];
-    
     }
     return self;
 }
@@ -143,7 +156,6 @@
 - (void)dealloc
 {    
     TT_RELEASE_SAFELY(_titleBackground);
-    //    TT_RELEASE_SAFELY(_recentlyAddedMovies);
     TT_RELEASE_SAFELY(_type);
     TT_RELEASE_SAFELY(_id);
     TT_RELEASE_SAFELY(_imdb);
@@ -164,18 +176,19 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {    
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor clearColor];
     self.view.autoresizesSubviews = TRUE;
     _imdb = @"";
     _type = @"";
     _id = @"";
-    
-    //        [_titleLabel setText:@""];
-    
+        
     //create new uiview with a background image
-    _backgroundView = [[[UIImageView alloc] 
-                        initWithImage:TTIMAGE(@"bundle://detailsback.png")] autorelease];
-//    _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    UIImageView* back = [[[UIImageView alloc] 
+                        initWithImage:TTIMAGE(@"bundle://gestureGlass.png")] autorelease];
+    back.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+	back.frame = self.view.frame;
+	[self.view addSubview:back];  
+
 	
 	_fanart = [[[FadingImageView alloc] init] autorelease];
 	_fanart.contentMode = UIViewContentModeScaleAspectFill;
@@ -191,12 +204,12 @@
     
     _gestureView = [[[UIImageView alloc] initWithFrame:TTNavigationFrame()] autorelease];
     _gestureView.backgroundColor = [UIColor clearColor];
-    _gestureView.image = TTIMAGE(@"bundle://gestureGlass.png");        
+//    _gestureView.image = TTIMAGE(@"bundle://gestureGlass.png");        
     _gestureView.opaque = YES;        
     _gestureView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     _gestureView.userInteractionEnabled= YES;
     
-    _backgroundView.frame = self.view.frame;
+//    _backgroundView.frame = self.view.frame;
     _infosView.frame = self.view.frame;
     _fanart.frame = _infosView.frame;
     _gestureView.frame = self.view.frame;
@@ -222,14 +235,14 @@
     [_infosView addSubview:_plotLabel]; 
     [_infosView addSubview:_cover];
 
-    [self.view addSubview:_backgroundView];  
+//    [self.view addSubview:_backgroundView];  
     [self.view addSubview:_infosView]; 
     
+    [self.view addSubview:_gestureView];
+
     PlayingOSDView* osdView = [[[PlayingOSDView alloc] initWithFrame:self.view.frame] autorelease];
-    //        mainView.frame  = self.view.frame;
     [self.view addSubview:osdView];
     
-    [self.view addSubview:_gestureView];
    
     ////toolbar
     _toolBar = [self createToolbar];
@@ -245,18 +258,6 @@
     
     //gestures
     [self addGestures];
-//    [self cleanPlayingInfo];
-    
-//    _recentlyAddedMovies = [[RecentlyAddedViewController alloc] init];
-//    [_recentlyAddedMovies.view setFrame:CGRectMake(10, 10, 280, 120)];
-//    [self updateRecentlyAddedMovies:nil];
-//  [self.view insertSubview:_recentlyAddedMovies.view belowSubview:_gestureView];
-    
-
-    
-//    menu = [[DropDownMenuViewController alloc] initWithNibName:@"DropDownMenuView" bundle:nil];
-//    menu.view.hidden = TRUE;
-
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
 	
@@ -296,14 +297,6 @@
      name:@"nowPlayingInfo"
      object:nil ];
     
-    [center
-     addObserver:self
-     selector:@selector(updateRecentlyAddedMovies:)
-     name:@"recentlyAddedMovies"
-     object:nil ];
-    
-    
-    
     [center addObserver:self
                selector:@selector(applicationDidBecomeActive:)
                    name:UIApplicationDidBecomeActiveNotification
@@ -326,7 +319,7 @@
 - (void) hideToolbar
 {
     [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:0.2];
+    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
     _toolBar.bottom =  0;
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
@@ -335,7 +328,7 @@
 - (void) toggleToolbar
 {
     [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:0.2];
+    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
     if (_toolBar.top == 0)
         _toolBar.bottom = 0;
     else _toolBar.top = 0;
@@ -348,16 +341,12 @@
 	_infosView.frame = self.view.frame;
     _fanart.frame = _infosView.frame;
     [super viewWillAppear:animated];
-
-//    [_recentlyAddedMovies viewWillAppear:animated];
-//    [[self navigationController] setNavigationBarHidden:YES animated:NO];
 }
-//
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self hideToolbar];
-////    [_recentlyAddedMovies viewWillDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -366,15 +355,8 @@
     return YES;
 }
 
-
--(void) updateRecentlyAddedMovies: (NSNotification *) notification
-{
-//    [_recentlyAddedMovies setMovies:[[LibraryUpdater sharedInstance] recentlyAddedMovies]];
-}
 -(void)cleanPlayingInfo
 {
-//    [[self navigationController] setNavigationBarHidden:NO animated:NO];
-//    [_recentlyAddedMovies.view setHidden:FALSE];
     _imdb = @"";
     _type = @"";
     _id = @"";
@@ -615,8 +597,7 @@
 
 - (void)playingStarted: (NSNotification *) notification 
 {
-    self.title = @"Playing";
-//    [self updatePlayingInfo];
+    [self.tabButton setButtonTitle:@"Playing"];
 }
 
 - (void)coverLoaded:(NSDictionary*) result
@@ -637,7 +618,12 @@
 
 -(void)downloadCover:(NSString*)url
 {
-	NSInteger height = TTSTYLEVAR(movieDetailsViewCoverHeight)*[UIScreen mainScreen].scale;
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	CGFloat height = TTSTYLEVAR(movieDetailsViewCoverHeight);
+	if ([[defaults valueForKey:@"images:highQuality"] boolValue])
+	{
+		height *= (CGFloat)TTSTYLEVAR(highQualityFactor);
+	}
    [XBMCImage askForImage:url
                     object:self selector:@selector(coverLoaded:) 
              thumbnailHeight:height];
@@ -646,7 +632,12 @@
 
 -(void)downloadFanart:(NSString*)url
 {
-	NSInteger height = TTScreenBounds().size.height;
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	CGFloat height = TTScreenBounds().size.height;
+	if ([[defaults valueForKey:@"images:highQuality"] boolValue])
+	{
+		height *= (CGFloat)TTSTYLEVAR(highQualityFactor);
+	}
     [XBMCImage askForImage:url 
 					object:self selector:@selector(fanartLoaded:) 
 			 thumbnailHeight:height];
@@ -654,18 +645,18 @@
 
 - (void)playingStopped: (NSNotification *) notification 
 {
-    self.title = @"Remote";
+    [self.tabButton setButtonTitle:@"Remote"];
     [self cleanPlayingInfo];
 }
 
 - (void)playingPaused: (NSNotification *) notification 
 {
-    self.title = @"Paused";
+	[self.tabButton setButtonTitle:@"Paused"];
 }
 
 - (void)playingUnpaused: (NSNotification *) notification 
 {
-    self.title = @"Playing";
+    [self.tabButton setButtonTitle:@"Playing"];
 }
 
 - (void)handleSwipe:(UISwipeGestureRecognizer *)recognizer 
@@ -844,5 +835,35 @@
 //    }
 }
 
+- (void)handleLongPressOnTab:(UILongPressGestureRecognizer *)recognizer 
+{
+    if (recognizer.state != UIGestureRecognizerStateBegan) return;
+	
+	if ([XBMCStateListener connected])
+	{
+		LambdaAlert *alert = [[LambdaAlert alloc]
+							  initWithTitle:@"iXBMC"
+							  message:@"System Menu"];
+		
+		[alert addButtonWithTitle:@"Settings" block:^{ [XBMCCommand send:@"settings"]; }];
+		[alert addButtonWithTitle:@"Update Library" block:^{ [[LibraryUpdater sharedInstance] updateLibrary]; }];
+		[alert addButtonWithTitle:@"Exit XBMC" block:^{ [XBMCCommand send:@"exit"]; }];
+		[alert addButtonWithTitle:@"Shutdown Menu" block:^{ [XBMCCommand send:@"shutdownmenu"]; }];
+		[alert addButtonWithTitle:@"Cancel" block:NULL];
+		[alert show];
+		[alert release];
+	}
+	else
+	{
+		LambdaAlert *alert = [[LambdaAlert alloc]
+							  initWithTitle:@"iXBMC"
+							  message:@"Not Connected"];
+		
+		[alert addButtonWithTitle:@"Settings" block:^{ [XBMCCommand send:@"settings"]; }];
+		[alert addButtonWithTitle:@"Cancel" block:NULL];
+		[alert show];
+		[alert release];
+	}
+}
 
 @end

@@ -51,14 +51,15 @@
         }
 		NSLog(@"1time took: %f", -[_start timeIntervalSinceNow]);
 		
+		self.view.backgroundColor = [UIColor clearColor];
 		//create new uiview with a background image
-        UIImageView * backgroundView = [[[UIImageView alloc] 
-							initWithImage:TTIMAGE(@"bundle://detailsback.png")] autorelease];
-		backgroundView.backgroundColor = [UIColor clearColor];
-		backgroundView.frame = self.view.frame;
-
-        //add background view and send it to the back
-        [self.view addSubview:backgroundView];
+//        UIImageView * backgroundView = [[[UIImageView alloc] 
+//							initWithImage:TTIMAGE(@"bundle://detailsback.png")] autorelease];
+//		backgroundView.backgroundColor = [UIColor clearColor];
+//		backgroundView.frame = self.view.frame;
+//
+//        //add background view and send it to the back
+//        [self.view addSubview:backgroundView];
         
         Movie* movie = (Movie*)[array objectAtIndex:0];
         self.title =  movie.label;
@@ -226,20 +227,29 @@
 		_detailView.newFlag.hidden = FALSE;
 	}
 	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if (_coverUrl)
 	{
-		CGFloat coverHeight = TTSTYLEVAR(movieDetailsViewCoverHeight)*[UIScreen mainScreen].scale;
+		CGFloat height = TTSTYLEVAR(movieDetailsViewCoverHeight);
+		if ([[defaults valueForKey:@"images:highQuality"] boolValue])
+		{
+			height *= (CGFloat)TTSTYLEVAR(highQualityFactor);
+		}
 		UITapGestureRecognizer *tapgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapCover:)];
 		[_detailView.cover addGestureRecognizer:tapgr];
 		[tapgr release];    
 		[XBMCImage askForImage:_coverUrl 
 						object:self selector:@selector(coverLoaded:) 
-				 thumbnailHeight:coverHeight];
+				 thumbnailHeight:height];
 	}
 	
 	if (_fanartUrl)
 	{
 		NSInteger fanartHeight = TTScreenBounds().size.height;
+		if ([[defaults valueForKey:@"images:highQuality"] boolValue])
+		{
+			fanartHeight *= (CGFloat)TTSTYLEVAR(highQualityFactor);
+		}
 		[XBMCImage askForImage:_fanartUrl 
 						object:self selector:@selector(fanartLoaded:) 
 				 thumbnailHeight:fanartHeight];
@@ -305,7 +315,7 @@
 - (void) hideToolbar
 {
     [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:0.2];
+    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
     _toolBar.bottom =  0;
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
@@ -365,7 +375,7 @@
 		}
 	}
     [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:0.2];
+    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
     if (_toolBar.top == 0)
         _toolBar.bottom = 0;
     else _toolBar.top = 0;

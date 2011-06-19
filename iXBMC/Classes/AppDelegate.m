@@ -1,5 +1,5 @@
   #import "AppDelegate.h"
-#import "TabBarController.h"
+#import "HeaderTabBarController.h"
 #import "NotConnectedController.h"
 #import "XBMCGestureController.h"
 #import "RemoteViewController.h"
@@ -15,6 +15,8 @@
 
 #import "MovieViewController.h"
 #import "TVShowsViewController.h"
+#import "SeasonsViewController.h"
+#import "EpisodesViewController.h"
 
 #import "CustomMoviePlayerViewController.h"
 #import "FullscreenImageViewController.h"
@@ -75,6 +77,23 @@
         [defaults setValue:[NSNumber numberWithBool:TTSTYLEVAR(tvshowCellRatingStars)] 
                     forKey:@"tvshowCell:ratingStars"];
     }
+	
+	if ([defaults valueForKey:@"seasonCell:height"] == nil)
+    {
+        [defaults setValue:[NSNumber numberWithFloat:TTSTYLEVAR(seasonCellHeight)] 
+                    forKey:@"seasonCell:height"];
+    }
+	
+	if ([defaults valueForKey:@"episodeCell:height"] == nil)
+    {
+        [defaults setValue:[NSNumber numberWithFloat:TTSTYLEVAR(episodeCellHeight)] 
+                    forKey:@"episodeCell:height"];
+    }
+    if ([defaults valueForKey:@"episodeCell:ratingStars"] == nil)
+    {
+        [defaults setValue:[NSNumber numberWithBool:TTSTYLEVAR(episodeCellRatingStars)] 
+                    forKey:@"episodeCell:ratingStars"];
+    }
     
     if ([defaults valueForKey:@"currenthost"] == nil) 
     {
@@ -95,7 +114,7 @@
     [[TTURLRequestQueue mainQueue] setMaxContentLength:20];
     [[TTURLCache sharedCache] setDisableDiskCache:FALSE];
     TTNavigator* navigator = [TTNavigator navigator];
-    navigator.persistenceMode = TTNavigatorPersistenceModeNone;
+	navigator.persistenceMode = TTNavigatorPersistenceModeNone;
     navigator.window = [[[UIWindow alloc] initWithFrame:TTScreenBounds()] autorelease];
   
     TTURLMap* map = navigator.URLMap;
@@ -120,12 +139,15 @@
   
   // The tab bar controller is shared, meaning there will only ever be one created.  Loading
   // This URL will make the existing tab bar controller appear if it was not visible.
-  [map from:@"tt://tabBar" toSharedViewController:[TabBarController class]];
+  [map from:@"tt://tabBar" toSharedViewController:[HeaderTabBarController class]];
   
   // Menu controllers are also shared - we only create one to show in each tab, so opening
   // these URLs will switch to the tab containing the menu
-    [map from:@"tt://library/movies" toSharedViewController:[MovieViewController class]];
-    [map from:@"tt://library/tvshows" toSharedViewController:[TVShowsViewController class]];
+    [map from:@"tt://library/movies/(initWithWatched:)" toSharedViewController:[MovieViewController class]];
+    [map from:@"tt://library/tvshows/(initWithWatched:)" toSharedViewController:[TVShowsViewController class]];
+	[map from:@"tt://library/seasons/(initWithTVShow:)/(showWatched:)" toSharedViewController:[SeasonsViewController class]];
+	
+	[map from:@"tt://library/episodes/(initWithTVShow:)/(season:)/(showWatched:)" toSharedViewController:[EpisodesViewController class]];
 	
 	[map from:@"tt://details/(initWithEntity:)/(id:)" toSharedViewController:[DetailViewController class]];
   
@@ -393,6 +415,15 @@
     if ([imdbid length] > 0)
     {
         NSString* url = [NSString stringWithFormat:@"http://www.imdb.com/title/%@",imdbid];
+        TTOpenURL(url);
+    }
+}
+
+- (void)showTvdb:(NSString *)tvdbid
+{
+    if ([tvdbid length] > 0)
+    {
+        NSString* url = [NSString stringWithFormat:@"http://thetvdb.com/?tab=series&id=%@",tvdbid];
         TTOpenURL(url);
     }
 }

@@ -5,7 +5,7 @@
 
 
 
-@interface TVShowsTableViewDelegate : TTTableViewDragRefreshDelegate{
+@interface TVShowsTableViewDelegate : TTTableViewDelegate{
 
 }
 

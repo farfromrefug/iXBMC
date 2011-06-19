@@ -18,6 +18,7 @@
 //    NSOperationQueue *_moviesQueue;
 	dispatch_queue_t _queue;
     NSArray* _recentlyAddedMovies; 
+    NSArray* _recentlyAddedEpisodes; 
     NSTimer * _updatingTimer;
 	
 	NSCharacterSet *_lettersCharSet;
@@ -32,6 +33,7 @@
 + (BOOL) updating;
 
 @property (nonatomic, retain, readonly) NSArray* recentlyAddedMovies;
+@property (nonatomic, retain, readonly) NSArray* recentlyAddedEpisodes;
 @property (nonatomic, readonly) BOOL updating;
 
 - (void)start;
@@ -39,12 +41,12 @@
 
 - (void) updateLibrary;
 - (void) updateLibrary:(NSInteger) number;
-- (void) updateMovies:(NSInteger) number;
-- (void) updateAllTVShows:(NSInteger) number;
+- (void) updateMovies:(NSInteger) number hidden:(BOOL) hid;
+- (void) updateAllTVShows:(NSInteger) number hidden:(BOOL) hid;
 
-- (void) updateRecentlyAddedMovies;
-- (void) updateRecentlyAddedMovies:(NSInteger) number;
+- (void) updateRecentlyAddedMovies:(BOOL) hid;
+- (void) updateRecentlyAddedMovies:(NSInteger) number hidden:(BOOL) hid;
 
-- (void) updateRecentlyAddedEpisodes;
-- (void) updateRecentlyAddedEpisodes:(NSInteger) number;
+- (void) updateRecentlyAddedEpisodes:(BOOL) hid;
+- (void) updateRecentlyAddedEpisodes:(NSInteger) number hidden:(BOOL) hid;
 @end

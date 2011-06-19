@@ -96,17 +96,18 @@
 - (void)updateMoviesCoreData:(id)result clean:(BOOL)canDelete;
 - (void)updateMoviesCoreData:(id)result;
 - (void)updateMoviesCoreDataBackgroundThread:(id)result clean:(BOOL)canDelete;
+
 - (void)updateAllTVShowsCoreData:(id)result;
 - (void)updateAllTVShowsCoreData:(id)result clean:(BOOL)canDelete;
 - (void)updateAllTVShowsCoreDataBackgroundThread:(id)result clean:(BOOL)canDelete;
 
-- (void)updateTVShow:(NSInteger) tvshowid;
+- (void)updateTVShow:(NSInteger) tvshowid hidden:(BOOL) hid;
 - (void)updateTVShowCoreData:(id)result;
 - (void)updateTVShowCoreData:(id)result clean:(BOOL)canDelete;
 - (void)updateTVShowCoreDataBackgroundThread:(id)result clean:(BOOL)canDelete;
 
 
-- (void)updateSeason:(NSInteger) tvshowid season:(NSInteger)seasonid;
+- (void)updateSeason:(NSInteger) tvshowid season:(NSInteger)seasonid hidden:(BOOL) hid;
 - (void)updateSeasonCoreData:(id)result;
 - (void)updateSeasonCoreData:(id)result clean:(BOOL)canDelete;
 - (void)updateSeasonCoreDataBackgroundThread:(id)result clean:(BOOL)canDelete;
@@ -116,10 +117,20 @@
 @implementation LibraryUpdater
 static LibraryUpdater *sharedInstance = nil;
 @synthesize recentlyAddedMovies = _recentlyAddedMovies;
+@synthesize recentlyAddedEpisodes = _recentlyAddedEpisodes;
 @synthesize updating = _updating;
 
 + (LibraryUpdater *) sharedInstance {
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
+}
+- (void)dealloc {
+	
+    TT_RELEASE_SAFELY(_recentlyAddedEpisodes);
+    TT_RELEASE_SAFELY(_recentlyAddedMovies);
+	[self stop];
+	// wait for queue to empty
+	dispatch_sync(_queue, ^{});
+    [super dealloc];
 }
 
 + (BOOL) updating
@@ -129,8 +140,6 @@ static LibraryUpdater *sharedInstance = nil;
 
 - (void)start
 {
-//    _moviesQueue = [NSOperationQueue new];
-//    [_moviesQueue setMaxConcurrentOperationCount:1];
 	_lettersCharSet = [[ NSCharacterSet letterCharacterSet ] retain];
 
 	_queue = dispatch_queue_create("com.ixbmc.library", NULL);
@@ -138,10 +147,10 @@ static LibraryUpdater *sharedInstance = nil;
     _updating = false;
 	_nbrunningUpdates = 0;
     [self updateLibrary];
-    _updatingTimer = [NSTimer scheduledTimerWithTimeInterval: 600.0
-                                                       target: self
-                                                     selector: @selector(updateLibrary)
-                                                     userInfo: nil repeats:TRUE];
+//    _updatingTimer = [NSTimer scheduledTimerWithTimeInterval: 600.0
+//                                                       target: self
+//                                                     selector: @selector(updateLibrary)
+//                                                     userInfo: nil repeats:TRUE];
 }
 
 - (void)oneUpdateStarted
@@ -153,13 +162,11 @@ static LibraryUpdater *sharedInstance = nil;
 		 object:nil];	
 	}
 	_nbrunningUpdates += 1;
-//	NSLog(@"adding an update %d", _nbrunningUpdates);
 }
 
 - (void)oneUpdateFinished
 {
 	_nbrunningUpdates -= 1;
-//	NSLog(@"removing an update %d", _nbrunningUpdates);
 	if (_nbrunningUpdates == 0)
 	{
 	    [[NSNotificationCenter defaultCenter] 
@@ -200,7 +207,8 @@ static LibraryUpdater *sharedInstance = nil;
 
 - (void)updateMoviesCoreDataBackgroundThread:(id)result clean:(BOOL)canDelete
 {
-//	NSLog(@"Movies update %@", result);
+	BOOL hidden = [[[result objectForKey:@"info"] 
+					objectForKey:@"hiddenUpdate"] boolValue];
 	NSManagedObjectContext *context = [[[NSManagedObjectContext alloc] init] autorelease];
     NSPersistentStoreCoordinator *coordinator = [[ActiveManager shared] persistentStoreCoordinator];
     [context setPersistentStoreCoordinator:coordinator];
@@ -358,26 +366,50 @@ static LibraryUpdater *sharedInstance = nil;
             }
         }
         
-//        if ([currentStore isEqual:[[coordinator persistentStores] objectAtIndex:0]])
-        {
-			[[[ActiveManager shared] persistentStoreCoordinator] lock];
-			[context save:&error];
-            if(error) {
-                // handle error
-            }
-//            else
-//            {
-//    //        [fetchRequest release];
-//                [[NSNotificationCenter defaultCenter] 
-//                 postNotificationName:@"ContextDidSave" 
-//                 object:context];
-//            }
-			[[[ActiveManager shared] persistentStoreCoordinator] unlock];
-        }
+        [[[ActiveManager shared] persistentStoreCoordinator] lock];
+		[context save:&error];
+		if(error) {
+			// handle error
+		}
+		[[[ActiveManager shared] persistentStoreCoordinator] unlock];
     }
     [pool drain];
-	[self oneUpdateFinished];
+	if (!hidden) [self oneUpdateFinished];
 }
+
+- (void) updateMovies:(NSInteger) number hidden:(BOOL)hid
+{
+    if (![XBMCStateListener connected]) return;
+	if (!hid) [self oneUpdateStarted];
+	
+    NSMutableDictionary *requestParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+										  [NSArray arrayWithObjects:@"title", @"sorttitle"
+										   , @"plot", @"director", @"writer"
+										   , @"studio", @"genre", @"year", @"runtime", @"rating"
+										   , @"tagline", @"imdbnumber",@"trailer",
+										   @"lastplayed",@"thumbnail",@"fanart",
+										   @"playcount", @"file"
+										   , @"streamDetails", @"cast", nil]
+										  , @"fields", nil];
+    if (number > 0)
+    {
+        [requestParams addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+												 [NSDictionary dictionaryWithObjectsAndKeys:
+												  [NSNumber numberWithInt:0], @"start", 
+												  [NSNumber numberWithInt:number], @"end", nil]
+												 , @"limits", nil]];
+    }
+    
+    [requestParams addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [NSDictionary dictionaryWithObjectsAndKeys:
+											  @"date", @"method", nil]
+											 , @"sort", nil]];
+	
+    NSDictionary *request = [NSDictionary dictionaryWithObjectsAndKeys:
+							 @"VideoLibrary.GetMovies", @"cmd", requestParams, @"params",nil];
+    [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request target:self selector:@selector(updateMoviesCoreData:)];    
+}
+
 
 - (void)gotRecentlyAddedMovies:(id)result
 {
@@ -410,10 +442,10 @@ static LibraryUpdater *sharedInstance = nil;
     }
 }
 
-- (void) updateRecentlyAddedMovies:(NSInteger) number
+- (void) updateRecentlyAddedMovies:(NSInteger) number hidden:(BOOL)hid
 {
     if (![XBMCStateListener connected]) return;
-	[self oneUpdateStarted];
+	if (!hid) [self oneUpdateStarted];
 
     NSMutableDictionary *requestParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                            [NSArray arrayWithObjects:@"plot", @"director", @"writer"
@@ -441,42 +473,9 @@ static LibraryUpdater *sharedInstance = nil;
     [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request target:self selector:@selector(gotRecentlyAddedMovies:)];    
 }
 
-- (void) updateMovies:(NSInteger) number
+- (void) updateRecentlyAddedMovies:(BOOL)hid
 {
-    if (![XBMCStateListener connected]) return;
-	[self oneUpdateStarted];
-
-    NSMutableDictionary *requestParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-										   [NSArray arrayWithObjects:@"title", @"sorttitle"
-											, @"plot", @"director", @"writer"
-											, @"studio", @"genre", @"year", @"runtime", @"rating"
-											, @"tagline", @"imdbnumber",@"trailer",
-											@"lastplayed",@"thumbnail",@"fanart",
-											@"playcount", @"file"
-											, @"streamDetails", @"cast", nil]
-										   , @"fields", nil];
-    if (number > 0)
-    {
-        [requestParams addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
-												  [NSDictionary dictionaryWithObjectsAndKeys:
-													[NSNumber numberWithInt:0], @"start", 
-												   [NSNumber numberWithInt:number], @"end", nil]
-												  , @"limits", nil]];
-    }
-    
-    [requestParams addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
-											  [NSDictionary dictionaryWithObjectsAndKeys:
-												@"date", @"method", nil]
-											  , @"sort", nil]];
-	
-    NSDictionary *request = [NSDictionary dictionaryWithObjectsAndKeys:
-							  @"VideoLibrary.GetMovies", @"cmd", requestParams, @"params",nil];
-    [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request target:self selector:@selector(updateMoviesCoreData:)];    
-}
-
-- (void) updateRecentlyAddedMovies
-{
-    [self updateRecentlyAddedMovies:0];
+    [self updateRecentlyAddedMovies:0 hidden:hid];
 }
 
 
@@ -486,6 +485,8 @@ static LibraryUpdater *sharedInstance = nil;
 - (void)updateAllTVShowsCoreDataBackgroundThread:(id)result clean:(BOOL)canDelete
 
 {
+	BOOL hidden = [[[result objectForKey:@"info"] 
+					objectForKey:@"hiddenUpdate"] boolValue];
 	//	NSLog(@"AllTVShows update %@", result);
 	NSManagedObjectContext *context = [[[NSManagedObjectContext alloc] init] autorelease];
     NSPersistentStoreCoordinator *coordinator = [[ActiveManager shared] persistentStoreCoordinator];
@@ -569,14 +570,11 @@ static LibraryUpdater *sharedInstance = nil;
                 [show setValue:[newshow valueForKey:@"studio"] forKey:@"studio"];
                 [show setValue:[NSNumber numberWithInt:[[newshow valueForKey:@"tvshowid"] intValue]] forKey:@"tvshowid"];
                 [show setValue:[NSNumber numberWithFloat:[[newshow valueForKey:@"rating"] floatValue]] forKey:@"rating"];
-                [show setValue:[NSNumber numberWithInt:[[newshow valueForKey:@"episode"] intValue]] forKey:@"nbepisodes"];
                 [show setValue:[newshow valueForKey:@"plot"] forKey:@"plot"];
                 [show setValue:[newshow valueForKey:@"genre"] forKey:@"genre"];
                 [show setValue:[newshow valueForKey:@"fanart"] forKey:@"fanart"];
                 [show setValue:[newshow valueForKey:@"thumbnail"] forKey:@"thumbnail"];
-                [show setValue:[newshow valueForKey:@"imdbnumber"] forKey:@"imdbid"];
-                [show setValue:[newshow valueForKey:@"episode"] forKey:@"nbepisodes"];
-                [show setValue:[newshow valueForKey:@"playcount"] forKey:@"playcount"];
+                [show setValue:[newshow valueForKey:@"imdbnumber"] forKey:@"tvdbid"];
                 
 //                if ([newshow objectForKey:@"cast"] && [[newshow objectForKey:@"cast"] isKindOfClass:[NSArray class]])
 //                {
@@ -605,26 +603,26 @@ static LibraryUpdater *sharedInstance = nil;
             anObject = [enumerator nextObject];
         }
 		
-		enumerator = [toUpdateItems objectEnumerator];
-        
-        anObject = [enumerator nextObject];
-        while (anObject) 
-        {
-            id newshow = [newshows objectForKey:anObject];
-			//            NSLog(@"season %@", newseason);
-            NSManagedObject *oldseason = [oldshows objectForKey:anObject];
-			
-            if (![[newshow valueForKey:@"playcount"] isEqual: [oldseason valueForKey:@"playcount"]])
-            {
-                [oldseason setValue:[newshow valueForKey:@"playcount"] forKey:@"playcount"];
-            }
-			if (![[newshow valueForKey:@"episode"] isEqual: [oldseason valueForKey:@"nbepisodes"]])
-            {
-                [oldseason setValue:[newshow valueForKey:@"episode"] forKey:@"nbepisodes"];
-            }
-			
-            anObject = [enumerator nextObject];
-        }
+//		enumerator = [toUpdateItems objectEnumerator];
+//        
+//        anObject = [enumerator nextObject];
+//        while (anObject) 
+//        {
+//            id newshow = [newshows objectForKey:anObject];
+//			//            NSLog(@"season %@", newseason);
+//            NSManagedObject *oldseason = [oldshows objectForKey:anObject];
+//			
+////            if (![[newshow valueForKey:@"playcount"] isEqual: [oldseason valueForKey:@"playcount"]])
+////            {
+////                [oldseason setValue:[newshow valueForKey:@"playcount"] forKey:@"playcount"];
+////            }
+//			if (![[newshow valueForKey:@"episode"] isEqual: [oldseason valueForKey:@"nbepisodes"]])
+//            {
+//                [oldseason setValue:[newshow valueForKey:@"episode"] forKey:@"nbepisodes"];
+//            }
+//			
+//            anObject = [enumerator nextObject];
+//        }
         
         if (canDelete)
         {
@@ -651,12 +649,12 @@ static LibraryUpdater *sharedInstance = nil;
 		for (NSDictionary* show in shows)
 		{
 			dispatch_sync(dispatch_get_main_queue(), ^{
-			[self updateTVShow:[[show valueForKey:@"tvshowid"] intValue]];
+			[self updateTVShow:[[show valueForKey:@"tvshowid"] intValue] hidden:hidden];
 			});
 		}
     }
     [pool drain];
-	[self oneUpdateFinished];
+	if (!hidden) [self oneUpdateFinished];
 }
 
 -(void)updateAllTVShowsCoreData:(id)result clean:(BOOL)canDelete
@@ -670,13 +668,13 @@ static LibraryUpdater *sharedInstance = nil;
     [self updateAllTVShowsCoreData:result clean:YES];
 }
 
-- (void) updateAllTVShows:(NSInteger) number
+- (void) updateAllTVShows:(NSInteger) number hidden:(BOOL)hid
 {
 	if (![XBMCStateListener connected]) return;
-	[self oneUpdateStarted];
+	if (!hid) [self oneUpdateStarted];
     NSMutableDictionary *requestParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 										  [NSArray arrayWithObjects:@"title", @"originaltitle"
-										   , @"plot", @"cast", @"episode", @"premiered",@"votes", @"file"
+										   , @"plot", @"cast", @"episode", @"premiered", @"file"
 										   , @"studio", @"genre", @"rating", @"imdbnumber", @"fanart", @"thumbnail", nil]
 										  , @"fields", nil];
     if (number > 0)
@@ -699,14 +697,83 @@ static LibraryUpdater *sharedInstance = nil;
 }
 
 #pragma mark -
+#pragma mark Recent Episodes
+
+- (void)gotRecentlyAddedEpisodes:(id)result
+{
+    if (![[result objectForKey:@"failure"] boolValue])
+    {
+        TT_RELEASE_SAFELY(_recentlyAddedEpisodes);
+//		NSLog(@"recentEpisodes %@", result);
+        
+//        [self updateEpisodesCoreData:result clean:NO];
+        
+        if ([[result objectForKey:@"result"] objectForKey:@"episodes"] != nil)
+        {
+            NSMutableArray* episodes = [[NSMutableArray alloc] init];
+            for (NSDictionary* episode in [[result objectForKey:@"result"] objectForKey:@"episodes"])
+            {
+                [episodes addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithInt:[[episode valueForKey:@"episodeid"] intValue]], @"id"
+                                    ,[episode objectForKey:@"label"], @"label"
+                                    ,[episode objectForKey:@"thumbnail"], @"thumbnail"
+                                    ,[episode objectForKey:@"fanart"], @"fanart"
+                                    ,[episode objectForKey:@"season"], @"season"
+                                    ,[episode objectForKey:@"showtitle"], @"showtitle"
+                                    ,[episode objectForKey:@"episode"], @"episode"
+                                    ,[episode objectForKey:@"playcount"], @"playcount"
+                                    ,[episode objectForKey:@"file"], @"file"
+                                    , nil]];
+            }
+            _recentlyAddedEpisodes = [episodes retain];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"recentlyAddedEpisodes"  object:nil];
+        }
+    }
+}
+
+- (void) updateRecentlyAddedEpisodes:(NSInteger) number hidden:(BOOL)hid
+{
+    if (![XBMCStateListener connected]) return;
+	if (!hid) [self oneUpdateStarted];
+	
+    NSMutableDictionary *requestParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+										  [NSArray arrayWithObjects:@"season", @"showtitle"
+										   , @"episode", @"playcount",@"file"
+										   , @"fanart", @"thumbnail", nil]
+										  , @"fields", nil];
+    if (number > 0)
+    {
+        [requestParams addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+												 [NSDictionary dictionaryWithObjectsAndKeys:
+												  [NSNumber numberWithInt:0], @"start", 
+												  [NSNumber numberWithInt:number], @"end", nil]
+												 , @"limits", nil]];
+    }
+    
+    [requestParams addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [NSDictionary dictionaryWithObjectsAndKeys:
+											  @"none", @"method", nil]
+											 , @"sort", nil]];
+    
+    NSDictionary *request = [[[NSDictionary alloc] initWithObjectsAndKeys:
+                              @"VideoLibrary.GetRecentlyAddedEpisodes", @"cmd", requestParams, @"params",nil] autorelease];
+    [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request target:self selector:@selector(gotRecentlyAddedEpisodes:)];    
+}
+
+- (void) updateRecentlyAddedEpisodes:(BOOL)hid
+{
+    [self updateRecentlyAddedEpisodes:0 hidden:hid];
+}
+
+
+#pragma mark -
 #pragma mark TVShow
 
 - (void)updateTVShowCoreDataBackgroundThread:(id)result clean:(BOOL)canDelete
 
 {
-//	NSLog(@"Seasons update %@", result);
-//	[self oneUpdateFinished];
-//	return;
+	BOOL hidden = [[[result objectForKey:@"info"] 
+					objectForKey:@"hiddenUpdate"] boolValue];
 	NSManagedObjectContext *context = [[[NSManagedObjectContext alloc] init] autorelease];
     NSPersistentStoreCoordinator *coordinator = [[ActiveManager shared] persistentStoreCoordinator];
     [context setPersistentStoreCoordinator:coordinator];
@@ -714,6 +781,7 @@ static LibraryUpdater *sharedInstance = nil;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     if (![[result objectForKey:@"failure"] boolValue])
     {
+		NSNumber* tvshowid = [[result objectForKey:@"info"] objectForKey:@"tvshowid"];
         NSError *error = nil;
         NSArray* seasons = [[result objectForKey:@"result"] objectForKey:@"seasons"];
         
@@ -724,7 +792,7 @@ static LibraryUpdater *sharedInstance = nil;
         NSEntityDescription *seasonEntity = [NSEntityDescription entityForName:@"Season" inManagedObjectContext:context];
         [seasonFetchRequest setPredicate:[NSPredicate 
 										predicateWithFormat:@"tvshowid == %@"
-										,[result objectForKey:@"info"]]];
+										,tvshowid]];
 		[seasonFetchRequest setEntity:seasonEntity];
         NSArray *seasonsArray = [context executeFetchRequest:seasonFetchRequest error:&error];
         [seasonFetchRequest release];
@@ -764,21 +832,18 @@ static LibraryUpdater *sharedInstance = nil;
 				
                 [season setValue:label forKey:@"label"];
 				
-                [season setValue:[result objectForKey:@"info"] forKey:@"tvshowid"];
+                [season setValue:tvshowid forKey:@"tvshowid"];
                 [season setValue:[NSNumber numberWithInt:[[newseason valueForKey:@"season"] intValue]] forKey:@"season"];
-                [season setValue:[NSNumber numberWithInt:[[newseason valueForKey:@"playcount"] intValue]] forKey:@"playcount"];
-                [season setValue:[NSNumber numberWithInt:[[newseason valueForKey:@"episode"] intValue]] forKey:@"nbepisodes"];
-                [season setValue:[newseason valueForKey:@"season"] forKey:@"season"];
                 [season setValue:[newseason valueForKey:@"fanart"] forKey:@"fanart"];
                 [season setValue:[newseason valueForKey:@"thumbnail"] forKey:@"thumbnail"];
 				
 				NSArray *array = [context fetchObjectsForEntityName:@"TVShow" withPredicate:
-								  [NSPredicate predicateWithFormat:@"tvshowid == %@", [result objectForKey:@"info"]]];
+								  [NSPredicate predicateWithFormat:@"tvshowid == %@", tvshowid]];
 				
 				if (array == nil || [array count] ==0) {
 					[self oneUpdateFinished];
 					NSLog(@"Could not find tvshow %@ dealing with season %@"
-						  , [result objectForKey:@"info"], [newseason valueForKey:@"season"]);
+						  , tvshowid, [newseason valueForKey:@"season"]);
 					[pool drain];
 					return;
 				}
@@ -789,26 +854,26 @@ static LibraryUpdater *sharedInstance = nil;
             anObject = [enumerator nextObject];
         }
         
-        enumerator = [toUpdateItems objectEnumerator];
-        
-        anObject = [enumerator nextObject];
-        while (anObject) 
-        {
-            id newseason = [newseasons objectForKey:anObject];
-			//            NSLog(@"season %@", newseason);
-            NSManagedObject *oldseason = [oldseasons objectForKey:anObject];
-			
-            if (![[newseason valueForKey:@"playcount"] isEqual: [oldseason valueForKey:@"playcount"]])
-            {
-                [oldseason setValue:[newseason valueForKey:@"playcount"] forKey:@"playcount"];
-            }
-			if (![[newseason valueForKey:@"episode"] isEqual: [oldseason valueForKey:@"nbepisodes"]])
-            {
-                [oldseason setValue:[newseason valueForKey:@"episode"] forKey:@"nbepisodes"];
-            }
-			
-            anObject = [enumerator nextObject];
-        }
+//        enumerator = [toUpdateItems objectEnumerator];
+//        
+//        anObject = [enumerator nextObject];
+//        while (anObject) 
+//        {
+//            id newseason = [newseasons objectForKey:anObject];
+//			//            NSLog(@"season %@", newseason);
+//            NSManagedObject *oldseason = [oldseasons objectForKey:anObject];
+//			
+//            if (![[newseason valueForKey:@"playcount"] isEqual: [oldseason valueForKey:@"playcount"]])
+//            {
+//                [oldseason setValue:[newseason valueForKey:@"playcount"] forKey:@"playcount"];
+//            }
+//			if (![[newseason valueForKey:@"episode"] isEqual: [oldseason valueForKey:@"nbepisodes"]])
+//            {
+//                [oldseason setValue:[newseason valueForKey:@"episode"] forKey:@"nbepisodes"];
+//            }
+//			
+//            anObject = [enumerator nextObject];
+//        }
         
         if (canDelete)
         {
@@ -834,13 +899,13 @@ static LibraryUpdater *sharedInstance = nil;
 		for (NSDictionary* season in seasons)
 		{
 			dispatch_sync(dispatch_get_main_queue(), ^{ 
-				[self updateSeason:[[result objectForKey:@"info"] intValue]
-				  season:[[season valueForKey:@"season"] intValue]];
+				[self updateSeason:[tvshowid intValue]
+				  season:[[season valueForKey:@"season"] intValue] hidden:hidden];
 			});
 		}
     }
     [pool drain];
-	[self oneUpdateFinished];
+	if (!hidden) [self oneUpdateFinished];
 }
 
 -(void)updateTVShowCoreData:(id)result clean:(BOOL)canDelete
@@ -855,13 +920,13 @@ static LibraryUpdater *sharedInstance = nil;
     [self updateTVShowCoreData:result clean:YES];
 }
 
-- (void) updateTVShow:(NSInteger) tvshowid
+- (void) updateTVShow:(NSInteger) tvshowid hidden:(BOOL)hid
 {
 	if (![XBMCStateListener connected]) return;
 	[self oneUpdateStarted];
     NSDictionary *requestParams = [NSDictionary dictionaryWithObjectsAndKeys:
 										  [NSArray arrayWithObjects:@"season", @"showtitle"
-										   , @"episode", @"playcount", @"fanart", @"thumbnail", nil]
+										   , @"episode", @"fanart", @"thumbnail", nil]
 										  , @"fields"
 								   , [NSNumber numberWithInt:tvshowid],@"tvshowid"
 										  ,[NSDictionary dictionaryWithObjectsAndKeys:
@@ -870,7 +935,9 @@ static LibraryUpdater *sharedInstance = nil;
 	
     NSDictionary *request = [NSDictionary dictionaryWithObjectsAndKeys:
 							 @"VideoLibrary.GetSeasons", @"cmd", requestParams, @"params"
-							 ,[NSNumber numberWithInt:tvshowid], @"info",nil];
+							 ,[NSDictionary dictionaryWithObjectsAndKeys:
+							   [NSNumber numberWithBool:hid], @"hiddenUpdate"
+							   ,[NSNumber numberWithInt:tvshowid], @"tvshowid", nil], @"info",nil];
     [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request target:self selector:@selector(updateTVShowCoreData:)]; 
 }
 
@@ -880,9 +947,8 @@ static LibraryUpdater *sharedInstance = nil;
 - (void)updateSeasonCoreDataBackgroundThread:(id)result clean:(BOOL)canDelete
 
 {
-//	NSLog(@"Season update %@", result);
-//	[self oneUpdateFinished];
-//	return;
+	BOOL hidden = [[[result objectForKey:@"info"] 
+					objectForKey:@"hiddenUpdate"] boolValue];
 	NSManagedObjectContext *context = [[[NSManagedObjectContext alloc] init] autorelease];
     NSPersistentStoreCoordinator *coordinator = [[ActiveManager shared] persistentStoreCoordinator];
     [context setPersistentStoreCoordinator:coordinator];
@@ -1062,7 +1128,7 @@ static LibraryUpdater *sharedInstance = nil;
 		[[[ActiveManager shared] persistentStoreCoordinator] unlock];
     }
     [pool drain];
-	[self oneUpdateFinished];
+	if (!hidden) [self oneUpdateFinished];
 }
 
 -(void)updateSeasonCoreData:(id)result clean:(BOOL)canDelete
@@ -1077,10 +1143,10 @@ static LibraryUpdater *sharedInstance = nil;
     [self updateSeasonCoreData:result clean:YES];
 }
 
-- (void) updateSeason:(NSInteger) tvshowid season:(NSInteger)seasonid
+- (void) updateSeason:(NSInteger) tvshowid season:(NSInteger)seasonid hidden:(BOOL)hid
 {
 	if (![XBMCStateListener connected]) return;
-	[self oneUpdateStarted];
+	if (!hid) [self oneUpdateStarted];
     NSDictionary *requestParams = [NSDictionary dictionaryWithObjectsAndKeys:
 								   [NSArray arrayWithObjects:@"season", @"showtitle"
 									, @"episode", @"playcount",@"streamDetails"
@@ -1096,7 +1162,8 @@ static LibraryUpdater *sharedInstance = nil;
     NSDictionary *request = [NSDictionary dictionaryWithObjectsAndKeys:
 							 @"VideoLibrary.GetEpisodes", @"cmd", requestParams, @"params"
 							 ,[NSDictionary dictionaryWithObjectsAndKeys:
-							   [NSNumber numberWithInt:tvshowid], @"tvshowid"
+							   [NSNumber numberWithBool:hid], @"hiddenUpdate"
+							   ,[NSNumber numberWithInt:tvshowid], @"tvshowid"
 							   ,[NSNumber numberWithInt:seasonid], @"season", nil], @"info",nil];
     [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request target:self selector:@selector(updateSeasonCoreData:)]; 
 }
@@ -1109,18 +1176,9 @@ static LibraryUpdater *sharedInstance = nil;
 
 - (void) updateLibrary:(NSInteger) number
 {
-    [self updateMovies:0];
+    [self updateMovies:number hidden:FALSE];
     
-    [self updateAllTVShows:0];
-}
-
-- (void)dealloc {
-
-    TT_RELEASE_SAFELY(_recentlyAddedMovies);
-	[self stop];
-	// wait for queue to empty
-	dispatch_sync(_queue, ^{});
-    [super dealloc];
+    [self updateAllTVShows:number hidden:FALSE];
 }
 
 @end

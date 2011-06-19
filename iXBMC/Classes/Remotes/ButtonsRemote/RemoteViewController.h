@@ -21,7 +21,7 @@
     
  
     TTView* _toolBar;
-    UIImageView *_backgroundView;
+//    UIImageView *_backgroundView;
     TTView *_infosView;
     TTView *_buttonsView;
     CustomTitleView* _titleBackground;

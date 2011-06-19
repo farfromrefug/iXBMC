@@ -33,4 +33,6 @@
 @property (nonatomic, retain) Season * season;
 @property (nonatomic, retain) TVShow * tvshow;
 
++ (NSString*)defaultSort;
+
 @end

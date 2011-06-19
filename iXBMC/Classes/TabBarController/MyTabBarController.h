@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class TabBarController;
-@interface MyTabBarController : UITabBarController {
-    TabBarController* surrogateParent;
+#import "BCTabBarController.h"
+@class HeaderTabBarController;
+@interface MyTabBarController : BCTabBarController {
+    HeaderTabBarController* surrogateParent;
 }
-@property (nonatomic, assign) TabBarController *surrogateParent;
+@property (nonatomic, assign) HeaderTabBarController *surrogateParent;
+- (void)setTabURLs:(NSArray*)URLs;
 
 @end

@@ -30,6 +30,19 @@
 @dynamic season;
 @dynamic tvshow;
 
++ (NSString*)defaultSort
+{
+    return @"season.season asc episode asc";
+}
+
++ (NSArray*)sorts
+{
+    return [NSArray arrayWithObjects:[self defaultSort], nil];
+}
++ (NSArray*)sortNames
+{
+    return [NSArray arrayWithObjects:@"Episode", nil];
+}
 
 
 @end

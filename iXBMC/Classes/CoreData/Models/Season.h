@@ -21,7 +21,6 @@
 @property (nonatomic, retain) NSNumber * season;
 @property (nonatomic, retain) NSNumber * tvshowid;
 @property (nonatomic, retain) NSString * label;
-@property (nonatomic, retain) NSNumber * nbepisodes;
 
 @property (nonatomic, retain) TVShow * tvshow;
 @property (nonatomic, retain) NSSet* episodes;
@@ -30,5 +29,7 @@
 - (void)removeEpisodesObject:(Episode *)value;
 - (void)addEpisodes:(NSSet *)value;
 - (void)removeEpisodes:(NSSet *)value;
+
++ (NSString*)defaultSort;
 
 @end

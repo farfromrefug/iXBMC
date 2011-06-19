@@ -17,17 +17,15 @@
 @property (nonatomic, retain) NSString * fanart;
 @property (nonatomic, retain) NSString * firstLetter;
 @property (nonatomic, retain) NSString * genre;
-@property (nonatomic, retain) NSString * imdbid;
+@property (nonatomic, retain) NSString * tvdbid;
 @property (nonatomic, retain) NSString * label;
 @property (nonatomic, retain) NSNumber * tvshowid;
-@property (nonatomic, retain) NSNumber * playcount;
 @property (nonatomic, retain) NSString * plot;
 @property (nonatomic, retain) NSNumber * rating;
 @property (nonatomic, retain) NSString * sortLabel;
 @property (nonatomic, retain) NSString * studio;
 @property (nonatomic, retain) NSString * tagline;
 @property (nonatomic, retain) NSString * thumbnail;
-@property (nonatomic, retain) NSNumber * nbepisodes;
 @property (nonatomic, retain) NSString * premiered;
 @property (nonatomic, retain) NSSet* genres;
 @property (nonatomic, retain) NSSet* roles;
