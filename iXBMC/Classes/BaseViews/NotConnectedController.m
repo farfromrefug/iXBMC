@@ -32,17 +32,18 @@
                                                          subtitle:@"Tap here to go to the Settings Page"
                                                             image:TTIMAGE(@"bundle://error.png")] 
                                autorelease];
-    errorView.backgroundColor = [UIColor clearColor];
+	errorView.frame = self.view.frame;
+    errorView.backgroundColor = TTSTYLEVAR(tableViewBackColor);
     errorView.userInteractionEnabled= YES;
-    errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth 
-                                | UIViewAutoresizingFlexibleHeight;
+	errorView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+
     
-    //create new uiview with a background image
-    UIImage *backgroundImage = TTIMAGE(@"bundle://detailsback.png");
-    UIImageView *backgroundView = [[[UIImageView alloc] 
-                        initWithImage:backgroundImage] autorelease];
-    [errorView addSubview:backgroundView];
-    [errorView sendSubviewToBack:backgroundView];
+//    //create new uiview with a background image
+//    UIImage *backgroundImage = TTIMAGE(@"bundle://detailsback.png");
+//    UIImageView *backgroundView = [[[UIImageView alloc] 
+//                        initWithImage:backgroundImage] autorelease];
+//    [errorView addSubview:backgroundView];
+//    [errorView sendSubviewToBack:backgroundView];
     UITapGestureRecognizer *tapgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     [errorView addGestureRecognizer:tapgr];
     [tapgr release]; 

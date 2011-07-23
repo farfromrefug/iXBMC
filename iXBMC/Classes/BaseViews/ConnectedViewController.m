@@ -30,6 +30,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center
@@ -52,13 +53,13 @@
 
 - (void)disconnectedFromXBMC: (NSNotification *) notification
 {
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
     if (_notConnected == nil)
     {
         _notConnected = [[NotConnectedController alloc] init];
     }
     _notConnected.view.frame = self.view.frame;
-    [[self navigationController] setNavigationBarHidden:YES animated:NO];
-    [self.view addSubview:_notConnected.view];
+	[self.view addSubview:_notConnected.view];
 }
 
 - (void)connectedToXBMC: (NSNotification *) notification

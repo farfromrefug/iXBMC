@@ -22,8 +22,8 @@
         
         _titleLabel = [[[UILabel alloc] init] autorelease];
         _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _titleLabel.font = [UIFont boldSystemFontOfSize:16];
-        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.font = TTSTYLEVAR(navBarTextFont);
+        _titleLabel.textColor = TTSTYLEVAR(navBarTextColor);
         _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.textAlignment = UITextAlignmentCenter;
         _titleLabel.adjustsFontSizeToFitWidth = NO;
@@ -34,8 +34,8 @@
         
         _subTitleLabel = [[[UILabel alloc] init] autorelease];
         _subTitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _subTitleLabel.font = [UIFont systemFontOfSize:12];
-        _subTitleLabel.textColor = [UIColor whiteColor];
+        _subTitleLabel.font = TTSTYLEVAR(navBarSubtitleTextFont);
+        _subTitleLabel.textColor = TTSTYLEVAR(navBarSubtitleTextColor);
         _subTitleLabel.backgroundColor = [UIColor clearColor];
         _subTitleLabel.textAlignment = UITextAlignmentCenter;
         _subTitleLabel.adjustsFontSizeToFitWidth = NO;
