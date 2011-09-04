@@ -3,7 +3,7 @@
 
 @interface AddServerViewController : FixedTTTableViewController <UITextFieldDelegate>
 {
-    NSMutableDictionary* serverInfo;
+    NSMutableDictionary* _serverInfo;
     NSString* hostName;
 }
 @property (nonatomic, retain) NSMutableDictionary* serverInfo;

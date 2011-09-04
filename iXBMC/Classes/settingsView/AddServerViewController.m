@@ -4,7 +4,7 @@
 
 @implementation AddServerViewController
 @synthesize hostName;
-@synthesize serverInfo;
+@synthesize serverInfo = _serverInfo;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
 
@@ -20,8 +20,8 @@
         self.title = @"Add Server";
         
         hostName = [host copy];
-        serverInfo = [[NSMutableDictionary alloc] init];
-        [serverInfo setValue:@"9090" forKey:@"tcpport"];
+        self.serverInfo = [[NSMutableDictionary alloc] init];
+        [_serverInfo setValue:@"9090" forKey:@"tcpport"];
         
         
         UITextField* nameTextField = [[[UITextField alloc] init] autorelease];
@@ -85,8 +85,8 @@
         tcpportTextField.font = TTSTYLEVAR(font);
         tcpportTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         tcpportTextField.textAlignment = UITextAlignmentRight;
-        tcpportTextField.text = [serverInfo valueForKey:@"tcpport"];
-        tcpportTextField.placeholder = [serverInfo valueForKey:@"tcpport"];
+        tcpportTextField.text = [_serverInfo valueForKey:@"tcpport"];
+        tcpportTextField.placeholder = [_serverInfo valueForKey:@"tcpport"];
         tcpportTextField.delegate = self;
         tcpportTextField.tag = 5;
         TTTableControlItem* tcpportFieldItem = [TTTableControlItem itemWithCaption:@"TCP Port"
@@ -104,14 +104,14 @@
         {
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 //            serverInfo = ;
-            serverInfo = [NSMutableDictionary dictionaryWithDictionary:[[defaults objectForKey:@"hosts"] objectForKey:hostName]];
+            self.serverInfo = [NSMutableDictionary dictionaryWithDictionary:[[defaults objectForKey:@"hosts"] objectForKey:hostName]];
             nameTextField.text = hostName;
             nameTextField.enabled = FALSE;
-            addressTextField.text = [serverInfo objectForKey:@"address"];
-            loginTextField.text = [serverInfo objectForKey:@"login"];
-            passwordTextField.text = [serverInfo objectForKey:@"pwd"];
-            portTextField.text = [serverInfo objectForKey:@"port"];
-            tcpportTextField.text = [serverInfo objectForKey:@"tcpport"];
+            addressTextField.text = [_serverInfo objectForKey:@"address"];
+            loginTextField.text = [_serverInfo objectForKey:@"login"];
+            passwordTextField.text = [_serverInfo objectForKey:@"pwd"];
+            portTextField.text = [_serverInfo objectForKey:@"port"];
+            tcpportTextField.text = [_serverInfo objectForKey:@"tcpport"];
         }
     }
     return self;
@@ -126,7 +126,7 @@
 }
 
 - (void)dealloc {
-    TT_RELEASE_SAFELY(serverInfo);
+    TT_RELEASE_SAFELY(_serverInfo);
     TT_RELEASE_SAFELY(hostName);
 	[super dealloc];
 }
@@ -142,16 +142,16 @@
 - (void) save {
     [self findAndResignFirstResonder: self.view];
     if ([hostName compare:@""] == NSOrderedSame ||
-        [serverInfo valueForKey:@"address"] == nil ||
-        [serverInfo valueForKey:@"address"] == @"" ||
-        [serverInfo valueForKey:@"login"] == nil ||
-        [serverInfo valueForKey:@"login"] == @"" ||
-        [serverInfo valueForKey:@"pwd"] == nil ||
-        [serverInfo valueForKey:@"pwd"] == @"" ||
-        [serverInfo valueForKey:@"port"] == nil ||
-        [serverInfo valueForKey:@"port"] == @"" ||
-        [serverInfo valueForKey:@"tcpport"] == nil ||
-        [serverInfo valueForKey:@"tcpport"] == @""          
+        [_serverInfo valueForKey:@"address"] == nil ||
+        [_serverInfo valueForKey:@"address"] == @"" ||
+        [_serverInfo valueForKey:@"login"] == nil ||
+        [_serverInfo valueForKey:@"login"] == @"" ||
+        [_serverInfo valueForKey:@"pwd"] == nil ||
+        [_serverInfo valueForKey:@"pwd"] == @"" ||
+        [_serverInfo valueForKey:@"port"] == nil ||
+        [_serverInfo valueForKey:@"port"] == @"" ||
+        [_serverInfo valueForKey:@"tcpport"] == nil ||
+        [_serverInfo valueForKey:@"tcpport"] == @""          
           )
          {
              UIAlertView *alert = [[UIAlertView alloc]
@@ -181,7 +181,7 @@
         [[NSNotificationCenter defaultCenter] 
          postNotificationName:@"hostAdded" 
          object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:hostName, @"name"
-                              , [[[NSString alloc] initWithString:[serverInfo objectForKey:@"address"]] autorelease], @"address"
+                              , [[[NSString alloc] initWithString:[_serverInfo objectForKey:@"address"]] autorelease], @"address"
                               , nil]];	
     }
     else
@@ -189,13 +189,13 @@
         [[NSNotificationCenter defaultCenter] 
          postNotificationName:@"hostUpdated" 
          object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:hostName, @"name"
-                              , [[[NSString alloc] initWithString:[serverInfo objectForKey:@"address"]] autorelease], @"address"
+                              , [[[NSString alloc] initWithString:[_serverInfo objectForKey:@"address"]] autorelease], @"address"
                               , nil]];	
     }
     
 //	[serverInfo release];
     [hosts 
-        setObject:[NSDictionary dictionaryWithDictionary:serverInfo] 
+        setObject:[NSDictionary dictionaryWithDictionary:_serverInfo] 
      forKey:hostName];
     [defaults setObject:hosts forKey:@"hosts"];
     [defaults setObject:hostName forKey:@"currenthost"];
@@ -218,19 +218,19 @@
             hostName = [NSString stringWithString:textField.text];
             break;
         case 1:
-            [serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"address"];
+            [_serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"address"];
             break;
         case 2:
-            [serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"login"];
+            [_serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"login"];
             break;
         case 3:
-            [serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"pwd"];
+            [_serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"pwd"];
             break;
         case 4:
-            [serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"port"];
+            [_serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"port"];
             break;
         case 5:
-            [serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"tcpport"];
+            [_serverInfo setValue:[NSString stringWithString:textField.text] forKey:@"tcpport"];
             break;
         default:
             break;
