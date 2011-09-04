@@ -14,14 +14,20 @@
 // NSObject
 
 - (NSString *)iconImageName {
-	return @"106-sliders.png";
+	return @"iconSettings.png";
+}
+
+- (NSString *)selectedIconImageNameSuffix
+{
+	return @"On";
 }
 
 - (void)setTabBarButton:(BCTab*) tabBarButton
 {
 }
 
-- (NSString *)iconTitle {
+- (NSString *)iconTitle 
+{
 	return @"Settings";
 }
 
@@ -29,9 +35,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
+		self.title = [self iconTitle];
         self.variableHeightRows = YES;
 //        self.tableViewStyle = UITableViewStylePlain;      
-        self.showTableShadows = YES;
+//self.showTableShadows = YES;
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
         
 //        //create new uiview with a background image

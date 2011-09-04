@@ -11,9 +11,6 @@
 	
 	UIImage* _poster;
 	UIImage* _fanart;
-	UIImage* _posterBack;
-	UIImage* _fanartBack;
-    UIImage* _titleBack;
     UIImage* _newFlag;
 }
 

@@ -21,18 +21,38 @@
 
 @property (nonatomic, readonly) CGFloat toolbarAnimationDuration;
 
+@property (nonatomic, readonly) CGFloat tableViewCellMenuHeight;
+@property (nonatomic, readonly) CGFloat tableViewCellSearchHeight;
+
+@property (nonatomic, readonly) TTStyle *connectionBanner;
+@property (nonatomic, readonly) UIColor	*connectionBarTextColor;
+@property (nonatomic, readonly) UIFont	*connectionBarTextFont;
+
+@property (nonatomic, readonly) UIColor	*navBarBackColor;
+@property (nonatomic, readonly) UIColor	*navBarBorderColor;
+@property (nonatomic, readonly) UIFont *navBarTextFont;
+@property (nonatomic, readonly) UIFont *navBarSubtitleTextFont;
+@property (nonatomic, readonly) UIColor	*navBarTextColor;
+@property (nonatomic, readonly) UIColor	*navBarSubtitleTextColor;
+
+@property (nonatomic, readonly) UIColor	*tabBarBackColor;
+@property (nonatomic, readonly) UIColor	*tabBarBorderColor;
+@property (nonatomic, readonly) UIColor	*tabBarHighlightedColor;
 @property (nonatomic, readonly) UIFont *tabBarTextFont;
 @property (nonatomic, readonly) UIColor	*tabBarTextColor;
+@property (nonatomic, readonly) UIColor	*tabBarTextHighlightedColor;
 @property (nonatomic, readonly) UIColor	*tabBarTextShadowColor;
 @property (nonatomic, readonly) CGSize	tabBarTextShadowOffset;
 @property (nonatomic, readonly) UILineBreakMode	tabBarTextLineBreakMode;
 @property (nonatomic, readonly) UIEdgeInsets tabBarTextEdgeInsets;
-@property (nonatomic, readonly) UIControlContentHorizontalAlignment tabBarTextHAlignment;
+@property (nonatomic, readonly) UITextAlignment tabBarTextAlignment;
 @property (nonatomic, readonly) UIControlContentVerticalAlignment tabBarTextVAlignment;
 
 
 @property (nonatomic, readonly) BOOL highQualityImages;
 @property (nonatomic, readonly) CGFloat highQualityFactor;
+
+@property (nonatomic, readonly) CGFloat cellHeight;
 
 @property (nonatomic, readonly) CGFloat headerViewHeight;
 @property (nonatomic, readonly) CGFloat movieCellHeight;
@@ -56,8 +76,45 @@
 
 @property (nonatomic, readonly) CGFloat movieDetailsViewCoverHeight;
 @property (nonatomic, readonly) UIColor*  navigationBarTintColor;
-@property (nonatomic, readonly) TTStyle* whiteText;
-@property (nonatomic, readonly) TTStyle* plotText;
+
+@property (nonatomic, readonly) UIColor* recentEpisodesBackColor;
+@property (nonatomic, readonly) UIColor* recentEpisodesFirstBorderColor;
+@property (nonatomic, readonly) UIColor* recentEpisodesSecondBorderColor;
+@property (nonatomic, readonly) UIColor* recentEpisodeTextFirstColor;
+@property (nonatomic, readonly) UIColor* recentEpisodeTextSecondColor;
+@property (nonatomic, readonly) UIFont* recentEpisodeTextFirstFont;
+@property (nonatomic, readonly) UIFont* recentEpisodeTextSecondFont;
+
+
+@property (nonatomic, readonly) UIColor* tableViewBackColor;
+@property (nonatomic, readonly) UIColor* tableViewHeaderMainColor;
+@property (nonatomic, readonly) UIColor* tableViewHeaderSecondColor;
+@property (nonatomic, readonly) UIColor* tableViewHeaderBorderColor;
+@property (nonatomic, readonly) UIColor* tableViewHeaderTextColor;
+@property (nonatomic, readonly) UIFont* tableViewHeaderTextFont;
+
+@property (nonatomic, readonly) UIColor* tableViewCellMainColor;
+@property (nonatomic, readonly) UIColor* tableViewCellSecondColor;
+@property (nonatomic, readonly) UIColor* tableViewCellFirstBorderColor;
+@property (nonatomic, readonly) UIColor* tableViewCellSecondBorderColor;
+
+@property (nonatomic, readonly) UIColor* tableViewCellHighlightedMainColor;
+@property (nonatomic, readonly) UIColor* tableViewCellHighlightedSecondColor;
+@property (nonatomic, readonly) UIColor* tableViewCellHighlightedFirstBorderColor;
+@property (nonatomic, readonly) UIColor* tableViewCellHighlightedSecondBorderColor;
+
+@property (nonatomic, readonly) UIColor* tableViewCellTextFirstColor;
+@property (nonatomic, readonly) UIColor* tableViewCellTextSecondColor;
+@property (nonatomic, readonly) UIColor* tableViewCellTextThirdColor;
+@property (nonatomic, readonly) UIColor* tableViewCellHighlightedTextFirstColor;
+@property (nonatomic, readonly) UIColor* tableViewCellHighlightedTextSecondColor;
+@property (nonatomic, readonly) UIColor* tableViewCellHighlightedTextThirdColor;
+@property (nonatomic, readonly) UIFont* tableViewCellTextFirstFont;
+@property (nonatomic, readonly) UIFont* tableViewCellTextSecondFont;
+@property (nonatomic, readonly) UIFont* tableViewCellTextThirdFont;
+
+@property (nonatomic, readonly) UIColor* detailsViewBackColor;
+
 @property (nonatomic, readonly) TTStyle* bigWhiteText;
 @property (nonatomic, readonly) UIColor*  tabTintColor;
 @property (nonatomic, readonly) UIColor*  themeColor;

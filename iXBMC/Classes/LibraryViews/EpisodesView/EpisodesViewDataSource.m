@@ -156,6 +156,8 @@
 	Episode *episode = nil;
 	EpisodeTableItem* item = [EpisodeTableItem item];
 	item.watched = TRUE;
+	item.dataSource = self;
+	
 	if (indexPath.section == 0)
 	{
 		item.label = @"All Episodes";

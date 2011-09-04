@@ -220,9 +220,6 @@
 			item.nbUnWatched = [NSNumber numberWithInt:[item.nbUnWatched intValue] + 1];
 		}
 	}
-	
-    
-//
     return item;
 }
 
@@ -269,8 +266,6 @@
 
 - (NSString *)controller:(NSFetchedResultsController *)controller sectionIndexTitleForSectionName:(NSString *)sectionName 
 {
-//    NSInteger index = [self.fetchedResultsController sectionForSectionIndexTitle:sectionName atIndex:0];
-//    NSLog(@"index %@", index); 
     return sectionName;
 }
 

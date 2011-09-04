@@ -17,7 +17,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)init {
-    if (self = [super init]) {
+	self = [super init];
+    if (self) {
         [self setClipsToBounds:YES];
 		self.backgroundColor = [UIColor clearColor];
 		
@@ -28,11 +29,7 @@
 		_fanart = nil;
 		_poster = nil;
 		_newFlag = [TTIMAGE(@"bundle://unWatched.png") retain];
-		_posterBack = [TTIMAGE(@"bundle://coverSmall.png") retain];
-		_fanartBack = [TTIMAGE(@"bundle://recentFanart.png") retain];
-//		_titleBack = [TTIMAGE(@"bundle://recentFanartTitleBack.png") retain];
     }
-    
     return self;
 }
 
@@ -40,11 +37,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)dealloc {
     TT_RELEASE_SAFELY(_poster);
-    TT_RELEASE_SAFELY(_posterBack);
     TT_RELEASE_SAFELY(_fanart);
-    TT_RELEASE_SAFELY(_fanartBack);
     TT_RELEASE_SAFELY(_newFlag);
-    TT_RELEASE_SAFELY(_titleBack);
     TT_RELEASE_SAFELY(_title);
     TT_RELEASE_SAFELY(_season);
     TT_RELEASE_SAFELY(_episode);
@@ -58,21 +52,16 @@
 #pragma mark UIView
 
 - (void)drawRect:(CGRect)rect {
-	
-#define MAIN_FONT_SIZE 14
-#define SECONDARY_FONT_SIZE 12
 
 	// Get the graphics context and clear it
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextClearRect(ctx, rect);
 	
-	// Color and font for the main text items (time zone name, time)
-	UIColor *mainTextColor = [UIColor whiteColor];
-	UIFont *mainFont = [UIFont systemFontOfSize:MAIN_FONT_SIZE];
+	UIColor *mainTextColor = TTSTYLEVAR(recentEpisodeTextFirstColor);
+	UIFont *mainFont = TTSTYLEVAR(recentEpisodeTextFirstFont);
 	
-	// Color and font for the secondary text items (GMT offset, day)
-	UIColor *secondaryTextColor = [UIColor grayColor];
-	UIFont *secondaryFont = [UIFont systemFontOfSize:SECONDARY_FONT_SIZE];
+	UIColor *secondaryTextColor = TTSTYLEVAR(recentEpisodeTextSecondColor);
+	UIFont *secondaryFont = TTSTYLEVAR(recentEpisodeTextSecondFont);
 	
 	
 	CGRect contentRect = self.bounds;
@@ -80,36 +69,16 @@
 	CGFloat boundsY = contentRect.origin.y;
 	CGFloat height = contentRect.size.height;
 	CGFloat width = contentRect.size.width;
-	//	CGSize size;
 	
 	int thumbnailHeight = height - 2*V_SPACING;
+	int thumbnailWidth = thumbnailHeight*5/3;
 	
-	CGRect posterShadowRect = CGRectMake(boundsX + H_SPACING, boundsY + V_SPACING, 
-								   thumbnailHeight*5/3, thumbnailHeight);
+	CGRect posterRect = CGRectMake(boundsX + H_SPACING, boundsY + V_SPACING, 
+								   thumbnailWidth, thumbnailHeight);
 	
-	CGRect posterRect = CGRectMake(0, 0
-								   , posterShadowRect.size.width*0.94
-								   , posterShadowRect.size.height*0.92);
-	posterRect.origin.x = posterShadowRect.origin.x + (posterShadowRect.size.width - posterRect.size.width)/2;
-	posterRect.origin.y = posterShadowRect.origin.y + (posterShadowRect.size.height - posterRect.size.height)/2;
-	
-	CGFloat posterRight = posterShadowRect.origin.x + posterShadowRect.size.width;
-	CGRect fanartShadowRect = CGRectMake(posterRight + H_SPACING, V_SPACING, 
+	CGFloat posterRight = posterRect.origin.x + posterRect.size.width;
+	CGRect fanartRect = CGRectMake(posterRight + H_SPACING, V_SPACING, 
 										 width - posterRight - 2*H_SPACING, thumbnailHeight);
-	
-	CGRect fanartRect = CGRectMake(0, 0
-								   , fanartShadowRect.size.width*0.96
-								   , fanartShadowRect.size.height*0.92);
-	fanartRect.origin.x = fanartShadowRect.origin.x + (fanartShadowRect.size.width - fanartRect.size.width)/2;
-	fanartRect.origin.y = fanartShadowRect.origin.y + (fanartShadowRect.size.height - fanartRect.size.height)/2;
-
-	if (_posterBack)
-	{
-		[_posterBack drawInRect:posterShadowRect
-					  contentMode:UIViewContentModeScaleToFill];
-	}
-		
-	
 	if (_poster)
 	{
 		[_poster drawInRect:posterRect 
@@ -128,22 +97,10 @@
 		}
 	}
 	
-	if (_fanartBack)
-	{
-		[_fanartBack drawInRect:fanartShadowRect
-					contentMode:UIViewContentModeScaleToFill];
-	}
-	
-	
 	if (_fanart)
 	{
 		[_fanart drawInRect:fanartRect 
 					 radius:4 contentMode:UIViewContentModeScaleAspectFit];
-//		if (_titleBack)
-//		{
-//			[_titleBack drawInRect:fanartRect 
-//						 contentMode:UIViewContentModeScaleToFill];
-//		}
 		CGContextSetRGBFillColor(ctx, 0, 0, 0, 0.7);
 		CGContextFillRect(ctx, fanartRect);
 	}
@@ -151,17 +108,15 @@
 	CGFloat firstLabelHeight = mainFont.ttLineHeight;
 	CGFloat secondLabelHeight = secondaryFont.ttLineHeight;
 	
-//	CGFloat firstLabelHeight = mainFont.ttLineHeight;
 	CGRect textRect = CGRectMake(fanartRect.origin.x + 5, fanartRect.origin.y
 								  + 5
 								, fanartRect.size.width - 10, firstLabelHeight);
-//	
+
 	[mainTextColor set];
 	[_tvshow drawInRect:textRect withFont:mainFont  
 		  lineBreakMode:UILineBreakModeTailTruncation 
 			alignment:UITextAlignmentLeft];
 	
-	//	CGFloat firstLabelHeight = mainFont.ttLineHeight;
 	textRect.origin.y = textRect.origin.y + textRect.size.height;
 	textRect.size.height = secondLabelHeight;
 	NSString* text = [NSString stringWithFormat:@"Season %@ ● Episode %@", _season, _episode];

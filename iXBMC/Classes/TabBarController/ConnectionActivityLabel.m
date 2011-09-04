@@ -33,7 +33,7 @@ static CGFloat kSpacing         = 6;
     _bezelView = [[TTView alloc] init];
 
     _bezelView.backgroundColor = [UIColor clearColor];
-    _bezelView.style = TTSTYLE(blackBanner);
+    _bezelView.style = TTSTYLE(connectionBanner);
     self.backgroundColor = [UIColor clearColor];
 
 
@@ -49,10 +49,10 @@ static CGFloat kSpacing         = 6;
     _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
                                                             UIActivityIndicatorViewStyleWhite];
     [_activityIndicator hidesWhenStopped];
-    _label.font = TTSTYLEVAR(activityBannerFont);
+    _label.font = TTSTYLEVAR(connectionBarTextFont);
     _label.textColor = [UIColor whiteColor];
-    _label.shadowColor = [UIColor colorWithWhite:0 alpha:0.3];
-    _label.shadowOffset = CGSizeMake(1, 1);
+//    _label.shadowColor = [UIColor colorWithWhite:0 alpha:0.3];
+//    _label.shadowOffset = CGSizeMake(1, 1);
 
     [self addSubview:_bezelView];
     [_bezelView addSubview:_activityIndicator];

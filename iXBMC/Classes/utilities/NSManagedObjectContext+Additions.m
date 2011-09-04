@@ -54,6 +54,9 @@
 	
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
     [request setEntity:entity];
+    [request setSortDescriptors:$SORT([NSClassFromString([entity managedObjectClassName]) defaultSort])];
+	
+
     
     if (stringOrPredicate)
     {

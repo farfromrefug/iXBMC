@@ -20,12 +20,15 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation MovieViewController
 @synthesize delegate = _delegate;
-@synthesize selectedCellIndexPath = _selectedCellIndexPath;
-@synthesize forSearch = _forSearch;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSString *)iconImageName {
-	return @"46-movie-2.png";
+	return @"iconMovies.png";
+}
+
+- (NSString *)selectedIconImageNameSuffix
+{
+	return @"On";
 }
 
 - (void)setTabBarButton:(BCTab*) tabBarButton
@@ -38,12 +41,8 @@
 
 - (id)initWithWatched:(BOOL)watched
 {
-	self = [super initWithNibName:nil bundle:nil];
+	self = [super init];
     if (self) {
-		self.variableHeightRows = YES;
-		self.showTableShadows = YES;
-		_forSearch = FALSE;
-        _selectedCellIndexPath = nil;
 		_startWithWatched = watched;
 	}
 
@@ -63,9 +62,6 @@
 - (void)dealloc
 {    
     TT_RELEASE_SAFELY(_recentlyAddedMovies);
-    TT_RELEASE_SAFELY(_toolBar);
-    TT_RELEASE_SAFELY(_selectedCellIndexPath);
-    TT_RELEASE_SAFELY(_titleBackground);
     [super dealloc];
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,9 +69,8 @@
 
 - (TTView*) createToolbar
 {
-    TTView* toolbar = [[[TTView alloc] initWithFrame:CGRectMake(0, -41, self.tableView.width, 41)] autorelease];
-    toolbar.backgroundColor = [UIColor clearColor];
-    toolbar.style = TTSTYLEVAR(tableToolbar);
+    TTView* toolbar = [super createToolbar];
+
     UILabel* watchedLabel = [[[UILabel alloc] init] autorelease];
     watchedLabel.text = @"NoWatched:";
     watchedLabel.backgroundColor = [UIColor clearColor];
@@ -119,15 +114,6 @@
     return toolbar;
 }
 
-- (void) hideToolbar
-{
-    [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
-    _toolBar.bottom =  0;
-    [UIView setAnimationDelegate:self];
-    [UIView commitAnimations];
-}
-
 - (void) toggleToolbar
 {
     if (_toolBar.bottom == 0)
@@ -135,14 +121,7 @@
         _hideWatchedButton.selected = ((MovieViewDataSource*)self.dataSource).hideWatched;
         [_sortButton setTitle:[((MovieViewDataSource*)self.dataSource) currentSortName] forState:UIControlStateNormal] ;
     }
-    
-    [UIView beginAnimations:nil context:_toolBar];
-    [UIView setAnimationDuration:TTSTYLEVAR(toolbarAnimationDuration)];
-    if (_toolBar.top == 0)
-        _toolBar.bottom = 0;
-    else _toolBar.top = 0;
-    [UIView setAnimationDelegate:self];
-    [UIView commitAnimations];
+    [super toggleToolbar];
 }
 
 - (void)viewDidLoad {
@@ -159,30 +138,6 @@
      addObserver:self
      selector:@selector(updateFinished:)
      name:@"updatedLibrary"
-     object:nil ];
-    
-    [center
-     addObserver:self
-     selector:@selector(persistentStoreChanged:)
-     name:@"persistentStoreChanged"
-     object:nil ];
-    
-    [center
-     addObserver:self
-     selector:@selector(updateLibrary)
-     name:@"DragRefreshTableReload"
-     object:nil ];
-    
-    [center
-     addObserver:self
-     selector:@selector(connectedToXBMC:)
-     name:@"ConnectedToXBMC"
-     object:nil ];
-    
-    [center
-     addObserver:self
-     selector:@selector(disconnectedFromXBMC:)
-     name:@"DisconnectedFromXBMC"
      object:nil ];
     
 	if (!_forSearch)
@@ -203,57 +158,14 @@
 	[center
 	 addObserver:self
 	 selector:@selector(reloadTableView)
-	 name:@"highQualityChanged"
-	 object:nil ];
-	
-	[center
-	 addObserver:self
-	 selector:@selector(reloadTableView)
-	 name:@"cacheCleared"
-	 object:nil ];
-	
-	[center
-	 addObserver:self
-	 selector:@selector(reloadTableView)
 	 name:@"movieCellRatingStarsChanged"
 	 object:nil ];
     
-    UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeLeft:)];
-    gesture.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.tableView addGestureRecognizer:gesture];
-    [gesture release];
-    
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone]; 
-    
-    //clear background color of uitableview
-    self.tableView.backgroundColor = [UIColor clearColor];
-    self.view.backgroundColor = [UIColor clearColor];
-    
-//    //create new uiview with a background image
-//    UIImage *backgroundImage = TTIMAGE(@"bundle://tableViewback.png");
-//    UIImageView *backgroundView = [[[UIImageView alloc] 
-//                                   initWithImage:backgroundImage] autorelease];
-//    
-//    //adjust the frame for the case of navigation or tabbars
-//    backgroundView.frame = self.tableView.frame;
-//    
-//    //add background view and send it to the back
-//    [self.view addSubview:backgroundView];
-//    [self.view sendSubviewToBack:backgroundView];
-    
-    _titleBackground = [[[CustomTitleView alloc] init] retain];
-    
     _titleBackground.title = @"Movies";
     _titleBackground.subtitle = @"No Items Found";
-    [_titleBackground addTarget:self action:@selector(toggleToolbar) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.navigationItem.titleView = _titleBackground;
     
     if (!_forSearch)
     {
-        ////toolbar
-        _toolBar = [self createToolbar];
-        [[self.tableView superview] addSubview:_toolBar];
         
         //Header VIew
         MovieViewController* searchController = [[[MovieViewController alloc] initForSearch] autorelease];
@@ -276,7 +188,7 @@
         [header addSubview:_searchController.searchBar];
         self.tableView.tableHeaderView = header;
         
-        _searchController.searchBar.tintColor = TTSTYLEVAR(navigationBarTintColor); 
+        _searchController.searchBar.tintColor = TTSTYLEVAR(tableViewBackColor); 
         self.searchViewController.tableView.backgroundColor = [UIColor clearColor];
         [self.searchViewController.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone]; 
         
@@ -284,19 +196,16 @@
 
         self.tableView.contentOffset = CGPointMake(0, _searchController.searchBar.height);
 
-        [self.tableView setCanCancelContentTouches:NO];
     }
 }
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewDidUnload];
 }
 
 - (void)viewWillAppear:(BOOL)animated 
 {
-//	[self modelDidStartLoad:nil];
     [super viewWillAppear:animated];
     
     [_recentlyAddedMovies viewWillAppear:animated];
@@ -307,22 +216,21 @@
         self.tableView.contentOffset =
         CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
     }
-	[self updateLibrary];
+	if (_recentlyAddedMovies.movies == nil)
+	{
+		[self updateLibrary];
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated 
 {    
-	_isViewAppearing = FALSE;
     [super viewDidAppear:animated];
-//    [self loadContentForVisibleCells];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [_recentlyAddedMovies viewWillDisappear:animated];
-    [self hideToolbar];
-    //    [self showEmpty:NO];
 }
 
 - (void) updateSubtitle
@@ -330,13 +238,6 @@
 	_titleBackground.subtitle = [NSString stringWithFormat:@"%d movies"
 								 , [((MovieViewDataSource*)self.dataSource) 
 									count]];
-}
-
-- (void) reloadTableView
-{
-	[self setSelectedCellIndexPath:nil];
-	[self.tableView reloadData];
-	[self updateSubtitle];
 }
 
 -(void) hideRecentlyAddedMovies
@@ -357,10 +258,8 @@
 
 - (void) persistentStoreChanged: (NSNotification *) notification 
 {
-    [[self navigationController] popToViewController:self animated:YES];
+    [super persistentStoreChanged:notification];
     [self hideRecentlyAddedMovies];
-    [self invalidateModel];
-//    _titleBackground.subtitle = [NSString stringWithFormat:@"%d items", [((MovieViewDataSource*)self.dataSource) count]];
 }
 
 - (void) updateStarted: (NSNotification *) notification 
@@ -403,68 +302,6 @@
     [((MovieViewDataSource*)self.dataSource).delegates addObject:self];
     ((MovieViewDataSource*)self.dataSource).forSearch = _forSearch;
 	[start release];
-//    if ([LibraryUpdater updating])
-//    {
-//        [self modelDidBeginUpdates:self.model];
-//    }
-//    _titleBackground.subtitle = [NSString stringWithFormat:@"%d items", [((MovieViewDataSource*)self.dataSource) count]];
-}
-
-//- (void)modelDidFinishLoad:(id)sender
-//{
-//    _titleBackground.subtitle = [NSString stringWithFormat:@"%d items", [((MovieViewDataSource*)self.dataSource) count]];
-//    
-//}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)didRefreshModel {
-	[self updateSubtitle];
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//- (BOOL)shouldLoad {
-//	return NO;
-//}
-//
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//- (BOOL)shouldLoadMore {
-//	return YES;
-//}
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//- (void)showLoading:(BOOL)show {
-//}
-//
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//- (void)showEmpty:(BOOL)show {
-//}
-//
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//- (void)showError:(BOOL)show {
-//}
-
-
-
-- (void)loadContentForVisibleCells
-{
-    if ([XBMCStateListener connected])
-    {
-        NSArray *cells = [self.tableView visibleCells];
-        [cells retain];
-        for (int i = 0; i < [cells count]; i++) 
-        { 
-            // Go through each cell in the array and call its loadContent method if it responds to it.
-            MovieTableItemCell *movieCell = (MovieTableItemCell *)[[cells objectAtIndex: i] retain];
-            [movieCell loadImage];
-            [movieCell release];
-            movieCell = nil;
-        }
-        [cells release];
-    }
 }
 
 -(void) updateRecentlyAddedMovies: (NSNotification *) notification
@@ -497,86 +334,16 @@
     return [[[MovieTableViewDelegate alloc] initWithController:self] autorelease];
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// TTTableViewController
-
-- (void) deselectCurrentObject
-{
-    NSIndexPath* oldIndex = [_selectedCellIndexPath retain];
-    [self setSelectedCellIndexPath:nil];
-	MovieTableItemCell *cell = (MovieTableItemCell *)[self.tableView cellForRowAtIndexPath:oldIndex];
-//    [self.tableView deselectRowAtIndexPath:oldIndex animated:NO];
-	[cell setSelected:FALSE];
-    [self didDeselectRowAtIndexPath:oldIndex];
-    [oldIndex release];
-}
-
-- (void)didSelectObject:(id)object atIndexPath:(NSIndexPath*)indexPath {
-    
-    NSIndexPath* oldIndex = [_selectedCellIndexPath retain];
-    
-//    NSIndexPath* newIndex = indexPath;
-//    NSLog(@"selected %d %d", indexPath.row, indexPath.section);
-    if ([indexPath isEqual:oldIndex]) 
-    {
-        [self deselectCurrentObject];
-//        [oldIndex release];
-        return;
-    }
-    else
-    {
-//    [oldIndex release];
-
-        [self setSelectedCellIndexPath:indexPath];
-        MovieTableItemCell *cell = (MovieTableItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-//        [cell setDelegate:self];
-		[cell setSelected:TRUE];
-        
-        [self.tableView beginUpdates];
-        [self.tableView endUpdates];
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
-    }
-}
-
-- (void)didDeselectRowAtIndexPath:(NSIndexPath*)indexPath
-{
-    MovieTableItemCell *cell = (MovieTableItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    [cell setDelegate:self];
-    
-    [self.tableView beginUpdates];
-    [self.tableView endUpdates];
-//    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
-
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// TTSearchTextFieldDelegate
-
-- (void)textField:(TTSearchTextField*)textField didSelectObject:(id)object {
-    //    [_delegate movieViewController:self didSelectObject:object];
-}
-
 - (void)connectedToXBMC: (NSNotification *) notification
 {
-    [self reloadTableView];
+    [super connectedToXBMC:notification];
+	[self updateLibrary];
 }
 
 - (void)disconnectedFromXBMC: (NSNotification *) notification
 {
+    [super disconnectedFromXBMC:notification];
     [self hideRecentlyAddedMovies];
-    [self reloadTableView];
-}
-
-
--(void)didSwipeLeft:(UIGestureRecognizer *)gestureRecognizer {
-    
-    if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) {
-        CGPoint swipeLocation = [gestureRecognizer locationInView:self.tableView];
-        NSIndexPath *swipedIndexPath = [self.tableView indexPathForRowAtPoint:swipeLocation];
-        UITableViewCell* swipedCell = [self.tableView cellForRowAtIndexPath:swipedIndexPath];
-        [(MovieTableItemCell*)swipedCell moreInfos:nil];
-        // ...
-    }
 }
 
 - (void) toggleWatched:(id)sender
@@ -585,7 +352,6 @@
     [((MovieViewDataSource*)self.dataSource) toggleWatched];
     _hideWatchedButton.selected = ((MovieViewDataSource*)self.dataSource).hideWatched;
 	[self reloadTableView];
-//    _titleBackground.subtitle = [NSString stringWithFormat:@"%d items", [((MovieViewDataSource*)self.dataSource) count]];
 }
 
 - (void) switchSort:(id)sender

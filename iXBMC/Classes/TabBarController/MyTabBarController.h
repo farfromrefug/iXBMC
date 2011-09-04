@@ -13,6 +13,7 @@
     HeaderTabBarController* surrogateParent;
 }
 @property (nonatomic, assign) HeaderTabBarController *surrogateParent;
+- (UIViewController*)rootControllerForController:(UIViewController*)controller;
 - (void)setTabURLs:(NSArray*)URLs;
 
 @end

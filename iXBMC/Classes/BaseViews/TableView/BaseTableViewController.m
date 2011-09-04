@@ -145,6 +145,7 @@
 
 - (void)viewWillAppear:(BOOL)animated 
 {
+	[self deselectCurrentObject];
 //	[self modelDidStartLoad:nil];
     [super viewWillAppear:animated];
 }

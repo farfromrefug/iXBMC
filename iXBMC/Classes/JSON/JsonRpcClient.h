@@ -43,6 +43,11 @@
                    target:(NSObject*)object 
                  selector:(SEL)sel;
 
+- (void)requestWithArray:(NSArray *)methods 
+					info:(NSDictionary *)info 
+				  target:(NSObject*)object 
+				selector:(SEL)sel;
+
 - (void)requestWithUrl:(NSURL *)requestUrl data:(NSData *)requestData tag:(NSDictionary*)tag;
 
 

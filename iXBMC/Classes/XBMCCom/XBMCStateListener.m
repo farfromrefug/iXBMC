@@ -162,7 +162,7 @@ static XBMCStateListener *sharedInstance = nil;
 //							 @"JSONRPC.Introspect", @"cmd"
 //							 , [NSDictionary dictionaryWithObjectsAndKeys:
 //															   [NSDictionary dictionaryWithObjectsAndKeys:
-//																	@"VideoLibrary", @"id", 
+//																	@"VideoPlaylist", @"id", 
 //																	@"namespace", @"type", nil]
 //															 , @"filter", nil], @"params"
 //							 ,nil];
@@ -365,19 +365,6 @@ static XBMCStateListener *sharedInstance = nil;
         }
     }
     
-}
-
-+ (void)play:(NSString *) url
-{
-    NSDictionary *requestParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    url
-                                    , @"file", nil];
-    
-    NSDictionary *request = [NSDictionary dictionaryWithObjectsAndKeys:
-                                @"XBMC.Play", @"cmd", 
-                              requestParams, @"params",nil];
-    [[XBMCJSONCommunicator sharedInstance] addJSONRequest:request];
-
 }
 
 - (void)applicationDidBecomeActive: (NSNotification *) notification 

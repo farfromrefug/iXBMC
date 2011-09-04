@@ -14,11 +14,11 @@
 - (void)assignImages:(NSString *)image selectedImageNameSuffix:(NSString *)selectedSuffix 
 {
     NSString *selectedImageName = [image stringByDeletingPathExtension];
-	if (selectedImageNameSuffix)
+	if (selectedSuffix)
 	{
 		selectedImageName = [selectedImageName stringByAppendingString:selectedSuffix];
 	}
-	[selectedImageName stringByAppendingPathExtension:[image pathExtension]];
+	selectedImageName = [selectedImageName stringByAppendingPathExtension:[image pathExtension]];
     [self setImage:[UIImage imageNamed:image] forState:UIControlStateNormal];
     [self setImage:[UIImage imageNamed:selectedImageName] forState:UIControlStateSelected];
 }
@@ -38,28 +38,30 @@
     if (self) 
 	{
 		self.adjustsImageWhenHighlighted = NO;
-		self.background = [UIImage imageNamed:@"BCTabBarController.bundle/tab-background.png"];
-		self.rightBorder = [UIImage imageNamed:@"BCTabBarController.bundle/tab-right-border.png"];
+//		self.background = [UIImage imageNamed:@"BCTabBarController.bundle/tab-background.png"];
+//		self.rightBorder = [UIImage imageNamed:@"BCTabBarController.bundle/tab-right-border.png"];
 		self.backgroundColor = [UIColor clearColor];
-		
-		////Image Configuration
- 		[self assignImages:image selectedImageNameSuffix:selectedSuffix];
+
         self.imageName = image;
         self.selectedImageNameSuffix = selectedSuffix;
         self.landscapeImageNameSuffix = landscapeSuffix;
-		
+//		self.imageView.contentMode = UIViewContentModeScaleToFill;
+//		self.imageView.backgroundColor   = [UIColor redColor];
 		
 		///Title Configuration
 		self.titleLabel.font = TTSTYLEVAR(tabBarTextFont);
-		self.titleLabel.backgroundColor   = [UIColor redColor];
+		self.titleLabel.textAlignment = TTSTYLEVAR(tabBarTextAlignment);
+//		self.titleLabel.backgroundColor   = [UIColor redColor];
 		self.titleLabel.lineBreakMode   = TTSTYLEVAR(tabBarTextLineBreakMode);
 		self.titleLabel.shadowOffset    = TTSTYLEVAR(tabBarTextShadowOffset);
-		self.contentHorizontalAlignment = TTSTYLEVAR(tabBarTextHAlignment);
 		self.contentVerticalAlignment = TTSTYLEVAR(tabBarTextVAlignment);
 		[self setTitleColor:TTSTYLEVAR(tabBarTextColor) forState:UIControlStateNormal];
-		[self setTitleColor:TTSTYLEVAR(tabBarTextColor) forState:UIControlStateSelected];
+		[self setTitleColor:TTSTYLEVAR(tabBarTextHighlightedColor) forState:UIControlStateSelected];
 		[self setTitleShadowColor:TTSTYLEVAR(tabBarTextShadowColor) forState:UIControlStateNormal];
 		[self setTitleShadowColor:TTSTYLEVAR(tabBarTextShadowColor) forState:UIControlStateSelected];
+		
+		////Image Configuration
+ 		[self assignImages:image selectedImageNameSuffix:selectedSuffix];
 		[self setButtonTitle:tt];
 	}
 	return self;
@@ -89,16 +91,21 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-	if (self.selected) {
-		[background drawAtPoint:CGPointMake(0, 2)];
-		[rightBorder drawAtPoint:CGPointMake(self.bounds.size.width - rightBorder.size.width, 2)];
-		CGContextRef c = UIGraphicsGetCurrentContext();
-		[[UIColor colorWithRed:24.0/255.0 green:24.0/255.0 blue:24.0/255.0 alpha:1.0] set];
-		CGContextFillRect(c, CGRectMake(0, self.bounds.size.height / 2, self.bounds.size.width, self.bounds.size.height / 2));
-		[[UIColor colorWithRed:14.0/255.0 green:14.0/255.0 blue:14.0/255.0 alpha:1.0] set];
-		CGContextFillRect(c, CGRectMake(0, self.bounds.size.height / 2, 0.5, self.bounds.size.height / 2));
-		CGContextFillRect(c, CGRectMake(self.bounds.size.width - 0.5, self.bounds.size.height / 2, 0.5, self.bounds.size.height / 2));
-		}
+//	if (self.selected) {
+////		[background drawAtPoint:CGPointMake(0, 2)];
+////		[rightBorder drawAtPoint:CGPointMake(self.bounds.size.width - rightBorder.size.width, 2)];
+//		CGContextRef c = UIGraphicsGetCurrentContext();
+////		[[UIColor colorWithRed:24.0/255.0 green:24.0/255.0 blue:24.0/255.0 alpha:1.0] set];
+////		CGContextFillRect(c, CGRectMake(0, self.bounds.size.height / 2, self.bounds.size.width, self.bounds.size.height / 2));
+////		[[UIColor colorWithRed:14.0/255.0 green:14.0/255.0 blue:14.0/255.0 alpha:1.0] set];
+////		CGContextFillRect(c, CGRectMake(0, self.bounds.size.height / 2, 0.5, self.bounds.size.height / 2));
+////		CGContextFillRect(c, CGRectMake(self.bounds.size.width - 0.5, self.bounds.size.height / 2, 0.5, self.bounds.size.height / 2));
+//		
+//		[TTSTYLEVAR(tabBarHighlightedColor) set];
+//		CGContextFillRect(c, CGRectMake(5, 0, self.bounds.size.width - 10, 2));
+//		CGContextFillRect(c, CGRectMake(0, self.bounds.size.height - 2
+//										, self.bounds.size.width, 2));
+//		}
 }
 
 - (void)setFrame:(CGRect)aFrame {
@@ -108,25 +115,30 @@
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
-//	CGFloat yOffset = 0;
-//	if (![self.titleLabel.text isEqualToString:@""])
-//	{
-//		yOffset = -10;
-//	}
 	
-	if (self.imageView)
+//	if (self.imageView)
+//	{
+//		UIEdgeInsets imageInsets = UIEdgeInsetsMake(
+//			floor((self.height / 2) - (self.imageView.image.size.height / 2))
+//		  , floor((self.width / 2) - (self.imageView.image.size.width / 2))
+//		  , floor((self.height / 2) - (self.imageView.image.size.height / 2) + (self.titleLabel.height / 2))
+//		  , floor((self.width / 2) - (self.imageView.image.size.width / 2)));
+//		self.imageEdgeInsets = imageInsets;
+//	}
+	self.titleLabel.frame = CGRectMake(0, self.titleLabel.frame.origin.y + 2
+										   , self.frame.size.width
+										   , self.titleLabel.frame.size.height);
+		
+	CGFloat imageHeight = self.height - self.titleLabel.height;
+	
+	self.imageView.frame = CGRectMake(self.width/2 - imageHeight/2, self.titleLabel.bottom - 3
+									  , imageHeight
+									  , imageHeight);
+	
+	if (self.contentVerticalAlignment == UIControlContentVerticalAlignmentBottom)
 	{
-		UIEdgeInsets imageInsets = UIEdgeInsetsMake(floor((self.bounds.size.height / 2) -
-												(self.imageView.image.size.height / 2)),
-												floor((self.bounds.size.width / 2) -
-												(self.imageView.image.size.width / 2)),
-												floor((self.bounds.size.height / 2) -
-												(self.imageView.image.size.height / 2)),
-												floor((self.bounds.size.width / 2) -
-												(self.imageView.image.size.width / 2)));
-		self.imageEdgeInsets = imageInsets;
-	}
-//	self.titleEdgeInsets    = TTSTYLEVAR(tabBarTextEdgeInsets);
+		self.imageView.top = 0;
+	}	
 }
 
 - (void)adjustImageForOrientation {

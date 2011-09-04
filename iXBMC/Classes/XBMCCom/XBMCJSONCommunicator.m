@@ -71,10 +71,19 @@ static XBMCJSONCommunicator *sharedInstance = nil;
 {
     if (self.fulladdress != nil)
     {
-        [json requestWithMethod:[rq objectForKey:@"cmd"] 
+		if ([rq objectForKey:@"cmds"])
+		{
+			[json requestWithArray:[rq objectForKey:@"cmds"] 
+							   info:[rq objectForKey:@"info"]
+							 target:object selector:sel];
+		}
+		else if ([rq objectForKey:@"cmd"] && [rq objectForKey:@"params"])
+		{
+			[json requestWithMethod:[rq objectForKey:@"cmd"] 
                          params:[rq objectForKey:@"params"]
                          info:[rq objectForKey:@"info"]
                         target:object selector:sel];
+		}
     }
     
 }

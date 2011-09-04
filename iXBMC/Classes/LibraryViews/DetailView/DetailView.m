@@ -31,34 +31,19 @@
         //        self.frame = self.bounds;
         //[self setClipsToBounds:YES];
         //self.autoresizesSubviews = YES;
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = TTSTYLEVAR(detailsViewBackColor);
         
         _scrollView = [[[UIScrollView alloc] init] autorelease];
         _scrollView.delaysContentTouches = NO;
-        //_scrollView.autoresizesSubviews = YES;
-//        _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _scrollView.backgroundColor = [UIColor clearColor];
         [self addSubview:_scrollView];
         
-        UIColor* widgetBackColor = RGBACOLOR(0, 0, 0, 0.0);
-        
-        
-        
         _fanart = [[[FadingImageView alloc] initWithFrame:TTNavigationFrame()] autorelease];
         _fanart.contentMode = UIViewContentModeScaleAspectFill;
+        _fanart.backgroundColor = [UIColor clearColor];
         _fanart.clipsToBounds = YES;
         _fanart.alpha = 0.1;
         [self insertSubview:_fanart belowSubview:_scrollView];
-        
-//        //create new uiview with a background image
-//        _backgroundView = [[[UIImageView alloc] 
-//                                        initWithImage:TTIMAGE(@"bundle://detailsback.png")] autorelease];
-//        _backgroundView.alpha =0.5;
-//        
-//        //adjust the frame for the case of navigation or tabbars
-//        
-//        //add background view and send it to the back
-//        [self insertSubview:_backgroundView aboveSubview:_fanart];
                 
         _cover = [[[FadingImageView alloc] init] autorelease];
         
@@ -88,10 +73,10 @@
         _plotScroll = [[[UIScrollView alloc] init] autorelease];
         _plotScroll.autoresizesSubviews = YES;
 //        _plotScroll.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _plotScroll.backgroundColor = widgetBackColor;
+        _plotScroll.backgroundColor = [UIColor clearColor];
         _plotTitleLabel = [[[TTStyledTextLabel alloc] initWithFrame:TTNavigationFrame()] autorelease];
         _plotTitleLabel.contentInset = UIEdgeInsetsMake(5, 5, 0, 5);
-        _plotTitleLabel.backgroundColor = widgetBackColor;
+        _plotTitleLabel.backgroundColor = [UIColor clearColor];
 		_plotTitleLabel.text = [TTStyledText textFromXHTML:@"<span class=\"grayText\">Plot:</span>"];
   
         _plotLabel = [[[TTStyledTextLabel alloc] initWithFrame:TTNavigationFrame()] autorelease];
@@ -104,10 +89,10 @@
 		_castView.backgroundColor = [UIColor clearColor];
         _castScroll = [[[UIScrollView alloc] init] autorelease];
         _castScroll.autoresizesSubviews = YES;
-        _castScroll.backgroundColor = widgetBackColor;
+        _castScroll.backgroundColor = [UIColor clearColor];
         _castTitleLabel = [[[TTStyledTextLabel alloc] initWithFrame:TTNavigationFrame()] autorelease];
         _castTitleLabel.contentInset = UIEdgeInsetsMake(5, 5, 0, 5);
-        _castTitleLabel.backgroundColor = widgetBackColor;
+        _castTitleLabel.backgroundColor = [UIColor clearColor];
         
         _castLabel = [[[TTStyledTextLabel alloc] initWithFrame:TTNavigationFrame()] autorelease];
         _castLabel.contentInset = UIEdgeInsetsMake(0, 5, 5, 5);
@@ -128,7 +113,7 @@
         [_castScroll addSubview:_castLabel];
 		[_scrollView addSubview:_castView];    
 
-        [_scrollView addSubview:_cover];
+        [self addSubview:_cover];
         [_scrollView addSubview:_newFlag];
         
         
@@ -173,9 +158,9 @@
     _scrollView.frame = self.frame;
     _fanart.frame = self.frame;
     
-    CGFloat coverHeight = TTSTYLEVAR(movieDetailsViewCoverHeight);
+    CGFloat coverHeight = TTSTYLEVAR(movieDetailsViewCoverHeight)*2/3;
    
-    _cover.frame = CGRectMake(5, 5, coverHeight*2/3, coverHeight);
+    _cover.frame = CGRectMake(5, self.height + 15 - coverHeight, coverHeight*2/3, coverHeight);
     int newFlagWidth = _cover.width*1/2;
     _newFlag.frame = CGRectMake(_cover.right - newFlagWidth - 8, _cover.top + 8
                                 , newFlagWidth, newFlagWidth);

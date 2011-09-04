@@ -203,7 +203,7 @@
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Details"]) {
 	} else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Play"]) {
-		[XBMCStateListener play:self.file];
+		[XBMCCommand play:self.file];
 	}
 }
 @end

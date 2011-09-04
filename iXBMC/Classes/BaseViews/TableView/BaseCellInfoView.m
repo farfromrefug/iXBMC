@@ -7,7 +7,7 @@
 @synthesize item = _item;
 @synthesize highlighted;
 @synthesize editing;
-
+@synthesize realContentRect = _realContentRect;
 
 - (id)initWithFrame:(CGRect)frame {
 	self = [super initWithFrame:frame];

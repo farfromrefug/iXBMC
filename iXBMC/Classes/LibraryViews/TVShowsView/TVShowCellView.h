@@ -6,24 +6,12 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "BaseCellInfoView.h"
 
 @class TVShowTableItem;
-@interface TVShowCellView : TTView {
-    UIImage* _posterShadow;
-    UIImage* _posterShadowSelected;
+@interface TVShowCellView : BaseCellInfoView {
     UIImage* _newFlag;
     UIImage* _stars;
-	UIImage* _line;
-	TVShowTableItem *_item;
-	
-	BOOL highlighted;
-	BOOL editing;
 }
-@property (nonatomic, retain) TVShowTableItem *item;
-@property (nonatomic, getter=isHighlighted) BOOL highlighted;
-@property (nonatomic, getter=isEditing) BOOL editing;
-
-- (void)loadImage;
 
 @end

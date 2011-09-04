@@ -3,8 +3,6 @@
 #import "EpisodesViewDataSource.h"
 #import "EpisodeTableItemCell.h"
 
-#define MENU_HEIGHT 25;
-#define FORSEARCH_HEIGHT 40;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +50,7 @@
 
     if ([[(EpisodesViewController*)_controller selectedCellIndexPath] isEqual:indexPath])
     {
-        height += MENU_HEIGHT;
+        height += TTSTYLEVAR(tableViewCellMenuHeight);
     }
     
     return height;

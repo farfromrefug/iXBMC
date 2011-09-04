@@ -128,7 +128,12 @@
 }
 
 - (NSString *)iconImageName {
-	return @"156-controlpad.png";
+	return @"iconRemote.png";
+}
+
+- (NSString *)selectedIconImageNameSuffix
+{
+	return @"On";
 }
 
 - (void)setTabBarButton:(BCTab*) tabBarButton
@@ -175,9 +180,12 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
-{    
+{
+
     self.view.backgroundColor = [UIColor clearColor];
-    self.view.autoresizesSubviews = TRUE;
+    self.view.autoresizesSubviews = YES;
+	self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+
     _imdb = @"";
     _type = @"";
     _id = @"";
@@ -305,8 +313,8 @@
                selector:@selector(applicationWillResignActive:)
                    name:UIApplicationWillResignActiveNotification
                  object:nil];
-    
-    [super viewDidLoad];
+
+	[super viewDidLoad]; //we do it after to get the notconnected view correctly on top
 }
 
 
@@ -693,11 +701,11 @@
     {
         [XBMCCommand send:@"subtitles"];
     }
-    else if (recognizer.direction == UISwipeGestureRecognizerDirectionLeft) 
+    else if (recognizer.direction == UISwipeGestureRecognizerDirectionRight) 
     {
         [XBMCCommand send:@"previous"];
     }
-    else if (recognizer.direction == UISwipeGestureRecognizerDirectionRight) 
+    else if (recognizer.direction == UISwipeGestureRecognizerDirectionLeft) 
     {
         [XBMCCommand send:@"next"];
     }

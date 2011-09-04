@@ -6,9 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation SeasonTableItem
 
-@synthesize poster      = _poster;
-@synthesize label      = _label;
-@synthesize imageURL      = _imageURL;
 @synthesize itemId = _itemId;
 @synthesize showId = _showId;
 @synthesize watched = _watched;
@@ -22,16 +19,11 @@
     self = [super init];
     if (self)
     {
-		_poster = nil;
-//        _selected = false;
     }
     return self;
 }
 
 - (void)dealloc {
-    TT_RELEASE_SAFELY(_poster);
-    TT_RELEASE_SAFELY(_label);
-    TT_RELEASE_SAFELY(_imageURL);
     TT_RELEASE_SAFELY(_itemId);
     TT_RELEASE_SAFELY(_showId);
     TT_RELEASE_SAFELY(_nbEpisodes);
@@ -52,11 +44,5 @@
     SeasonTableItem* item = [[[self alloc] init] autorelease];
     return item;
 }
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark NSCoding
 
 @end

@@ -17,4 +17,8 @@
 +(void)send:(NSString*)cmd;
 -(void)internalSend:(NSString*)cmd;
 
++ (void)play:(NSString *) url;
++ (void)setVideoPlaylistAndPlay:(NSArray *) items;
++ (void)enqueue:(id)item;
+
 @end

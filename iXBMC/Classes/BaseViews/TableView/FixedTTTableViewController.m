@@ -3,6 +3,17 @@
 
 @implementation FixedTTTableViewController
 
+
+#pragma mark overlay resizing
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)addToOverlayView:(UIView*)view {
+	[super addToOverlayView:view];
+	_tableOverlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth
+	| UIViewAutoresizingFlexibleHeight;
+}
+
+
 #pragma mark keyboard resizing
 
 static int keyboardAdjustCount = 0;

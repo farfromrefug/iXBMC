@@ -21,6 +21,8 @@
 #import "CustomMoviePlayerViewController.h"
 #import "FullscreenImageViewController.h"
 
+#import "FileSearchFeedViewController.h"
+
 #import "ActiveManager.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,9 +30,17 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 @implementation UINavigationBar (MyCustomNavBar)
-- (void) drawRect:(CGRect)rect {
-    UIImage *barImage = TTIMAGE(@"bundle://navBack.png");
-    [barImage drawInRect:rect];
+//- (void) drawRect:(CGRect)rect {
+//    UIImage *barImage = TTIMAGE(@"bundle://navBack.png");
+//    [barImage drawInRect:rect];
+//}
+- (void)drawRect:(CGRect)rect {
+	[super drawRect:rect];
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	[TTSTYLEVAR(navBarBackColor) set];	
+	CGContextFillRect(context, CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height - 2));
+	[TTSTYLEVAR(navBarBorderColor) set];
+	CGContextFillRect(context, CGRectMake(0, self.bounds.size.height - 2, self.bounds.size.width, 2));
 }
 @end
 
@@ -55,6 +65,11 @@
     {
         [defaults setValue:[NSNumber numberWithBool:TTSTYLEVAR(highQualityImages)] 
                     forKey:@"images:highQuality"];
+    }
+	if ([defaults valueForKey:@"cell:height"] == nil)
+    {
+        [defaults setValue:[NSNumber numberWithFloat:TTSTYLEVAR(cellHeight)] 
+                    forKey:@"cell:height"];
     }
     if ([defaults valueForKey:@"movieCell:height"] == nil)
     {
@@ -93,6 +108,12 @@
     {
         [defaults setValue:[NSNumber numberWithBool:TTSTYLEVAR(episodeCellRatingStars)] 
                     forKey:@"episodeCell:ratingStars"];
+    }
+	
+	if ([defaults valueForKey:@"tvshows:playAndEnqueue"] == nil)
+    {
+        [defaults setValue:[NSNumber numberWithBool:TRUE] 
+                    forKey:@"tvshows:playAndEnqueue"];
     }
     
     if ([defaults valueForKey:@"currenthost"] == nil) 
@@ -149,7 +170,10 @@
 	
 	[map from:@"tt://library/episodes/(initWithTVShow:)/(season:)/(showWatched:)" toSharedViewController:[EpisodesViewController class]];
 	
-	[map from:@"tt://details/(initWithEntity:)/(id:)" toSharedViewController:[DetailViewController class]];
+	[map from:@"tt://details" toViewController:[DetailViewController class]];
+	
+	[map from:@"tt://videos" toSharedViewController:[FileSearchFeedViewController class]];
+	[map from:@"tt://videosWithPath" toViewController:[FileSearchFeedViewController class]];
   
 //  // By specifying the parent URL, we are saying that the tab containing menu #5 will be
 //  // selected before opening this URL, ensuring that about controllers are only pushed
@@ -405,7 +429,7 @@
     
 	// Show the movie player as modal
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:moviePlayer];
-    [[[TTNavigator navigator] topViewController].navigationController presentModalViewController:navController animated:YES];
+    [[[TTNavigator navigator] viewControllerForURL:@"tt://tabBar"] presentModalViewController:navController animated:YES];
     [moviePlayer release];
     [navController release];
 }
@@ -431,12 +455,18 @@
 - (void)showMovieDetails:(NSNumber *)movieid 
 {
 	
-	TTOpenURL([NSString stringWithFormat:@"tt://details/Movie/%@",movieid]);
+//	TTOpenURL([NSString stringWithFormat:@"tt://details/Movie/%@",movieid]);
 //    DetailViewController *controller = [[DetailViewController alloc] 
 //                                        initWithEntity:@"Movie" 
 //                                        id:movieid];
 //    [[[TTNavigator navigator] topViewController].navigationController pushViewController:controller animated:YES];
 //    [controller release];
+	[[TTNavigator navigator] openURLAction:
+	 [[[TTURLAction actionWithURLPath:@"tt://details"]
+	   applyQuery:[NSDictionary dictionaryWithObjectsAndKeys:
+				   @"movie", @"type"
+				   ,movieid, @"id", nil]]
+	  applyAnimated:YES]];
 }
 
 - (void)showFullscreenImage:(NSString *)imageurl 
@@ -446,7 +476,7 @@
                                                     initWithImageUrl:imageurl];
     [controller setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
 	// Show the fullscreen controller
-    [[[TTNavigator navigator] topViewController].navigationController presentModalViewController:controller animated:YES];
+    [[[TTNavigator navigator] viewControllerForURL:@"tt://tabBar"] presentModalViewController:controller animated:YES];
     [controller release];
 }
 

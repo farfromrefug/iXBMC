@@ -67,8 +67,8 @@
     //[connection release];
     	
 	NSError *error = nil;
-	NSDictionary *dictionary = [dataForConnection objectFromJSONData];
- 	//NSLog(@"json %@",dictionary);
+	NSDictionary *results = [dataForConnection objectFromJSONData];
+// 	NSLog(@"json %@",results);
     [receivedData removeObjectForKey:[connection.tag objectForKey:@"id"]];
 	NSDictionary *tag = [NSDictionary dictionaryWithDictionary:connection.tag];
     [connection release];
@@ -81,18 +81,37 @@
                         tag:tag];
 		return;
 	}
-	
-	// Handle error from server
-	if([dictionary objectForKey:@"error"]) {
-		NSDictionary *serverError = [dictionary objectForKey:@"error"];
-		[self jsonRpcClient:self didFailWithErrorCode:[serverError objectForKey:@"code"] message:[serverError objectForKey:@"data"] tag:tag];
-		return;
+	if ([results isKindOfClass:[NSArray class]])
+	{
+		for (NSDictionary *response in results)
+		{
+			// Handle error from server
+			if([response objectForKey:@"error"]) {
+				NSDictionary *serverError = [response objectForKey:@"error"];
+				[self jsonRpcClient:self didFailWithErrorCode:[serverError objectForKey:@"code"] message:[serverError objectForKey:@"data"] tag:tag];
+				return;
+			}
+			if ([[response objectForKey:@"result"] isKindOfClass:[NSDictionary class]])
+			{
+				[self jsonRpcClient:self 
+				   didReceiveResult:[NSDictionary dictionaryWithDictionary:[response objectForKey:@"result"]] tag:tag];
+			}
+		}
 	}
-	if ([[dictionary objectForKey:@"result"] isKindOfClass:[NSDictionary class]])
-    {
-        [self jsonRpcClient:self 
-           didReceiveResult:[NSDictionary dictionaryWithDictionary:[dictionary objectForKey:@"result"]] tag:tag];
-    }
+	else if ([results isKindOfClass:[NSDictionary class]])
+	{
+	// Handle error from server
+		if([results objectForKey:@"error"]) {
+			NSDictionary *serverError = [results objectForKey:@"error"];
+			[self jsonRpcClient:self didFailWithErrorCode:[serverError objectForKey:@"code"] message:[serverError objectForKey:@"data"] tag:tag];
+			return;
+		}
+		if ([[results objectForKey:@"result"] isKindOfClass:[NSDictionary class]])
+		{
+			[self jsonRpcClient:self 
+			   didReceiveResult:[NSDictionary dictionaryWithDictionary:[results objectForKey:@"result"]] tag:tag];
+		}
+	}
         //    theConnection = nil;
 }
 
@@ -130,13 +149,42 @@
     }
 }
 
+- (void)requestWithArray:(NSArray *)methods 
+					 info:(NSDictionary *)info 
+                   target:(NSObject*)object 
+                 selector:(SEL)sel
+{
+	NSMutableArray* jsonrequest = [NSMutableArray array];
+	for (NSDictionary* method in methods)
+	{
+		[jsonrequest addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+							   protocol, @"jsonrpc",
+							   [method objectForKey:@"cmd"], @"method",
+							   [method objectForKey:@"params"], @"params",
+							   self.requestId, @"id",
+							   nil]];
+	}
+	
+	NSData *serializedData = [jsonrequest JSONData];
+	
+    NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+	
+    NSDictionary* tag = [NSDictionary dictionaryWithObjectsAndKeys:
+                         [NSString stringWithFormat:@"%f",time], @"id",
+                         info?info:[[[NSDictionary alloc] init] autorelease], @"info",
+						 object, @"object",
+						 [NSValue valueWithPointer:sel], @"selector",
+						 nil];
+	[self requestWithUrl:self.url data:serializedData tag:tag];
+}
+
 - (void)requestWithMethod:(NSString *)method 
                    params:(NSObject *)params 
                    info:(NSDictionary *)info 
                    target:(NSObject*)object 
                  selector:(SEL)sel
 {
-    NSArray *jsonRpc = [NSDictionary dictionaryWithObjectsAndKeys:
+    NSDictionary *jsonRpc = [NSDictionary dictionaryWithObjectsAndKeys:
 						protocol, @"jsonrpc",
 						method, @"method",
 						params, @"params",

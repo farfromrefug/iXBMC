@@ -1,9 +1,8 @@
+#import "BaseTableItem.h"
+
 @class SeasonsViewDataSource;
-@interface SeasonTableItem : TTTableTextItem {
-	
-	UIImage* _poster;
-    NSString* _label;
-    NSString* _imageURL;
+@interface SeasonTableItem : BaseTableItem 
+{	
     NSNumber* _itemId;
     NSString* _showId;
     NSNumber* _nbEpisodes;
@@ -13,9 +12,6 @@
 
 }
 
-@property (nonatomic, retain)   UIImage* poster;
-@property (nonatomic, retain)   NSString* label;
-@property (nonatomic, retain)   NSString* imageURL;
 @property (nonatomic, retain)   NSNumber* itemId;
 @property (nonatomic, retain)   NSString* showId;
 @property (nonatomic, retain)   NSNumber* nbEpisodes;

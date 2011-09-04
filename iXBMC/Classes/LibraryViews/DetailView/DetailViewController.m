@@ -7,6 +7,7 @@
 #import "Actor.h"
 
 #import "XBMCStateListener.h"
+#import "XBMCCommand.h"
 #import "XBMCImage.h"
 
 #import "CustomTitleView.h"
@@ -15,141 +16,24 @@
 
 
 @implementation DetailViewController
-@synthesize entity = _entity;
-@synthesize entityId = _entityId;
-@synthesize coverUrl = _coverUrl;
-@synthesize fanartUrl = _fanartUrl;
-@synthesize trailerUrl = _trailerUrl;
-@synthesize fileUrl = _fileUrl;
-@synthesize imdbId = _imdbId;
-@synthesize info = _info;
-@synthesize cast = _cast;
-@synthesize plot = _plot;
+@synthesize details = _details;
 
 
 #pragma mark - View lifecycle
 
-- (id)initWithEntity:(NSString *)entity id:(NSString *)entityId {
+-(id) initWithNavigatorURL:(NSURL*)URL query:(NSDictionary*)query
+//- (id)initWithEntity:(NSString *)entity id:(NSString *)entityId 
+{
     self = [super init];
     if (self)
     {		
-		_start = [[NSDate date] retain];
-        self.entity = entity;
-        self.entityId = entityId;
-
-        NSArray *array = [[[ActiveManager shared] managedObjectContext] fetchObjectsForEntityName:_entity withPredicate:
-						  [NSPredicate predicateWithFormat:@"movieid == %@", _entityId]];
-        
-        if (array == nil || [array count] ==0) {
-            TTErrorView* errorView = [[[TTErrorView alloc] initWithTitle:@"Error"
-                                                                subtitle:@"Could not find item in Database"
-                                                                   image:TTIMAGE(@"bundle://error.png")] 
-                                      autorelease];
-            errorView.backgroundColor = RGBCOLOR(0, 0, 0);
-            self.view = errorView;
-            return self;
-        }
-		NSLog(@"1time took: %f", -[_start timeIntervalSinceNow]);
-		
-		self.view.backgroundColor = [UIColor clearColor];
-		//create new uiview with a background image
-//        UIImageView * backgroundView = [[[UIImageView alloc] 
-//							initWithImage:TTIMAGE(@"bundle://detailsback.png")] autorelease];
-//		backgroundView.backgroundColor = [UIColor clearColor];
-//		backgroundView.frame = self.view.frame;
-//
-//        //add background view and send it to the back
-//        [self.view addSubview:backgroundView];
-        
-        Movie* movie = (Movie*)[array objectAtIndex:0];
-        self.title =  movie.label;
-		
-		self.fileUrl = movie.file;
-		self.trailerUrl = movie.trailer;
-		self.imdbId = movie.imdbid;
-		
-		self.coverUrl = movie.thumbnail;
-        self.fanartUrl = movie.fanart;
-        
-		_watched = ([movie.playcount intValue] != 0);
-        
-		NSLog(@"2time took: %f", -[_start timeIntervalSinceNow]);
-        
-        //INFOS
-        NSString* infoText = @"";
-        if (movie.director)
-        {
-            infoText = [infoText stringByAppendingFormat:@"\
-<span class=\"grayText\">Director:</span>\n\
-<span class=\"whiteText\">%@</span>\n\n", movie.director]; 
-        }
-        if (movie.writer)
-        {
-            infoText = [infoText stringByAppendingFormat:@"\
-<span class=\"grayText\">Writer:</span>\n\
-<span class=\"whiteText\">%@</span>\n\n", movie.writer]; 
-        }
-        if ([movie.year integerValue] != 0)
-        {
-            infoText = [infoText stringByAppendingFormat:@"\
-<span class=\"grayText\">Year:</span>\n\
-<span class=\"whiteText\">%@</span>\n\n", [movie.year stringValue]]; 
-        }
-        if (movie.runtime)
-        {
-            NSString* runtime = [NSString stringWithString:movie.runtime];
-            NSRange foundRange = [runtime rangeOfString:@"min"];
-            
-            if ((foundRange.length == 0) ||
-                (foundRange.location == 0))
-            {
-                runtime = [runtime stringByAppendingString:@" min"];
-            }
-            infoText = [infoText stringByAppendingFormat:@"\
-<span class=\"grayText\">Runtime:</span>\n\
-<span class=\"whiteText\">%@</span>\n\n", runtime]; 
-        }
-//        if ([movie.rating floatValue] != 0.0)
-        {            
-            infoText = [infoText stringByAppendingFormat:@"\
-<span class=\"grayText\">Imdb Rating: </span>\
-<img src=\"bundle://star.%.1f.png\" width=\"100\" height=\"20\"/>\n\n", [movie.rating floatValue]]; 
-//            <span class=\"whiteText\">%.1f</span>\n\n", [movie.rating floatValue]]; 
-        }
-        
-		self.info = infoText;
-        
-        NSString* plotText = @"";
-        if (movie.plot)
-        {
-            plotText = [plotText stringByAppendingFormat:@"\
-<span class=\"whiteText\">%@</span>\n\n", movie.plot]; 
-        }
- 		self.plot = plotText;
-        
-        
-        ///ACTORS
-        NSString* castText = @"";
-        for (ActorRole* role in movie.roles)
-        {
-//            NSLog(@"role: %@ - %@", role.RoleToActor.name, role.role);
-            castText = [castText stringByAppendingFormat:@"\
-<img src=\"bundle://defaultPerson.png\" width=\"25\" height=\"25\"/>\
-<span class=\"whiteText\">  %@ </span>\
-<span class=\"grayText\">  %@</span>\n\n", role.actor.name, role.role]; 
-        }
- 		self.cast = castText;
-		
-		NSLog(@"3time took: %f", -[_start timeIntervalSinceNow]);
+		self.view.backgroundColor = TTSTYLEVAR(detailsViewBackColor);
         
 		////toolbar
 		_toolBar = [self createToolbar];
 		[self.view addSubview:_toolBar];
 		
 		_titleBackground = [[[CustomTitleView alloc] init] retain];
-		
-		_titleBackground.title = movie.label;
-		_titleBackground.subtitle = movie.genre;
 		[_titleBackground addTarget:self action:@selector(toggleToolbar) forControlEvents:UIControlEventTouchUpInside];
 		
 		self.navigationItem.titleView = _titleBackground;
@@ -160,20 +44,73 @@
 		recognizer.direction = UISwipeGestureRecognizerDirectionRight;
 		[self.view addGestureRecognizer:recognizer];
 		[recognizer release];
-		NSLog(@"4time took: %f", -[_start timeIntervalSinceNow]);
+		
+		self.details = [NSMutableDictionary dictionaryWithDictionary:query];
+		_start = [[NSDate date] retain];
+		if ([_details objectForKey:@"type"])
+		{
+			if ([[_details valueForKey:@"type"] isEqualToString:@"movie"])
+			{
+				if ([_details objectForKey:@"id"])
+				{
+					NSArray *array = [[[ActiveManager shared] managedObjectContext] fetchObjectsForEntityName:@"Movie" withPredicate:
+									  [NSPredicate predicateWithFormat:@"movieid == %@", [_details valueForKey:@"id"]]];
+					
+					if (array == nil || [array count] ==0) {
+						TTErrorView* errorView = [[[TTErrorView alloc] initWithTitle:@"Error"
+																			subtitle:@"Could not find item in Database"
+																			   image:TTIMAGE(@"bundle://error.png")] 
+												  autorelease];
+						errorView.backgroundColor = RGBCOLOR(0, 0, 0);
+						self.view = errorView;
+						return self;
+					}
+					Movie* movie = (Movie*)[array objectAtIndex:0];
+					[_details setValue:movie.label forKey:@"label"];
+					[_details setValue:movie.file forKey:@"fileURL"];
+					[_details setValue:movie.trailer forKey:@"trailerURL"];
+					[_details setValue:movie.imdbid forKey:@"imdb"];
+					[_details setValue:movie.thumbnail forKey:@"coverURL"];
+					[_details setValue:movie.fanart forKey:@"fanartURL"];
+					[_details setValue:[NSNumber numberWithBool:([movie.playcount intValue] != 0)] forKey:@"watched"];
+					[_details setValue:movie.rating forKey:@"rating"];
+					[_details setValue:movie.director forKey:@"director"];
+					[_details setValue:movie.writer forKey:@"writer"];
+					[_details setValue:movie.year forKey:@"year"];
+					[_details setValue:movie.runtime forKey:@"runtime"];
+					[_details setValue:movie.genre forKey:@"genre"];
+					[_details setValue:movie.plot forKey:@"plot"];
+					NSMutableDictionary* cast = [NSMutableDictionary dictionary];
+					for (ActorRole* role in movie.roles)
+					{
+						if (![role.role isEqualToString:@""])
+							[cast setValue:role.actorName forKey:role.role];
+					}
+					[_details setValue:cast forKey:@"cast"];
+				}
+				else
+				{
+					
+				}
+				[self updateViewForMovie];
+			}
+		}
+		else
+		{
+			TTErrorView* errorView = [[[TTErrorView alloc] initWithTitle:@"Error"
+                                                                subtitle:@"Could not find item in Database"
+                                                                   image:TTIMAGE(@"bundle://error.png")] 
+                                      autorelease];
+            errorView.backgroundColor = RGBCOLOR(0, 0, 0);
+            self.view = errorView;
+            return self;
+		}
     }
     return self ;
 }
 
 - (void)dealloc {
     TT_RELEASE_SAFELY(_start);
-    TT_RELEASE_SAFELY(_coverUrl);
-    TT_RELEASE_SAFELY(_fanartUrl);
-    TT_RELEASE_SAFELY(_entityId);
-    TT_RELEASE_SAFELY(_entity);
-    TT_RELEASE_SAFELY(_fileUrl);
-    TT_RELEASE_SAFELY(_trailerUrl);
-    TT_RELEASE_SAFELY(_imdbId);
     TT_RELEASE_SAFELY(_toolbarButtons);
     TT_RELEASE_SAFELY(_titleBackground);
     
@@ -218,17 +155,17 @@
 	_detailView.alpha = 0.0;
 	[self.view insertSubview:_detailView belowSubview:_toolBar];
 
-	[_detailView setInfo:_info];
-	[_detailView setPlot:_plot];
-	[_detailView setCast:_cast];
+	[_detailView setInfo:[_details valueForKey:@"formatedInfo"]];
+	[_detailView setPlot:[_details valueForKey:@"formatedPlot"]];
+	[_detailView setCast:[_details valueForKey:@"formatedCast"]];
 
-	if (!_watched)
+	if (![[_details valueForKey:@"watched"] boolValue])
 	{
 		_detailView.newFlag.hidden = FALSE;
 	}
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	if (_coverUrl)
+	if ([_details objectForKey:@"coverURL"])
 	{
 		CGFloat height = TTSTYLEVAR(movieDetailsViewCoverHeight);
 		if ([[defaults valueForKey:@"images:highQuality"] boolValue])
@@ -238,19 +175,19 @@
 		UITapGestureRecognizer *tapgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapCover:)];
 		[_detailView.cover addGestureRecognizer:tapgr];
 		[tapgr release];    
-		[XBMCImage askForImage:_coverUrl 
+		[XBMCImage askForImage:[_details valueForKey:@"coverURL"] 
 						object:self selector:@selector(coverLoaded:) 
 				 thumbnailHeight:height];
 	}
 	
-	if (_fanartUrl)
+	if ([_details objectForKey:@"fanartURL"])
 	{
 		NSInteger fanartHeight = TTScreenBounds().size.height;
 		if ([[defaults valueForKey:@"images:highQuality"] boolValue])
 		{
 			fanartHeight *= (CGFloat)TTSTYLEVAR(highQualityFactor);
 		}
-		[XBMCImage askForImage:_fanartUrl 
+		[XBMCImage askForImage:[_details valueForKey:@"fanartURL"] 
 						object:self selector:@selector(fanartLoaded:) 
 				 thumbnailHeight:fanartHeight];
 	}
@@ -261,6 +198,85 @@
     [UIView commitAnimations];
 
 }
+
+- (void)updateViewForMovie
+{
+	NSString* infoText = @"";
+	if ([_details valueForKey:@"director"])
+	{
+		infoText = [infoText stringByAppendingFormat:@"\
+					<span class=\"grayText\">Director:</span>\n\
+					<span class=\"whiteText\">%@</span>\n\n", [_details valueForKey:@"director"]]; 
+	}
+	if ([_details valueForKey:@"writer"])
+	{
+		infoText = [infoText stringByAppendingFormat:@"\
+					<span class=\"grayText\">Writer:</span>\n\
+					<span class=\"whiteText\">%@</span>\n\n", [_details valueForKey:@"writer"]]; 
+	}
+	if ([[_details valueForKey:@"year"] integerValue] != 0)
+	{
+		infoText = [infoText stringByAppendingFormat:@"\
+					<span class=\"grayText\">Year:</span>\n\
+					<span class=\"whiteText\">%@</span>\n\n", [[_details valueForKey:@"year"] stringValue]]; 
+	}
+	if ([_details valueForKey:@"runtime"])
+	{
+		NSString* runtime = [NSString stringWithString:[_details valueForKey:@"runtime"]];
+		NSRange foundRange = [runtime rangeOfString:@"min"];
+		
+		if ((foundRange.length == 0) ||
+			(foundRange.location == 0))
+		{
+			runtime = [runtime stringByAppendingString:@" min"];
+		}
+		infoText = [infoText stringByAppendingFormat:@"\
+					<span class=\"grayText\">Runtime:</span>\n\
+					<span class=\"whiteText\">%@</span>\n\n", runtime]; 
+	}
+	//        if ([movie.rating floatValue] != 0.0)
+	{            
+		infoText = [infoText stringByAppendingFormat:@"\
+					<span class=\"grayText\">Imdb Rating: </span>\
+					<img src=\"bundle://star.%.1f.png\" width=\"100\" height=\"20\"/>\n\n"
+					, [[_details valueForKey:@"rating"] floatValue]]; 
+		//            <span class=\"whiteText\">%.1f</span>\n\n", [movie.rating floatValue]]; 
+	}
+	
+	[_details setValue:infoText forKey:@"formatedInfo"];
+//	self.info = infoText;
+	
+	NSString* plotText = @"";
+	if ([_details valueForKey:@"plot"])
+	{
+		plotText = [plotText stringByAppendingFormat:@"\
+					<span class=\"whiteText\">%@</span>\n\n", [_details valueForKey:@"plot"]]; 
+	}
+//	self.plot = plotText;
+	[_details setValue:plotText forKey:@"formatedPlot"];
+	
+	
+	///ACTORS
+	if ([_details objectForKey:@"cast"])
+	{
+		NSString* castText = @"";
+		for (NSString* key in [_details objectForKey:@"cast"])
+		{
+			//            NSLog(@"role: %@ - %@", role.RoleToActor.name, role.role);
+			castText = [castText stringByAppendingFormat:@"\
+						<img src=\"bundle://defaultPerson.png\" width=\"25\" height=\"25\"/>\
+						<span class=\"whiteText\">  %@ </span>\
+						<span class=\"grayText\">  %@</span>\n\n"
+						, [[_details objectForKey:@"cast"] valueForKey:key], key]; 
+		}
+//		self.cast = castText;
+		[_details setValue:castText forKey:@"formatedCast"];
+	}
+	
+	_titleBackground.title = [_details valueForKey:@"label"];
+	_titleBackground.subtitle = [_details valueForKey:@"genre"];
+}
+
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -283,7 +299,7 @@
     toolbar.backgroundColor = [UIColor clearColor];
     toolbar.style = TTSTYLEVAR(tableToolbar);
 	
-	if (![_imdbId isEqualToString:@""])
+	if ([_details objectForKey:@"imdb"])
 	{
 		_imdbButton = [TTButton buttonWithStyle:@"embossedButton:" title:@"Imdb"];
 		_imdbButton.frame = CGRectMake(0, 0, 60, 30);
@@ -301,7 +317,7 @@
     [_enqueueButton addTarget:self action:@selector(enqueue:) forControlEvents:UIControlEventTouchUpInside];
     [toolbar addSubview:_enqueueButton];
     
-	if (![_trailerUrl isEqualToString:@""])
+	if ([_details objectForKey:@"trailerURL"])
 	{
 		_trailerButton = [TTButton buttonWithStyle:@"embossedButton:" title:@"Trailer"];
 		_trailerButton.frame = CGRectMake(0, 0, 70, 30);
@@ -404,7 +420,8 @@
 
 -(void)tapCover:(UITapGestureRecognizer *)gesture
 {
-    [((AppDelegate*)[UIApplication sharedApplication].delegate) showFullscreenImage:_coverUrl];
+    [((AppDelegate*)[UIApplication sharedApplication].delegate) 
+	 showFullscreenImage:[_details valueForKey:@"coverURL"]];
 }
 
 #pragma mark -
@@ -433,19 +450,21 @@
 -(void) showTrailer:(id)sender
 {
 	[((AppDelegate*)[UIApplication sharedApplication].delegate) 
-	 showTrailer:_trailerUrl name:_titleBackground.title];
+		showTrailer:[_details valueForKey:@"trailerURL"] 
+			name:[_details valueForKey:@"label"]];
 }
 -(void) play:(id)sender
 {
-	[XBMCStateListener play:_fileUrl];
+	[XBMCCommand play:[_details valueForKey:@"fileURL"]];
 }
 -(void) enqueue:(id)sender
 {
-//  [delegate Movie:movie action:@"enqueue"];
+	[XBMCCommand enqueue:[NSDictionary dictionaryWithObjectsAndKeys:@"movie", @"type"
+						  , [_details valueForKey:@"id"], @"id", nil]];
 }
 
 -(void) imdb:(id)sender
 {
-    [((AppDelegate*)[UIApplication sharedApplication].delegate) showImdb:_imdbId];
+    [((AppDelegate*)[UIApplication sharedApplication].delegate) showImdb:[_details valueForKey:@"imdb"]];
 }
 @end

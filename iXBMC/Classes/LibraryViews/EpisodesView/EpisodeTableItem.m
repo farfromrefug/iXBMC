@@ -6,11 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation EpisodeTableItem
 
-@synthesize poster      = _poster;
 @synthesize itemId = _itemId;
 @synthesize file      = _file;
-@synthesize label      = _label;
-@synthesize imageURL      = _imageURL;
 @synthesize episode = _episode;
 @synthesize season = _season;
 @synthesize tagline      = _tagline;
@@ -19,6 +16,7 @@
 @synthesize firstaired = _firstaired;
 @synthesize rating = _rating;
 @synthesize watched = _watched;
+@synthesize dataSource = _dataSource;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,17 +24,13 @@
     self = [super init];
     if (self)
     {
-		_poster = nil;
     }
     return self;
 }
 
 - (void)dealloc {
     TT_RELEASE_SAFELY(_itemId);
-    TT_RELEASE_SAFELY(_poster);
     TT_RELEASE_SAFELY(_file);
-    TT_RELEASE_SAFELY(_label);
-    TT_RELEASE_SAFELY(_imageURL);
     TT_RELEASE_SAFELY(_episode);
     TT_RELEASE_SAFELY(_season);
     TT_RELEASE_SAFELY(_genre);
@@ -44,6 +38,7 @@
     TT_RELEASE_SAFELY(_runtime);
     TT_RELEASE_SAFELY(_firstaired);
     TT_RELEASE_SAFELY(_rating);
+    TT_RELEASE_SAFELY(_dataSource);
     
     [super dealloc];
 }

@@ -1,28 +1,9 @@
-//
-//  SeasonsCellView.h
-//  iXBMC
-//
-//  Created by Martin Guillon on 5/29/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
 
-#import <Foundation/Foundation.h>
+#import "BaseCellInfoView.h"
 
 @class SeasonTableItem;
-@interface SeasonCellView : TTView {
-    UIImage* _posterShadow;
-    UIImage* _posterShadowSelected;
-    UIImage* _newFlag;
-	UIImage* _line;
-	SeasonTableItem *_item;
-	
-	BOOL highlighted;
-	BOOL editing;
+@interface SeasonCellView : BaseCellInfoView {
+    UIImage* _newFlag;	
 }
-@property (nonatomic, retain) SeasonTableItem *item;
-@property (nonatomic, getter=isHighlighted) BOOL highlighted;
-@property (nonatomic, getter=isEditing) BOOL editing;
-
-- (void)loadImage;
 
 @end

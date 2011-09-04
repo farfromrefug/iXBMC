@@ -11,7 +11,7 @@
 - (id)init {
     if (self = [super init]) {
         [self setClipsToBounds:YES];
-		self.backgroundColor = [UIColor clearColor];
+		self.backgroundColor = TTSTYLEVAR(recentEpisodesBackColor);
         
         _pageControl = [[[UIPageControl alloc] init] retain];
         _pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;

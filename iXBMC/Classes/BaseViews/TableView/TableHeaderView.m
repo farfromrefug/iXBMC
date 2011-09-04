@@ -79,7 +79,7 @@
 		
 	CGPoint point = CGPointMake(10, self.bounds.origin.y + self.bounds.size.height/2 - firstLabelHeight/2);
 	[TTSTYLEVAR(tableViewHeaderTextColor) set];
-	[_label drawAtPoint:point forWidth:self.bounds.size.width - 10 withFont:TTSTYLEVAR(tableViewHeaderTextFont) lineBreakMode:UILineBreakModeTailTruncation];
+	[[_label uppercaseString] drawAtPoint:point forWidth:self.bounds.size.width - 10 withFont:TTSTYLEVAR(tableViewHeaderTextFont) lineBreakMode:UILineBreakModeTailTruncation];
 	
 	
 }

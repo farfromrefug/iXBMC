@@ -5,19 +5,8 @@
 @interface DetailViewController : TTViewController
 {
 	DetailView* _detailView;
+	NSMutableDictionary* _details;
 	NSDate * _start ;
-    NSString* _entity;
-    NSString* _entityId;
-    NSString* _coverUrl;
-    NSString* _fanartUrl;
-    NSString* _fileUrl;
-    NSString* _trailerUrl;
-    NSString* _imdbId;
-	BOOL _watched;
-	
-	NSString* _info;
-	NSString* _plot;
-	NSString* _cast;
 
 	CustomTitleView* _titleBackground;
     TTView* _toolBar;
@@ -28,19 +17,13 @@
     TTButton *_enqueueButton;
     NSMutableArray* _toolbarButtons;
 }
-- (id)initWithEntity:(NSString *)entity id:(NSString *)entityId;
+-(id) initWithNavigatorURL:(NSURL*)URL query:(NSDictionary*)query;
+//- (id)initWithEntity:(NSString *)entity id:(NSString *)entityId;
 
 - (TTView*) createToolbar;
 - (void) hideToolbar;
+- (void)updateViewForMovie;
 
-@property (nonatomic, retain)   NSString* entity;
-@property (nonatomic, retain)   NSString* entityId;
-@property (nonatomic, retain)   NSString* coverUrl;
-@property (nonatomic, retain)   NSString* fanartUrl;
-@property (nonatomic, retain)   NSString* fileUrl;
-@property (nonatomic, retain)   NSString* trailerUrl;
-@property (nonatomic, retain)   NSString* imdbId;
-@property (nonatomic, retain)   NSString* info;
-@property (nonatomic, retain)   NSString* plot;
-@property (nonatomic, retain)   NSString* cast;
+@property (nonatomic, retain)   NSMutableDictionary* details;
+
 @end

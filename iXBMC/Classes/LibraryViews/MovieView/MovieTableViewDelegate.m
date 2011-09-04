@@ -2,9 +2,8 @@
 #import "MovieViewController.h"
 #import "MovieViewDataSource.h"
 #import "MovieTableItemCell.h"
+#import "TableHeaderView.h"
 
-#define MENU_HEIGHT 25;
-#define FORSEARCH_HEIGHT 40;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +41,7 @@
 //    if ([[((MovieViewDataSource*)((MovieViewController*)_controller).dataSource) currentSortName] isEqualToString:@"Title"])
 //        return 30;
 //    else 
-        return 30;
+        return 20;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,50 +51,21 @@
     
     if ([(MovieViewController*)_controller forSearch])
     {
-        height = FORSEARCH_HEIGHT ;
+        height = TTSTYLEVAR(tableViewCellSearchHeight) ;
     }
     
     if ([[(MovieViewController*)_controller selectedCellIndexPath] isEqual:indexPath])
     {
-        height += MENU_HEIGHT;
+        height += TTSTYLEVAR(tableViewCellMenuHeight);
     }
     
     return height;
 }
 
 - (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    
-	// create the parent view
-	UIImageView * customSectionView = [[UIImageView alloc] initWithFrame:CGRectZero];
-	customSectionView.backgroundColor = [UIColor clearColor];
-	customSectionView.image = TTIMAGE(@"bundle://sectionback.png");
-    customSectionView.image = [customSectionView.image stretchableImageWithLeftCapWidth:18 topCapHeight:3];
-	
-    UIImageView * labelBackImage = [[[UIImageView alloc] initWithFrame:CGRectZero] autorelease];
-	labelBackImage.backgroundColor = [UIColor clearColor];
-	labelBackImage.image = TTIMAGE(@"bundle://sectiontitleback.png");
-    labelBackImage.image = [labelBackImage.image stretchableImageWithLeftCapWidth:15 topCapHeight:3];
-	// create the label
-    
-    // create the label
-	UILabel * headerLabel = [[[UILabel alloc] initWithFrame:CGRectMake(10, 5, 300
-																	  , [self tableView:tableView 
-															   heightForHeaderInSection:section])] autorelease];
-	headerLabel.backgroundColor = [UIColor clearColor];
-	headerLabel.opaque = NO;
-	headerLabel.textColor = TTSTYLEVAR(themeColor);
-	headerLabel.highlightedTextColor = TTSTYLEVAR(themeColor);
-	headerLabel.font = [UIFont boldSystemFontOfSize:16];
-	headerLabel.text = [((MovieViewDataSource*)((MovieViewController*)_controller).dataSource) tableView:tableView titleForHeaderInSection:section];
-	[headerLabel sizeToFit];
-    labelBackImage.frame = CGRectMake(0, 0, headerLabel.right + 15, [self tableView:tableView heightForHeaderInSection:section]);
-    customSectionView.frame = CGRectMake(labelBackImage.right, 0,  tableView.frame.size.width - labelBackImage.right, [self tableView:tableView heightForHeaderInSection:section]);
-    
-	// package and return
-	[customSectionView addSubview:labelBackImage];
-	[customSectionView addSubview:headerLabel];
-//	[headerLabel release];
-	return [customSectionView autorelease];
+	TableHeaderView* view = [[TableHeaderView alloc] init];
+	view.label = [((MovieViewDataSource*)((MovieViewController*)_controller).dataSource) tableView:tableView titleForHeaderInSection:section];
+	return [view autorelease];
 	
 }
 

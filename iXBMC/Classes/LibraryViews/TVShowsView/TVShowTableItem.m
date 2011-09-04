@@ -6,11 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation TVShowTableItem
 
-@synthesize poster      = _poster;
-@synthesize label      = _label;
 @synthesize tagline      = _tagline;
 @synthesize genre      = _genre;
-@synthesize imageURL      = _imageURL;
 @synthesize tvdb       = _tvdb;
 @synthesize itemId = _itemId;
 @synthesize rating = _rating;
@@ -27,19 +24,15 @@
     self = [super init];
     if (self)
     {
-		_poster = nil;
 //        _selected = false;
     }
     return self;
 }
 
 - (void)dealloc {
-    TT_RELEASE_SAFELY(_poster);
     TT_RELEASE_SAFELY(_rating);
-    TT_RELEASE_SAFELY(_label);
     TT_RELEASE_SAFELY(_tagline);
     TT_RELEASE_SAFELY(_genre);
-    TT_RELEASE_SAFELY(_imageURL);
     TT_RELEASE_SAFELY(_itemId);
     TT_RELEASE_SAFELY(_tvdb);
     TT_RELEASE_SAFELY(_nbEpisodes);

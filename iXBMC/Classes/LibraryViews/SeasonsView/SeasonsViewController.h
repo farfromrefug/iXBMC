@@ -1,39 +1,23 @@
-#import "TTTableViewCoreDataController.h"
+
+#import "BaseTableViewController.h"
 
 @protocol SeasonsViewControllerDelegate;
 
-@class CustomTitleView;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
-@interface SeasonsViewController : TTTableViewCoreDataController<TTSearchTextFieldDelegate> {
+@interface SeasonsViewController : BaseTableViewController {
     id<SeasonsViewControllerDelegate> _delegate;
 
-//    RecentlyAddedViewController* _recentlyAddedSeasonss;
-    TTView* _toolBar;
     TTButton* _hideWatchedButton;
-    
-    CustomTitleView* _titleBackground;
-
-    NSIndexPath *_selectedCellIndexPath;
-	
+    	
 	BOOL _startWithWatched;
 	NSString* _showId;
 	NSString* _showName;
 }
 
 @property(nonatomic,assign) id<SeasonsViewControllerDelegate> delegate;
-@property (nonatomic, retain) NSIndexPath* selectedCellIndexPath;
 @property (nonatomic, retain) NSString* showId;
 @property (nonatomic, retain) NSString* showName;
 
-- (void)didDeselectRowAtIndexPath:(NSIndexPath*)indexPath;
 - (id)initWithTVShow:(NSString *)tvshowid showWatched:(BOOL)watched;
-
-@end
-
-@protocol SeasonsViewControllerDelegate <NSObject>
-
-- (void)SeasonsViewController:(SeasonsViewController*)controller didSelectObject:(id)object;
 
 @end

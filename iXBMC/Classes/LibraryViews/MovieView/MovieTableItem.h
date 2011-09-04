@@ -1,38 +1,31 @@
+#import "BaseTableItem.h"
 
-@interface MovieTableItem : TTTableTextItem {
+@interface MovieTableItem : BaseTableItem {
 	
-	UIImage* _poster;
     NSString* _file;
-    NSString* _label;
     NSString* _tagline;
     NSString* _genre;
     NSString* _runtime;
 	NSString* _year;
     NSString* _rating;
     NSString* _trailer;
-    NSString* _imageURL;
     NSString* _imdb;
 
     NSNumber* _itemId;
     BOOL _watched;
-//    BOOL _selected;
     BOOL _forSearch;
 }
 
-@property (nonatomic, retain)   UIImage* poster;
 @property (nonatomic, retain)   NSString* file;
-@property (nonatomic, retain)   NSString* label;
 @property (nonatomic, retain)   NSString* tagline;
 @property (nonatomic, retain)   NSString* genre;
 @property (nonatomic, retain)   NSString* runtime;
 @property (nonatomic, retain)   NSString* year;
 @property (nonatomic, retain)   NSString* rating;
-@property (nonatomic, retain)   NSString* imageURL;
 @property (nonatomic, retain)   NSString* trailer;
 @property (nonatomic, retain)   NSString* imdb;
 @property (nonatomic, retain)   NSNumber* itemId;
 @property (nonatomic)   BOOL watched;
-//@property (nonatomic)   BOOL selected;
 @property (nonatomic)   BOOL forSearch;
 
 + (id)item;

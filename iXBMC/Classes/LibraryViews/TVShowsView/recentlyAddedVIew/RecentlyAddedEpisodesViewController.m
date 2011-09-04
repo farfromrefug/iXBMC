@@ -252,48 +252,6 @@
 #pragma mark -
 #pragma mark View controller rotation methods
 
-//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation 
-//{
-//    return YES;
-//}
-
-//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-//{
-//    // here, our pagingScrollView bounds have not yet been updated for the new interface orientation. So this is a good
-//    // place to calculate the content offset that we will need in the new orientation
-//    CGFloat offset = pagingScrollView.contentOffset.x;
-//    CGFloat pageWidth = pagingScrollView.bounds.size.width;
-//    
-//    if (offset >= 0) {
-//        firstVisiblePageIndexBeforeRotation = floorf(offset / pageWidth);
-//        percentScrolledIntoFirstVisiblePage = (offset - (firstVisiblePageIndexBeforeRotation * pageWidth)) / pageWidth;
-//    } else {
-//        firstVisiblePageIndexBeforeRotation = 0;
-//        percentScrolledIntoFirstVisiblePage = offset / pageWidth;
-//    }    
-//}
-
-//- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-//{
-//    // recalculate contentSize based on current orientation
-//    pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
-//    
-//    // adjust frames and configuration of each visible page
-//    for (ImageScrollView *page in visiblePages) {
-//        CGPoint restorePoint = [page pointToCenterAfterRotation];
-//        CGFloat restoreScale = [page scaleToRestoreAfterRotation];
-//        page.frame = [self frameForPageAtIndex:page.index];
-//        [page setMaxMinZoomScalesForCurrentBounds];
-//        [page restoreCenterPoint:restorePoint scale:restoreScale];
-//        
-//    }
-//    
-//    // adjust contentOffset to preserve page location based on values collected prior to location
-//    CGFloat pageWidth = pagingScrollView.bounds.size.width;
-//    CGFloat newOffset = (firstVisiblePageIndexBeforeRotation * pageWidth) + (percentScrolledIntoFirstVisiblePage * pageWidth);
-//    pagingScrollView.contentOffset = CGPointMake(newOffset, 0);
-//}
-
 #pragma mark -
 #pragma mark  Frame calculations
 #define PADDING  10
@@ -306,10 +264,6 @@
 }
 
 - (CGRect)frameForPageAtIndex:(NSUInteger)index {
-    // We have to use our paging scroll view's bounds, not frame, to calculate the page placement. When the device is in
-    // landscape orientation, the frame will still be in portrait because the pagingScrollView is the root view controller's
-    // view, so its frame is in window coordinate space, which is never rotated. Its bounds, however, will be in landscape
-    // because it has a rotation transform applied.
     CGRect bounds = self.scrollView.bounds;
     CGRect pageFrame = bounds;
     pageFrame.size.width -= (2 * PADDING);

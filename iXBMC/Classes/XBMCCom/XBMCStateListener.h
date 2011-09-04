@@ -48,8 +48,6 @@
 - (void)start;
 - (void)stop;
 
-+ (void)play:(NSString *) url;
-
 -(void)askForTime;
 
 

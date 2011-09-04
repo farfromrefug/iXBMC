@@ -1,11 +1,10 @@
+#import "BaseTableItem.h"
+
 @class TVShowsViewDataSource;
-@interface TVShowTableItem : TTTableTextItem {
+@interface TVShowTableItem : BaseTableItem {
 	
-	UIImage* _poster;
-    NSString* _label;
     NSString* _tagline;
     NSString* _genre;
-    NSString* _imageURL;
     NSString* _tvdb;
     NSString* _rating;
     NSString* _premiered;
@@ -17,11 +16,8 @@
 	TVShowsViewDataSource* _dataSource;
 }
 
-@property (nonatomic, retain)   UIImage* poster;
-@property (nonatomic, retain)   NSString* label;
 @property (nonatomic, retain)   NSString* tagline;
 @property (nonatomic, retain)   NSString* genre;
-@property (nonatomic, retain)   NSString* imageURL;
 @property (nonatomic, retain)   NSString* tvdb;
 @property (nonatomic, retain)   NSString* rating;
 @property (nonatomic, retain)   NSString* premiered;

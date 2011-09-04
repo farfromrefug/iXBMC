@@ -1,11 +1,10 @@
+#import "BaseTableItem.h"
 
-@interface EpisodeTableItem : TTTableTextItem {
+@class EpisodesViewDataSource;
+@interface EpisodeTableItem : BaseTableItem {
 	
-	UIImage* _poster;
     NSNumber* _itemId;
     NSString* _file;
-    NSString* _label;
-    NSString* _imageURL;
     NSNumber* _episode;
     NSNumber* _season;
 	
@@ -16,14 +15,12 @@
     NSString* _rating;
 	
     BOOL _watched;
+	EpisodesViewDataSource* _dataSource;
 
 }
 
-@property (nonatomic, retain)   UIImage* poster;
 @property (nonatomic, retain)   NSNumber* itemId;
 @property (nonatomic, retain)   NSString* file;
-@property (nonatomic, retain)   NSString* label;
-@property (nonatomic, retain)   NSString* imageURL;
 @property (nonatomic, retain)   NSNumber* episode;
 @property (nonatomic, retain)   NSNumber* season;
 
@@ -32,6 +29,8 @@
 @property (nonatomic, retain)   NSString* runtime;
 @property (nonatomic, retain)   NSString* firstaired;
 @property (nonatomic, retain)   NSString* rating;
+
+@property (nonatomic, retain)   EpisodesViewDataSource* dataSource;
 
 @property (nonatomic)   BOOL watched;
 

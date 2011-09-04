@@ -2,11 +2,15 @@
 
 @protocol BCTabBarDelegate;
 
+@interface BCTabBarArrow : UIView {
+}
+@end
+
 @interface BCTabBar : UIView {
 	NSArray *tabs;
 	BCTab *selectedTab;
 	UIImage *backgroundImage;
-	UIImageView *arrow;
+	BCTabBarArrow *arrow;
 	id <BCTabBarDelegate> delegate;
 }
 
@@ -16,7 +20,7 @@
 @property (nonatomic, retain) NSArray *tabs;
 @property (nonatomic, retain) BCTab *selectedTab;
 @property (nonatomic, assign) id <BCTabBarDelegate> delegate;
-@property (nonatomic, retain) UIImageView *arrow;
+@property (nonatomic, retain) BCTabBarArrow *arrow;
 @property (nonatomic, assign) BOOL isInvisible;
 @end
 

@@ -80,17 +80,21 @@
 
 //    [self.view setBackgroundColor:[UIColor grayColor]];
 	//create new uiview with a background image
-    UIImage *backgroundImage = TTIMAGE(@"bundle://background.png");
-    UIImageView *backgroundView = [[[UIImageView alloc] 
-									initWithImage:backgroundImage] autorelease];
-	backgroundView.contentMode = UIViewContentModeScaleToFill;
-    [self.view addSubview:backgroundView];
+//    UIImage *backgroundImage = TTIMAGE(@"bundle://background.png");
+//    UIImageView *backgroundView = [[[UIImageView alloc] 
+//									initWithImage:backgroundImage] autorelease];
+//	backgroundView.contentMode = UIViewContentModeScaleToFill;
+//	backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | 
+//										UIViewAutoresizingFlexibleHeight;
+//    backgroundView.frame = self.view.frame;
+//    [self.view addSubview:backgroundView];
 	
     _tabBarController = [[MyTabBarController alloc] init];
     _tabBarController.view.frame = self.view.frame;
 	[self setTabURLs:[NSArray arrayWithObjects:@"tt://gesture",
                       @"tt://library/movies/1",
                       @"tt://library/tvshows/1",
+                      @"tt://videos",
                       @"tt://settings",
                       nil]];
 //    _tabBarController = [[CustomTabBarViewController alloc] init];
